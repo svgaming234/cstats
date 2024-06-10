@@ -51,8 +51,8 @@ def playerlist():
 
 def chat():
     listfmt = "{display}: {message}"
-    param = {'startUnixTime': '1716850600'}
-    playerlist = json.loads(json.dumps(requests.get('http://api.retromc.org/api/v1/server/chat', params=param).json()))
+    #param = {'startUnixTime': '1716850600'}
+    playerlist = json.loads(json.dumps(requests.get('http://api.retromc.org/api/v1/server/chat').json()))
 
     print("\033[94mDisplaying recently sent messages. (does NOT display Discord messages)\033[0m")
 
