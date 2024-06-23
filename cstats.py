@@ -43,11 +43,11 @@ def playerlist():
     for i in range(0, playerlist["player_count"]):
         print(listfmt.format(
             display = colorcodeparser(playerlist['players'][i]['display_name']),
-            user = colorcodeparser(playerlist['players'][i]['name']), 
-            uuid = colorcodeparser(playerlist['players'][i]['uuid']), 
-            xcoord = colorcodeparser(str(playerlist['players'][i]['x'])),
-            ycoord = colorcodeparser(str(playerlist['players'][i]['y'])),
-            zcoord = colorcodeparser(str(playerlist['players'][i]['z']))
+            user = playerlist['players'][i]['name'], 
+            uuid = playerlist['players'][i]['uuid'], 
+            xcoord = str(round(playerlist['players'][i]['x'], 1)),
+            ycoord = str(round(playerlist['players'][i]['y'], 1)),
+            zcoord = str(round(playerlist['players'][i]['z'], 1))
         ))
 
 def chat():
