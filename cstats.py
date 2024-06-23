@@ -3,6 +3,7 @@
 import json
 import requests
 import platform
+import sys
 
 if platform.system() == 'Windows':
     # make color codes show up on windows properly
@@ -51,7 +52,6 @@ def playerlist():
 
 def chat():
     listfmt = "{display}: {message}"
-    #param = {'startUnixTime': '1716850600'}
     playerlist = json.loads(json.dumps(requests.get('http://api.retromc.org/api/v1/server/chat').json()))
 
     print("\033[94mDisplaying recently sent messages. (does NOT display Discord messages)\033[0m")
@@ -62,16 +62,40 @@ def chat():
             message = colorcodeparser(playerlist['messages'][i]['message'])
         ))
 
+def villagelist():
+    listfmt = "{name} | {owner}"
+    playerlist = json.loads(json.dumps(requests.get('http://api.retromc.org/api/v1/village/getVillageList').json()))
+
+    print("\033[94mDisplaying village list.\033[0m")
+
+    for i in range(0, len(playerlist['villages'])): 
+        ownerusernameapiurl = "https://sessionserver.mojang.com/session/minecraft/profile/" + playerlist['villages'][i]['owner']
+
+        try:
+            ownerusername = json.loads(json.dumps(requests.get(ownerusernameapiurl).json()))
+        except:
+            ownerusername = {'name':playerlist['villages'][i]['owner']}
+
+
+        print(listfmt.format(
+            name = colorcodeparser(playerlist['villages'][i]['name']), 
+            owner = ownerusername['name']
+        ))
+
+
 def main():
     print("Welcome to cstats!")
     print("Press 1 to launch playerlist")
     print("Press 2 to launch chat")
+    print("Press 3 to launch villagelist")
     print("This UI is temporary, it will be improved in the next releases")
     choose = input("> ")
     if choose == "1":
         playerlist()
     elif choose == "2":
         chat()
+    elif choose == "3":
+        villagelist()
     else:
         print("Invalid option!")
     
