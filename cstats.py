@@ -109,7 +109,12 @@ def villagedetails():
     print("Village UUID: " + str(request2["uuid"]))
     print("Owner: " + uuidtousername(request2['owner']))
     print("Location: X:" + str(request2["spawn"]["x"]) + ", Y:" + str(request2["spawn"]["y"]) + ", Z:" + str(request2["spawn"]["z"]) + " in world " + request2["spawn"]["world"])
-    print("Creation time: " + datetime.fromtimestamp(request2['creationTime']).strftime('%Y-%m-%d %H:%M:%S'))
+
+    if request2['creationTime'] != 1640995200:
+        print("Creation time: " + datetime.fromtimestamp(request2['creationTime']).strftime('%Y-%m-%d %H:%M:%S'))
+    else:
+        print("Creation time: Unknown (likely lost in Towny > JVillage transfer)")
+        
     print("Balance: " + str(round(request2["balance"], 2)))
     print("Claim count: " + str(request2["claims"]))
     print("Assistants: " + str(len(request2["assistants"])))
@@ -123,19 +128,25 @@ def villagedetails():
     print("Mob spawner bypass: " + str(request2["flags"]["MOB_SPAWNER_BYPASS"]))
 
     print("\nAssistants:")
-    for i in range(0, len(request2["assistants"])):
-        print(uuidtousername(request2["assistants"][i]), end="")
-        if len(request2["assistants"]) - 1 != i:
-            print(", ", end="")
-    
+    if len(request2["assistants"]) != 0:    
+        for i in range(0, len(request2["assistants"])):
+            print(uuidtousername(request2["assistants"][i]), end="")
+            if len(request2["assistants"]) - 1 != i:
+                print(", ", end="")
+    else:
+        print("No assistants", end="")
+
     print("\n\nMembers:")
-    for i in range(0, len(request2["members"])):
-        print(uuidtousername(request2["members"][i]), end="")
-        if len(request2["members"]) - 1 != i:
-            print(", ", end="")
+    if len(request2["members"]) != 0:
+        for i in range(0, len(request2["members"])):
+            print(uuidtousername(request2["members"][i]), end="")
+            if len(request2["members"]) - 1 != i:
+                print(", ", end="")
+    else:
+        print("No members", end="")
 
+    # Add newline to the end of the members output
     print("")
-
 
 def main():
     print("Welcome to cstats!")
