@@ -105,6 +105,8 @@ def villagedetails():
 
     request2 = json.loads(json.dumps(requests.get('http://api.retromc.org/api/v1/village/getVillage?uuid=' + villageuuid).json()))
     
+    print("Name: " + str(request2["name"]))
+    print("Village UUID: " + str(request2["uuid"]))
     print("Owner: " + uuidtousername(request2['owner']))
     print("Location: X:" + str(request2["spawn"]["x"]) + ", Y:" + str(request2["spawn"]["y"]) + ", Z:" + str(request2["spawn"]["z"]) + " in world " + request2["spawn"]["world"])
     print("Creation time: " + datetime.fromtimestamp(request2['creationTime']).strftime('%Y-%m-%d %H:%M:%S'))
