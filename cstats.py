@@ -157,13 +157,13 @@ def main():
     print("This UI is temporary, it will be improved in the next releases")
 
     choose = input("> ")
-    if choose == "1":
+    if choose == "1" or choose == "playerlist":
         playerlist()
-    elif choose == "2":
+    elif choose == "2" or choose == "chat":
         chat()
-    elif choose == "3":
+    elif choose == "3" or choose == "villagelist":
         villagelist()
-    elif choose == "4":
+    elif choose == "4" or choose == "villagedetails":
         villagedetails()
     else:
         print("Invalid option!")
