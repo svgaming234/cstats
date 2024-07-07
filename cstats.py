@@ -37,9 +37,9 @@ def colorcodeparser(s):
 
 def uuidtousername(uuid):
     mojangapiurl = "https://sessionserver.mojang.com/session/minecraft/profile/" + uuid
-    request = json.loads(json.dumps(requests.get(mojangapiurl).json()))
 
     try:
+        request = json.loads(json.dumps(requests.get(mojangapiurl).json()))
         username = request["name"]
     except:
         username = uuid
@@ -66,7 +66,7 @@ def chat():
     listfmt = "{display}: {message}"
     request = json.loads(json.dumps(requests.get('http://api.retromc.org/api/v1/server/chat').json()))
 
-    print("\033[94mDisplaying recently sent messages. (does NOT display Discord messages)\033[0m")
+    print("\033[94mDisplaying recently sent messages. (does \033[91mNOT\033[94m display Discord messages)\033[0m")
 
     for i in range(0, len(request['messages'])): 
         print(listfmt.format(
@@ -78,7 +78,8 @@ def villagelist():
     listfmt = "{name} | {owner} | {villageuuid}"
     request = json.loads(json.dumps(requests.get('http://api.retromc.org/api/v1/village/getVillageList').json()))
 
-    print("\033[94mDisplaying village list.\033[0m")
+    print("Displaying list of all RetroMC villages.\n\nFormat:")
+    print("Village name | Village owner | Village UUID\n")
 
     for i in range(0, len(request['villages'])): 
         print(listfmt.format(
@@ -149,14 +150,18 @@ def villagedetails():
     print("")
 
 def main():
-    print("Welcome to cstats!")
-    print("Press 1 to launch playerlist")
-    print("Press 2 to launch chat")
-    print("Press 3 to launch villagelist")
-    print("Press 4 to launch villagedetails")
-    print("This UI is temporary, it will be improved in the next releases")
+    if len(sys.argv) > 1:
+        choose = sys.argv[1]
+    else:
+        print("Welcome to cstats!")
+        print("Press 1 to launch playerlist")
+        print("Press 2 to launch chat")
+        print("Press 3 to launch villagelist")
+        print("Press 4 to launch villagedetails")
+        print("This UI is temporary, it will be improved in the next releases")
 
-    choose = input("> ")
+        choose = input("> ")
+
     if choose == "1" or choose == "playerlist":
         playerlist()
     elif choose == "2" or choose == "chat":
@@ -167,7 +172,6 @@ def main():
         villagedetails()
     else:
         print("Invalid option!")
-    
 
 if __name__ == '__main__':
     main()
