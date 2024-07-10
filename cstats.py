@@ -52,7 +52,8 @@ def playerlist():
     listfmt = "{display} | {user} | {uuid} | X:{xcoord}, Y:{ycoord}, Z:{zcoord}"
     request = json.loads(json.dumps(requests.get('http://api.retromc.org/api/v1/server/players').json()))
 
-    print("\033[94mThere are \033[91m" + str(request["player_count"]) + "\033[94m out of a maximum \033[91m100\033[94m players online.\033[0m")
+    print("\033[94mThere are \033[91m" + str(request["player_count"]) + "\033[94m out of a maximum \033[91m100\033[94m players online.\033[0m\n\nOutput format:")
+    print("Rank and display name | Username | Player UUID | X coord | Y coord | Z coord\n")
 
     for i in range(0, request["player_count"]):
         print(listfmt.format(
@@ -80,7 +81,7 @@ def villagelist():
     listfmt = "{name} | {owner} | {villageuuid}"
     request = json.loads(json.dumps(requests.get('http://api.retromc.org/api/v1/village/getVillageList').json()))
 
-    print("Displaying list of all RetroMC villages.\n\nFormat:")
+    print("Displaying list of all RetroMC villages.\n\nOutput format:")
     print("Village name | Village owner | Village UUID\n")
 
     for i in range(0, len(request['villages'])): 
