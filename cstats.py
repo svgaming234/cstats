@@ -6,6 +6,8 @@ import platform
 import sys
 from datetime import datetime
 
+version = "0.1.0pre"
+
 if platform.system() == 'Windows':
     # make color codes show up on windows properly
     from colorama import just_fix_windows_console
@@ -153,7 +155,8 @@ def main():
     if len(sys.argv) > 1:
         choose = sys.argv[1]
     else:
-        print("Welcome to cstats!\nType the name of a function or its numerical ID from the list below and press ENTER")
+        print("Welcome to cstats v" + version + "!")
+        print("Type the name of a function or its numerical ID from the list below and press ENTER")
         print("1) playerlist")
         print("2) chat")
         print("3) villagelist")
