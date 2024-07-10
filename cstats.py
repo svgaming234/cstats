@@ -153,12 +153,12 @@ def main():
     if len(sys.argv) > 1:
         choose = sys.argv[1]
     else:
-        print("Welcome to cstats!")
-        print("Press 1 to launch playerlist")
-        print("Press 2 to launch chat")
-        print("Press 3 to launch villagelist")
-        print("Press 4 to launch villagedetails")
-        print("This UI is temporary, it will be improved in the next releases")
+        print("Welcome to cstats!\nType the name of a function or its numerical ID from the list below and press ENTER")
+        print("1) playerlist")
+        print("2) chat")
+        print("3) villagelist")
+        print("4) villagedetails")
+        print("\nThis program is still a work in progress, report issues to SvGaming")
 
         choose = input("> ")
 
