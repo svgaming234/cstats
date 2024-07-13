@@ -13,7 +13,7 @@ if platform.system() == 'Windows':
     from colorama import just_fix_windows_console
     just_fix_windows_console()
 
-def colorcodeparser(s):
+def ccparser(s):
     # this is very jank feeling but it works i guess
     s = s.replace("&", "§")
     
@@ -57,7 +57,7 @@ def playerlist():
 
     for i in range(0, request["player_count"]):
         print(listfmt.format(
-            display = colorcodeparser(request['players'][i]['display_name']),
+            display = ccparser(request['players'][i]['display_name']),
             user = request['players'][i]['name'], 
             uuid = request['players'][i]['uuid'], 
             xcoord = str(round(request['players'][i]['x'], 1)),
@@ -73,8 +73,8 @@ def chat():
 
     for i in range(0, len(request['messages'])): 
         print(listfmt.format(
-            display = colorcodeparser(request['messages'][i]['display_name']), 
-            message = colorcodeparser(request['messages'][i]['message'])
+            display = ccparser(request['messages'][i]['display_name']), 
+            message = ccparser(request['messages'][i]['message'])
         ))
 
 def villagelist():
@@ -157,7 +157,8 @@ def main():
         choose = sys.argv[1]
     else:
         print("Welcome to cstats v" + version + "!")
-        print("Type the name of a function or its numerical ID from the list below and press ENTER")
+        print("Type the name of a function or its numerical ID from the list below and press ENTER\n")
+        
         print("1) playerlist")
         print("2) chat")
         print("3) villagelist")
