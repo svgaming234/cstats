@@ -163,6 +163,8 @@ def main():
         print("2) chat")
         print("3) villagelist")
         print("4) villagedetails")
+        print("4) exit")
+
         print("\nThis program is still a work in progress, report issues to SvGaming")
 
         choose = input("> ")
@@ -175,6 +177,8 @@ def main():
         villagelist()
     elif choose == "4" or choose == "villagedetails":
         villagedetails()
+    elif choose == "0" or choose == "exit":
+        return
     else:
         print("Invalid option!")
 
