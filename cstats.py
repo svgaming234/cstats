@@ -180,12 +180,31 @@ def playerstats():
     print("\033[94mDisplaying player info.\033[0m")
 
     print("Name: " + playerusernamefixed)
-    print("Player UUID: " + playeruuid)
+    print("Player UUID: " + playeruuid + "\n")
+    
     print("Online: " + str(request["online"]))
+
+    try:
+        x = str(request["x"])
+        y = str(request["x"])
+        z = str(request["x"])
+    except:
+        x = "Player is offline"
+        y = x
+        z = x
+
+    print("X: " + x)
+    print("Y: " + y)
+    print("Z: " + z)
 
     request2 = json.loads(json.dumps(requests.get('https://statistics.retromc.org/api/bans?uuid=' + str(playeruuid)).json()))
 
-    print("Banned: " + str(request2["banned"]))
+    print("\nBanned: " + str(request2["banned"]))
+
+    print("Ban history: ")
+    
+    for i in range(len(request2["bans"])):
+        print(request2["bans"][i]["admin"][0])
 
     request3 = json.loads(json.dumps(requests.get('https://statistics.retromc.org/api/user_villages?uuid=' + str(playeruuid)).json()))
 
