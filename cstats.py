@@ -9,7 +9,7 @@ from datetime import datetime
 version = "0.1.0pre"
 
 if platform.system() == 'Windows':
-    # make color codes show up on windows properly
+    # make color codes show up on windows properly, this library is not required on linux/mac
     from colorama import just_fix_windows_console
     just_fix_windows_console()
 
@@ -47,6 +47,23 @@ def uuidtousername(uuid):
         username = uuid
 
     return username
+
+def usernametouuid(username):
+    mojangapiurl = "https://api.mojang.com/users/profiles/minecraft/" + username
+
+    request = json.loads(json.dumps(requests.get(mojangapiurl).json()))
+    
+    uuid = request["id"]
+    uuidwithdashes = uuid[:8] + "-" + uuid[8:12] + "-" + uuid[12:16] + "-" + uuid[16:20] + "-" + uuid[20:]
+
+    return uuidwithdashes
+
+def fixusernamecase(username):
+    mojangapiurl = "https://api.mojang.com/users/profiles/minecraft/" + username
+    request = json.loads(json.dumps(requests.get(mojangapiurl).json()))
+
+    usernamefixed = request["name"]
+    return usernamefixed
 
 def playerlist():
     listfmt = "{display} | {user} | {uuid} | X:{xcoord}, Y:{ycoord}, Z:{zcoord}"
@@ -152,6 +169,23 @@ def villagedetails():
     # Add newline to the end of the members output
     print("")
 
+def playerstats():
+    print("Enter the player name:")
+    player = input("> ")
+    playerusernamefixed = fixusernamecase(player)
+    playeruuid = usernametouuid(playerusernamefixed)
+
+    request = json.loads(json.dumps(requests.get('https://statistics.retromc.org/api/online?username=' + playerusernamefixed).json()))
+
+    print("\033[94mDisplaying player info.\033[0m")
+
+    print("Name: " + playerusernamefixed)
+    print("Player UUID: " + playeruuid)
+    print("Online: " + str(request["online"]))
+
+    request2 = json.loads(json.dumps(requests.get('https://statistics.retromc.org/api/bans?uuid=' + str(playeruuid)).json()))
+    
+
 def main():
     if len(sys.argv) > 1:
         choose = sys.argv[1]
@@ -163,7 +197,8 @@ def main():
         print("2) chat")
         print("3) villagelist")
         print("4) villagedetails")
-        print("4) exit")
+        print("5) playerstats (WIP)")
+        print("0) exit")
 
         print("\nThis program is still a work in progress, report issues to SvGaming")
 
@@ -177,6 +212,8 @@ def main():
         villagelist()
     elif choose == "4" or choose == "villagedetails":
         villagedetails()
+    elif choose == "5" or choose == "playerstats":
+        playerstats()
     elif choose == "0" or choose == "exit":
         return
     else:
