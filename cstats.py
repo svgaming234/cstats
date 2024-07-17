@@ -184,7 +184,32 @@ def playerstats():
     print("Online: " + str(request["online"]))
 
     request2 = json.loads(json.dumps(requests.get('https://statistics.retromc.org/api/bans?uuid=' + str(playeruuid)).json()))
-    
+
+    print("Banned: " + str(request2["banned"]))
+
+    request3 = json.loads(json.dumps(requests.get('https://statistics.retromc.org/api/user_villages?uuid=' + str(playeruuid)).json()))
+
+    print("\nOwner of villages: ")
+    if len(request3["data"]["owner"]) == 0:
+        print("None :(")
+    else:
+        for i in range(len(request3["data"]["owner"])):
+            print(request3["data"]["owner"][i]["village"] + " (" + request3["data"]["owner"][i]["village_uuid"] + ")")
+
+    print("\nAssistant of villages: ")
+    if len(request3["data"]["assistant"]) == 0:
+        print("None :(")
+    else:
+        for i in range(len(request3["data"]["assistant"])):
+            print(request3["data"]["assistant"][i]["village"] + " (" + request3["data"]["assistant"][i]["village_uuid"] + ")")
+
+    print("\nMember of villages: ")
+    if len(request3["data"]["member"]) == 0:
+        print("None :(")
+    else:
+        for i in range(len(request3["data"]["member"])):
+            print(request3["data"]["member"][i]["village"] + " (" + request3["data"]["member"][i]["village_uuid"] + ")")
+
 
 def main():
     if len(sys.argv) > 1:
