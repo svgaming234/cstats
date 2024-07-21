@@ -13,6 +13,9 @@ if platform.system() == 'Windows':
     from colorama import just_fix_windows_console
     just_fix_windows_console()
 
+def unixtimetotime(unixtime):
+    return datetime.fromtimestamp(unixtime).strftime('%Y-%m-%d %H:%M:%S')
+
 def ccparser(s):
     # this is very jank feeling but it works i guess
     s = s.replace("&", "§")
@@ -132,7 +135,7 @@ def villagedetails():
     print("Location: X:" + str(request2["spawn"]["x"]) + ", Y:" + str(request2["spawn"]["y"]) + ", Z:" + str(request2["spawn"]["z"]) + " in world " + request2["spawn"]["world"])
 
     if request2['creationTime'] != 1640995200:
-        print("Creation time: " + datetime.fromtimestamp(request2['creationTime']).strftime('%Y-%m-%d %H:%M:%S'))
+        print("Creation time: " + unixtimetotime(request2['creationTime']))
     else:
         print("Creation time: Unknown (likely lost in Towny > JVillage transfer)")
         
@@ -186,8 +189,8 @@ def playerstats():
 
     try:
         x = str(request["x"])
-        y = str(request["x"])
-        z = str(request["x"])
+        y = str(request["y"])
+        z = str(request["z"])
     except:
         x = "Player is offline"
         y = x
@@ -204,7 +207,8 @@ def playerstats():
     print("Ban history: ")
     
     for i in range(len(request2["bans"])):
-        print(request2["bans"][i]["admin"][0])
+        print("\nBanned for \"" + request2["bans"][i]["reason"] + "\" by " + request2["bans"][i]["admin"][0])
+        print("Pardoned: " + str(request2["bans"][i]["pardoned"]) + ", 1st evidence addition date: " + unixtimetotime(request2["bans"][i]["evidence"][0]["issued"]))
 
     request3 = json.loads(json.dumps(requests.get('https://statistics.retromc.org/api/user_villages?uuid=' + str(playeruuid)).json()))
 
