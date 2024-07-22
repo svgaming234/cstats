@@ -175,40 +175,55 @@ def villagedetails():
 def playerstats():
     print("Enter the player name:")
     player = input("> ")
+
     playerusernamefixed = fixusernamecase(player)
     playeruuid = usernametouuid(playerusernamefixed)
 
     request = json.loads(json.dumps(requests.get('https://statistics.retromc.org/api/online?username=' + playerusernamefixed).json()))
+    request4 = json.loads(json.dumps(requests.get('https://statistics.johnymuffin.com/api/v1/getUser?serverID=0&uuid=' + playeruuid).json()))
 
     print("\033[94mDisplaying player info.\033[0m")
 
     print("Name: " + playerusernamefixed)
-    print("Player UUID: " + playeruuid + "\n")
+    print("Player UUID: " + playeruuid)
+    print("Rank: " + request4["groups"][0])
+    print("Money: " + str(round(request4["money"], 2)) + "$\n")
+
+    print("Playtime: " + str(round(request4["playTime"] / 60 / 60, 2)) + " hours")
+    print("First join: " + unixtimetotime(request4["firstJoin"]))
+    print("Last join: " + unixtimetotime(request4["lastJoin"]))
+    print("Join count: " + str(request4["joinCount"]) + "\n")
+
+    # TODO: implement more of these stats
+
+    print("Trust level: " + str(request4["trustLevel"]))
+    print("Trust score: " + str(round(request4["trustScore"], 2)))
     
-    print("Online: " + str(request["online"]))
+    print("\nOnline: " + str(request["online"]))
 
     try:
         x = str(request["x"])
         y = str(request["y"])
         z = str(request["z"])
-    except:
-        x = "Player is offline"
-        y = x
-        z = x
 
-    print("X: " + x)
-    print("Y: " + y)
-    print("Z: " + z)
+        print("Coordinates: ")
+        print("X: " + x)
+        print("Y: " + y)
+        print("Z: " + z)
+    except:
+        print("Coordinates: Player is offline")
 
     request2 = json.loads(json.dumps(requests.get('https://statistics.retromc.org/api/bans?uuid=' + str(playeruuid)).json()))
 
-    print("\nBanned: " + str(request2["banned"]))
-
-    print("Ban history: ")
+    print("\nCurrently banned: " + str(request2["banned"]))
     
-    for i in range(len(request2["bans"])):
-        print("\nBanned for \"" + request2["bans"][i]["reason"] + "\" by " + request2["bans"][i]["admin"][0])
-        print("Pardoned: " + str(request2["bans"][i]["pardoned"]) + ", 1st evidence addition date: " + unixtimetotime(request2["bans"][i]["evidence"][0]["issued"]))
+    if len(request2["bans"]) == 0:
+        print("Ban history: Player has never been banned")
+    else:
+        print("Ban history:")
+        for i in range(len(request2["bans"])):
+            print("\nBanned for \"" + request2["bans"][i]["reason"] + "\" by " + request2["bans"][i]["admin"][0])
+            print("Pardoned: " + str(request2["bans"][i]["pardoned"]) + ", 1st evidence addition date: " + unixtimetotime(request2["bans"][i]["evidence"][0]["issued"]))
 
     request3 = json.loads(json.dumps(requests.get('https://statistics.retromc.org/api/user_villages?uuid=' + str(playeruuid)).json()))
 
