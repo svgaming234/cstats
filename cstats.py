@@ -9,12 +9,19 @@ from datetime import datetime
 version = "0.1.0pre"
 
 if platform.system() == 'Windows':
-    # make color codes show up on windows properly, this library is not required on linux/mac
+    # make color codes show up on windows properly, this library is not required on other operating systems
     from colorama import just_fix_windows_console
     just_fix_windows_console()
 
-def unixtimetotime(unixtime):
-    return datetime.fromtimestamp(unixtime).strftime('%Y-%m-%d %H:%M:%S')
+# not using ccparser for colors everywhere for performance reasons
+class colors:
+    reset = '\033[0m'
+    red = '\033[91m'
+    aqua = '\033[96m'
+    yellow = '\033[33m'
+    white = '\033[39m'
+
+c = colors()
 
 def ccparser(s):
     # this is very jank feeling but it works i guess
@@ -39,6 +46,9 @@ def ccparser(s):
 
     s = s + "\033[0m"    
     return s
+
+def unixtimetotime(unixtime):
+    return datetime.fromtimestamp(unixtime).strftime('%Y-%m-%d %H:%M:%S')
 
 def uuidtousername(uuid):
     mojangapiurl = "https://sessionserver.mojang.com/session/minecraft/profile/" + uuid
@@ -253,15 +263,15 @@ def main():
     if len(sys.argv) > 1:
         choose = sys.argv[1]
     else:
-        print("Welcome to cstats v" + version + "!")
-        print("Type the name of a function or its numerical ID from the list below and press ENTER\n")
+        print("Welcome to " + c.aqua + "cstats v" + version + c.reset + "!")
+        print("Type the " + c.aqua + "name of a function " + c.reset + "or its " + c.aqua + "numerical ID " + c.reset + "from the list below and press " + c.aqua + "ENTER\n" + c.reset)
         
-        print("1) playerlist")
-        print("2) chat")
-        print("3) villagelist")
-        print("4) villagedetails")
-        print("5) playerstats (WIP)")
-        print("0) exit")
+        print(c.aqua + "1) "  + c.reset + "playerlist")
+        print(c.aqua + "2) "  + c.reset + "chat")
+        print(c.aqua + "3) "  + c.reset + "villagelist")
+        print(c.aqua + "4) "  + c.reset + "villagedetails")
+        print(c.aqua + "5) "  + c.reset + "playerstats (WIP)")
+        print(c.aqua + "0) "  + c.reset + "exit")
 
         print("\nThis program is still a work in progress, report issues to SvGaming")
 
