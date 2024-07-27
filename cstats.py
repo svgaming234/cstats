@@ -233,7 +233,13 @@ def playerstats():
         print("Ban history:")
         for i in range(len(request2["bans"])):
             print("\nBanned for \"" + request2["bans"][i]["reason"] + "\" by " + request2["bans"][i]["admin"][0])
-            print("Pardoned: " + str(request2["bans"][i]["pardoned"]) + ", 1st evidence addition date: " + unixtimetotime(request2["bans"][i]["evidence"][0]["issued"]))
+
+            try:
+                evadditiondate = unixtimetotime(request2["bans"][i]["evidence"][0]["issued"])
+            except IndexError:
+                evadditiondate = "No evidence added to this ban"
+
+            print("Pardoned: " + str(request2["bans"][i]["pardoned"]) + ", 1st evidence addition date: " + evadditiondate)
 
     request3 = json.loads(json.dumps(requests.get('https://statistics.retromc.org/api/user_villages?uuid=' + str(playeruuid)).json()))
 
