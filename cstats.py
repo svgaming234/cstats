@@ -186,11 +186,21 @@ def playerstats():
     print("Enter the player name:")
     player = input("> ")
 
-    playerusernamefixed = fixusernamecase(player)
+    try:
+        playerusernamefixed = fixusernamecase(player)
+    except KeyError:
+        print("Error: This player does not exist")
+        return
+
     playeruuid = usernametouuid(playerusernamefixed)
 
-    request = json.loads(json.dumps(requests.get('https://statistics.retromc.org/api/online?username=' + playerusernamefixed).json()))
     request4 = json.loads(json.dumps(requests.get('https://statistics.johnymuffin.com/api/v1/getUser?serverID=0&uuid=' + playeruuid).json()))
+
+    if "msg" in request4:
+        print("Error: This player has not played on RetroMC")
+        return
+
+    request = json.loads(json.dumps(requests.get('https://statistics.retromc.org/api/online?username=' + playerusernamefixed).json()))
 
     print("\033[94mDisplaying player info.\033[0m")
 
