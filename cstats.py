@@ -216,10 +216,8 @@ def playerstats():
         y = str(request["y"])
         z = str(request["z"])
 
-        print("Coordinates: ")
-        print("X: " + x)
-        print("Y: " + y)
-        print("Z: " + z)
+        print("Coordinates:")
+        print("X: " + x + " Y: " + y + " Z: " + z)
     except:
         print("Coordinates: Player is offline")
 
@@ -232,13 +230,19 @@ def playerstats():
     else:
         print("Ban history:")
         for i in range(len(request2["bans"])):
-            print("\nBanned for \"" + request2["bans"][i]["reason"] + "\" by " + request2["bans"][i]["admin"][0])
+            banreason = request2["bans"][i]["reason"]
+
+            # remove trailing space on some ban reasons
+            if banreason[len(banreason) - 1] == " ":
+                banreason = banreason[:-1]
+
+            print("\nBanned for \"" + banreason + "\" by " + request2["bans"][i]["admin"][0])
 
             print("Pardoned: " + str(request2["bans"][i]["pardoned"]) + ", Ban issue date: " + unixtimetotime(request2["bans"][i]["date"]))
 
     request3 = json.loads(json.dumps(requests.get('https://statistics.retromc.org/api/user_villages?uuid=' + str(playeruuid)).json()))
 
-    print("\nOwner of villages: ")
+    print("\nOwner of villages: ", end="")
     if len(request3["data"]["owner"]) == 0:
         print("None :(")
     else:
