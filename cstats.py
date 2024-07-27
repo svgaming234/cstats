@@ -95,6 +95,9 @@ def playerlist():
             zcoord = str(round(request['players'][i]['z'], 1))
         ))
 
+    input("\nPress any key to return to main menu.\n")
+    main()
+
 def chat():
     listfmt = "{display}: {message}"
     request = json.loads(json.dumps(requests.get('http://api.retromc.org/api/v1/server/chat').json()))
@@ -106,6 +109,9 @@ def chat():
             display = ccparser(request['messages'][i]['display_name']), 
             message = ccparser(request['messages'][i]['message'])
         ))
+
+    input("\nPress any key to return to main menu.\n")
+    main()
 
 def villagelist():
     listfmt = "{name} | {owner} | {villageuuid}"
@@ -120,6 +126,9 @@ def villagelist():
             owner = uuidtousername(request['villages'][i]['owner']),
             villageuuid = request['villages'][i]['uuid']
         ))
+
+    input("\nPress any key to return to main menu.\n")
+    main()
 
 def villagedetails():
     print("Enter the village name:")
@@ -181,6 +190,9 @@ def villagedetails():
 
     # Add newline to the end of the members output
     print("")
+
+    input("\nPress any key to return to main menu.\n")
+    main()
 
 def playerstats():
     print("Enter the player name:")
@@ -272,6 +284,9 @@ def playerstats():
     else:
         for i in range(len(request3["data"]["member"])):
             print(request3["data"]["member"][i]["village"] + " (" + request3["data"]["member"][i]["village_uuid"] + ")")
+    
+    input("\nPress any key to return to main menu.")
+    main()
 
 
 def main():
