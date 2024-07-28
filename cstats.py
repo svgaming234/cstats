@@ -53,11 +53,27 @@ def unixtimetotime(unixtime):
 def uuidtousername(uuid):
     mojangapiurl = "https://sessionserver.mojang.com/session/minecraft/profile/" + uuid
 
-    try:
+
+    cache = open("uuidusernamecache", "r+")
+    content = cache.readlines()
+
+    # this code is so janky and unreadable but it works somehow
+    for l in content:
+        if l.find(uuid) != -1:
+            readline = content[content.index(l) - 1]
+            return readline[:-1]
+    else:
         request = json.loads(json.dumps(requests.get(mojangapiurl).json()))
-        username = request["name"]
-    except:
-        username = uuid
+
+        if "error" in request:
+            username = uuid
+        else:
+            username = request["name"]
+
+        cache.write(username + "\n" + uuid + "\n")
+
+    cache.close()
+
 
     return username
 
@@ -290,37 +306,46 @@ def playerstats():
 
 
 def main():
-    if len(sys.argv) > 1:
-        choose = sys.argv[1]
-    else:
-        print("Welcome to " + c.aqua + "cstats v" + version + c.reset + "!")
-        print("Type the " + c.aqua + "name of a function " + c.reset + "or its " + c.aqua + "numerical ID " + c.reset + "from the list below and press " + c.aqua + "ENTER\n" + c.reset)
-        
-        print(c.aqua + "1) "  + c.reset + "playerlist")
-        print(c.aqua + "2) "  + c.reset + "chat")
-        print(c.aqua + "3) "  + c.reset + "villagelist")
-        print(c.aqua + "4) "  + c.reset + "villagedetails")
-        print(c.aqua + "5) "  + c.reset + "playerstats (WIP)")
-        print(c.aqua + "0) "  + c.reset + "exit")
+    while(True):
+        try:
+            argused
+        except NameError:
+            argused = False
+        if len(sys.argv) > 1 and argused == False:
+            choose = sys.argv[1]
+            argused = True
+        else:
+            cache = open("uuidusernamecache", "a")
+            cache.close()
 
-        print("\nThis program is still a work in progress, report issues to SvGaming")
+            print("Welcome to " + c.aqua + "cstats v" + version + c.reset + "!")
+            print("Type the " + c.aqua + "name of a function " + c.reset + "or its " + c.aqua + "numerical ID " + c.reset + "from the list below and press " + c.aqua + "ENTER\n" + c.reset)
+            
+            print(c.aqua + "1) "  + c.reset + "playerlist")
+            print(c.aqua + "2) "  + c.reset + "chat")
+            print(c.aqua + "3) "  + c.reset + "villagelist")
+            print(c.aqua + "4) "  + c.reset + "villagedetails")
+            print(c.aqua + "5) "  + c.reset + "playerstats (WIP)")
+            print(c.aqua + "0) "  + c.reset + "exit")
 
-        choose = input("> ")
+            print("\nThis program is still a work in progress, report issues to SvGaming")
 
-    if choose == "1" or choose == "playerlist":
-        playerlist()
-    elif choose == "2" or choose == "chat":
-        chat()
-    elif choose == "3" or choose == "villagelist":
-        villagelist()
-    elif choose == "4" or choose == "villagedetails":
-        villagedetails()
-    elif choose == "5" or choose == "playerstats":
-        playerstats()
-    elif choose == "0" or choose == "exit":
-        return
-    else:
-        print("Invalid option!")
+            choose = input("> ")
+
+        if choose == "1" or choose == "playerlist":
+            playerlist()
+        elif choose == "2" or choose == "chat":
+            chat()
+        elif choose == "3" or choose == "villagelist":
+            villagelist()
+        elif choose == "4" or choose == "villagedetails":
+            villagedetails()
+        elif choose == "5" or choose == "playerstats":
+            playerstats()
+        elif choose == "0" or choose == "exit":
+            return
+        else:
+            print("Invalid option!")
 
 if __name__ == '__main__':
     main()
