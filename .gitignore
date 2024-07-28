@@ -2,3 +2,4 @@ build/
 dist/
 Pipfile.lock
 cstats.spec
+uuidusernamecache

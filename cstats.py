@@ -53,7 +53,6 @@ def unixtimetotime(unixtime):
 def uuidtousername(uuid):
     mojangapiurl = "https://sessionserver.mojang.com/session/minecraft/profile/" + uuid
 
-
     cache = open("uuidusernamecache", "r+")
     content = cache.readlines()
 
@@ -63,12 +62,11 @@ def uuidtousername(uuid):
             readline = content[content.index(l) - 1]
             return readline[:-1]
     else:
-        request = json.loads(json.dumps(requests.get(mojangapiurl).json()))
-
-        if "error" in request:
-            username = uuid
-        else:
+        try:
+            request = json.loads(json.dumps(requests.get(mojangapiurl).json()))
             username = request["name"]
+        except:
+            username = uuid
 
         cache.write(username + "\n" + uuid + "\n")
 
