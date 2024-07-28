@@ -343,7 +343,7 @@ def main():
         elif choose == "5" or choose == "playerstats":
             playerstats()
         elif choose == "0" or choose == "exit":
-            return
+            sys.exit(0)
         else:
             print("Invalid option!")
 
