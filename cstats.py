@@ -72,7 +72,6 @@ def uuidtousername(uuid):
 
     cache.close()
 
-
     return username
 
 def usernametouuid(username):
