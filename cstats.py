@@ -259,7 +259,7 @@ def playerstats():
         z = str(request["z"])
 
         print("Coordinates:")
-        print("X: " + x + " Y: " + y + " Z: " + z)
+        print("X: " + x + ", Y: " + y + ", Z: " + z)
     except:
         print("Coordinates: Player is offline")
 
