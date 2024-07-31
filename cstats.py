@@ -315,6 +315,17 @@ def main():
             cache = open("uuidusernamecache", "a")
             cache.close()
 
+            print('''
+                      /88                 /88
+                      | 88                | 88
+  ''' + c.aqua + '''/8888888  ''' + c.reset + '''/8888888 /888888    /888888  /888888   /8888888
+ ''' + c.aqua + '''/88_____/ ''' + c.reset + '''/88_____/|_  88_/   |____  88|_  88_/  /88_____/
+''' + c.aqua + '''| 88      ''' + c.reset + '''|  888888   | 88      /8888888  | 88   |  888888 
+''' + c.aqua + '''| 88       ''' + c.reset + '''\\____  88  | 88 /88 /88__  88  | 88 /88\\____  88
+''' + c.aqua + '''|  8888888 ''' + c.reset + '''/8888888/  |  8888/|  8888888  |  8888//8888888/
+ ''' + c.aqua + '''\\_______/''' + c.reset + '''|_______/    \\___/   \\_______/   \\___/ |_______/ 
+''')
+
             print("Welcome to " + c.aqua + "cstats v" + version + c.reset + "!")
             print("Type the " + c.aqua + "name of a function " + c.reset + "or its " + c.aqua + "numerical ID " + c.reset + "from the list below and press " + c.aqua + "ENTER\n" + c.reset)
             
