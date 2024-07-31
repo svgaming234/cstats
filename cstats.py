@@ -4,6 +4,7 @@ import json
 import requests
 import platform
 import sys
+import subprocess
 from datetime import datetime
 
 version = "0.1.0pre"
@@ -12,6 +13,12 @@ if platform.system() == 'Windows':
     # make color codes show up on windows properly, this library is not required on other operating systems
     from colorama import just_fix_windows_console
     just_fix_windows_console()
+
+    def cls():
+        subprocess.run("cls")
+else:
+    def cls():
+        subprocess.run("clear")
 
 # not using ccparser for colors everywhere for performance reasons
 class colors:
@@ -281,6 +288,7 @@ def playerstats():
     if len(request3["data"]["owner"]) == 0:
         print("None :(")
     else:
+        print("")
         for i in range(len(request3["data"]["owner"])):
             print(request3["data"]["owner"][i]["village"] + " (" + request3["data"]["owner"][i]["village_uuid"] + ")")
 
@@ -303,6 +311,7 @@ def playerstats():
 
 
 def main():
+    cls()
     while(True):
         try:
             argused
@@ -341,18 +350,29 @@ def main():
             choose = input("> ")
 
         if choose == "1" or choose == "playerlist":
+            cls()
             playerlist()
+            cls()
         elif choose == "2" or choose == "chat":
+            cls()
             chat()
+            cls()
         elif choose == "3" or choose == "villagelist":
+            cls()
             villagelist()
+            cls()
         elif choose == "4" or choose == "villagedetails":
+            cls()
             villagedetails()
+            cls()
         elif choose == "5" or choose == "playerstats":
+            cls()
             playerstats()
+            cls()
         elif choose == "0" or choose == "exit":
             sys.exit(0)
         else:
+            cls()
             print("Invalid option!")
 
 if __name__ == '__main__':
