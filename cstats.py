@@ -15,7 +15,7 @@ if platform.system() == 'Windows':
     just_fix_windows_console()
 
     def cls():
-        subprocess.run("cls")
+        subprocess.run(["cmd.exe", "/c", "cls"])
 else:
     def cls():
         subprocess.run("clear")
