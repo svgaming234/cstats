@@ -115,7 +115,7 @@ def playerlist():
             zcoord = str(round(request['players'][i]['z'], 1))
         ))
 
-    input("\nPress any key to return to main menu.\n")
+    input("\nPress ENTER to return to main menu.\n")
     main()
 
 def chat():
@@ -130,7 +130,7 @@ def chat():
             message = ccparser(request['messages'][i]['message'])
         ))
 
-    input("\nPress any key to return to main menu.\n")
+    input("\nPress ENTER to return to main menu.\n")
     main()
 
 def villagelist():
@@ -147,7 +147,7 @@ def villagelist():
             villageuuid = request['villages'][i]['uuid']
         ))
 
-    input("\nPress any key to return to main menu.\n")
+    input("\nPress ENTER to return to main menu.\n")
     main()
 
 def villagedetails():
@@ -211,7 +211,7 @@ def villagedetails():
     # Add newline to the end of the members output
     print("")
 
-    input("\nPress any key to return to main menu.\n")
+    input("\nPress ENTER to return to main menu.\n")
     main()
 
 def playerstats():
@@ -306,7 +306,7 @@ def playerstats():
         for i in range(len(request3["data"]["member"])):
             print(request3["data"]["member"][i]["village"] + " (" + request3["data"]["member"][i]["village_uuid"] + ")")
     
-    input("\nPress any key to return to main menu.")
+    input("\nPress ENTER to return to main menu.")
     main()
 
 
