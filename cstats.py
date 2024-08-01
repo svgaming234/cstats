@@ -98,11 +98,14 @@ def fixusernamecase(username):
     usernamefixed = request["name"]
     return usernamefixed
 
+def entertocontinue():
+    input("\nPress " + c.aqua + "ENTER" + c.reset + " to return to main menu.\n")
+
 def playerlist():
     listfmt = "{display} | {user} | {uuid} | X:{xcoord}, Y:{ycoord}, Z:{zcoord}"
     request = json.loads(json.dumps(requests.get('http://api.retromc.org/api/v1/server/players').json()))
 
-    print("\033[94mThere are \033[91m" + str(request["player_count"]) + "\033[94m out of a maximum \033[91m100\033[94m players online.\033[0m\n\nOutput format:")
+    print("There are " + c.aqua + str(request["player_count"]) + c.reset + " out of a maximum " + c.aqua + str(request["max_players"]) + c.reset + " players online.\n\nOutput format:")
     print("Rank and display name | Username | Player UUID | X coord | Y coord | Z coord\n")
 
     for i in range(0, request["player_count"]):
@@ -115,14 +118,14 @@ def playerlist():
             zcoord = str(round(request['players'][i]['z'], 1))
         ))
 
-    input("\nPress ENTER to return to main menu.\n")
+    entertocontinue()
     main()
 
 def chat():
     listfmt = "{display}: {message}"
     request = json.loads(json.dumps(requests.get('http://api.retromc.org/api/v1/server/chat').json()))
 
-    print("\033[94mDisplaying recently sent messages. (does \033[91mNOT\033[94m display Discord messages)\033[0m")
+    print("Displaying recently sent messages. (does " + c.aqua + "NOT" + c.reset + " display Discord messages)\n")
 
     for i in range(0, len(request['messages'])): 
         print(listfmt.format(
@@ -130,14 +133,14 @@ def chat():
             message = ccparser(request['messages'][i]['message'])
         ))
 
-    input("\nPress ENTER to return to main menu.\n")
+    entertocontinue()
     main()
 
 def villagelist():
     listfmt = "{name} | {owner} | {villageuuid}"
     request = json.loads(json.dumps(requests.get('http://api.retromc.org/api/v1/village/getVillageList').json()))
 
-    print("Displaying list of all RetroMC villages.\n\nOutput format:")
+    print("Displaying list of " + c.aqua + "all" + c.reset + " RetroMC villages.\n\nOutput format:")
     print("Village name | Village owner | Village UUID\n")
 
     for i in range(0, len(request['villages'])): 
@@ -147,16 +150,16 @@ def villagelist():
             villageuuid = request['villages'][i]['uuid']
         ))
 
-    input("\nPress ENTER to return to main menu.\n")
+    entertocontinue()
     main()
 
 def villagedetails():
-    print("Enter the village name:")
+    print("Enter the " + c.aqua + "village name" + c.reset + ":")
     village = input("> ").lower()
 
     request = json.loads(json.dumps(requests.get('http://api.retromc.org/api/v1/village/getVillageList').json()))
 
-    print("\033[94mDisplaying village info.\033[0m")
+    print("\nDisplaying " + c.aqua + "village details" + c.reset + ".\n")
 
     for i in range(0, len(request['villages'])): 
         if request['villages'][i]['name'].lower() == village:
@@ -211,11 +214,11 @@ def villagedetails():
     # Add newline to the end of the members output
     print("")
 
-    input("\nPress ENTER to return to main menu.\n")
+    entertocontinue()
     main()
 
 def playerstats():
-    print("Enter the player name:")
+    print("Enter the " + c.aqua + "player name" + c.reset + ":")
     player = input("> ")
 
     try:
@@ -234,7 +237,7 @@ def playerstats():
 
     request = json.loads(json.dumps(requests.get('https://statistics.retromc.org/api/online?username=' + playerusernamefixed).json()))
 
-    print("\033[94mDisplaying player info.\033[0m")
+    print("\nDisplaying " + c.aqua + "player statistics" + c.reset + ".\n")
 
     print("Name: " + playerusernamefixed)
     print("Player UUID: " + playeruuid)
@@ -349,7 +352,7 @@ def playerstats():
         for i in range(len(request3["data"]["member"])):
             print(request3["data"]["member"][i]["village"] + " (" + request3["data"]["member"][i]["village_uuid"] + ")")
     
-    input("\nPress ENTER to return to main menu.")
+    input("\nPress " + c.aqua + "ENTER" + c.reset + " to return to main menu.")
     main()
 
 
@@ -416,7 +419,7 @@ def main():
             sys.exit(0)
         else:
             cls()
-            print("Invalid option!")
+            print(c.red + "Invalid option!" + c.reset)
 
 if __name__ == '__main__':
     main()
