@@ -238,7 +238,43 @@ def playerstats():
 
     print("Name: " + playerusernamefixed)
     print("Player UUID: " + playeruuid)
-    print("Rank: " + request4["groups"][0])
+
+    if request4["groups"][0] == "wanderer":
+        rank = ccparser("&8[&7Wanderer&8]")
+    elif request4["groups"][0] == "citizen":
+        rank = ccparser("&f[&aCitizen&f]")
+    elif request4["groups"][0] == "trusted":
+        rank = ccparser("&6[&aCitizen&6]")
+    elif request4["groups"][0] == "diamondcitizen":
+        rank = ccparser("&b[&aCitizen&b]")
+    elif request4["groups"][0] == "hero":
+        rank = ccparser("&f[&2Hero&f]")
+    elif request4["groups"][0] == "legend":
+        rank = ccparser("&f[&9Legend&f]")
+    elif request4["groups"][0] == "mystic":
+        rank = ccparser("&f[&bMystic&f]")
+    elif request4["groups"][0] == "donator":
+        rank = ccparser("&8[&cDonator&8]")
+    elif request4["groups"][0] == "donator+":
+        rank = ccparser("&8[&cDonator&4+&8]")
+    elif request4["groups"][0] == "donatorplusplus":
+        rank = ccparser("&8[&cDonator&4++&8]")
+    elif request4["groups"][0] == "trooper":
+        rank = ccparser("&d[trooper]")
+    elif request4["groups"][0] == "helper":
+        rank = ccparser("&f[&3Helper&f]")
+    elif request4["groups"][0] == "trial":
+        rank = ccparser("&f[&aTrial Helper&f]")
+    elif request4["groups"][0] == "moderator":
+        rank = ccparser("&f[&6Moderator&f]")
+    elif request4["groups"][0] == "admin":
+        rank = ccparser("&f[&4Admin&f]")
+    elif request4["groups"][0] == "developer":
+        rank = ccparser("&f[&cDeveloper&f]")
+    else:
+        rank = request4["groups"][0]
+
+    print("Rank: " + rank)
     print("Money: " + str(round(request4["money"], 2)) + "$\n")
 
     print("Playtime: " + str(round(request4["playTime"] / 60 / 60, 2)) + " hours")
