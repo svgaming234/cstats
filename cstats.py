@@ -246,10 +246,17 @@ def playerstats():
     print("Last join: " + unixtimetotime(request4["lastJoin"]))
     print("Join count: " + str(request4["joinCount"]) + "\n")
 
-    # TODO: implement more of these stats
-
     print("Trust level: " + str(request4["trustLevel"]))
     print("Trust score: " + str(round(request4["trustScore"], 2)))
+
+    print("Player deaths: " + str(request4["playerDeaths"]))
+    print("Players killed: " + str(request4["playersKilled"]))
+    print("Creatures killed: " + str(request4["creaturesKilled"]))
+
+    print("\nDistance traveled: " + str(request4["metersTraveled"]) + " blocks")
+    print("Blocks destroyed: " + str(request4["blocksDestroyed"]))
+    print("Blocks placed: " + str(request4["blocksPlaced"]))
+    print("Items dropped: " + str(request4["itemsDropped"]))
     
     print("\nOnline: " + str(request["online"]))
 
