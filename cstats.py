@@ -157,6 +157,9 @@ def villagedetails():
     print("Enter the " + c.aqua + "village name" + c.reset + ":")
     village = input("> ").lower()
 
+    if village == "exit" or village == "0":
+        main()
+
     request = json.loads(json.dumps(requests.get('http://api.retromc.org/api/v1/village/getVillageList').json()))
 
     print("\nDisplaying " + c.aqua + "village details" + c.reset + ".\n")
@@ -166,8 +169,9 @@ def villagedetails():
             villageuuid = request['villages'][i]['uuid']
             break
     else:
-        print("Village not found")
-        return
+        cls()
+        print(c.red + "Error: Village not found." + c.reset)
+        villagedetails()
 
     request2 = json.loads(json.dumps(requests.get('http://api.retromc.org/api/v1/village/getVillage?uuid=' + villageuuid).json()))
     
@@ -221,19 +225,24 @@ def playerstats():
     print("Enter the " + c.aqua + "player name" + c.reset + ":")
     player = input("> ")
 
+    if player == "exit" or player == "0":
+        main()
+
     try:
         playerusernamefixed = fixusernamecase(player)
     except KeyError:
-        print("Error: This player does not exist")
-        return
+        cls()
+        print(c.red + "Error: A player going by this username does not exist." + c.reset)
+        playerstats()
 
     playeruuid = usernametouuid(playerusernamefixed)
 
     request4 = json.loads(json.dumps(requests.get('https://statistics.johnymuffin.com/api/v1/getUser?serverID=0&uuid=' + playeruuid).json()))
 
     if "msg" in request4:
-        print("Error: This player has not played on RetroMC")
-        return
+        cls()
+        print(c.red + "Error: This player has not played on RetroMC." + c.reset)
+        playerstats()
 
     request = json.loads(json.dumps(requests.get('https://statistics.retromc.org/api/online?username=' + playerusernamefixed).json()))
 
@@ -419,7 +428,7 @@ def main():
             sys.exit(0)
         else:
             cls()
-            print(c.red + "Invalid option!" + c.reset)
+            print(c.red + "Error: Invalid option!" + c.reset)
 
 if __name__ == '__main__':
     main()
