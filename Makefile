@@ -4,5 +4,5 @@ build:
 clean:
 	rm -r build/ dist/ cstats.spec
 
-install_pyinstaller:
-	python -m pip install -U pyinstaller
+install_deps:
+	python -m pip install colorama requests pyinstaller
