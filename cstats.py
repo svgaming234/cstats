@@ -109,8 +109,11 @@ def playerlist():
     print("Rank and display name | Username | Player UUID | X coord | Y coord | Z coord\n")
 
     for i in range(0, request["player_count"]):
+        # remove Â from display names because the api puts them there for no reason
+        displayname = request['players'][i]['display_name'].replace("Â", "")
+
         print(listfmt.format(
-            display = ccparser(request['players'][i]['display_name']),
+            display = ccparser(displayname),
             user = request['players'][i]['name'], 
             uuid = request['players'][i]['uuid'], 
             xcoord = str(round(request['players'][i]['x'], 1)),
