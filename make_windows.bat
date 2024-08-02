@@ -1,1 +1,1 @@
-pyinstaller --onefile cstats.py
+pyinstaller --onefile --icon=cstats.ico cstats.py
