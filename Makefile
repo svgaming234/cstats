@@ -2,7 +2,7 @@ build:
 	pyinstaller --onefile cstats.py
 
 clean:
-	rm -r build/ dist/ cstats.spec
+	rm -rf build/ dist/ cstats.spec
 
 install_deps:
-	python -m pip install colorama requests pyinstaller
+	python -m pip install requests pyinstaller
