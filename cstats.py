@@ -25,7 +25,7 @@ class colors:
     reset = '\033[0m'
     red = '\033[91m'
     aqua = '\033[96m'
-    yellow = '\033[33m'
+    yellow = '\033[93m'
     white = '\033[39m'
 
 c = colors()
@@ -364,7 +364,7 @@ def playerstats():
         for i in range(len(request3["data"]["member"])):
             print(request3["data"]["member"][i]["village"] + " (" + request3["data"]["member"][i]["village_uuid"] + ")")
     
-    input("\nPress " + c.aqua + "ENTER" + c.reset + " to return to main menu.")
+    entertocontinue()
     main()
 
 
@@ -392,6 +392,7 @@ def main():
 ''' + c.aqua + '''|  8888888 ''' + c.reset + '''/8888888/  |  8888/|  8888888  |  8888//8888888/
  ''' + c.aqua + '''\\_______/''' + c.reset + '''|_______/    \\___/   \\_______/   \\___/ |_______/ 
 ''')
+            print(c.yellow + "\"fer\" - Krissofer" + c.reset)
 
             print("Welcome to " + c.aqua + "cstats v" + version + c.reset + "!")
             print("Type the " + c.aqua + "name of a function " + c.reset + "or its " + c.aqua + "numerical ID " + c.reset + "from the list below and press " + c.aqua + "ENTER\n" + c.reset)
