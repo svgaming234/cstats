@@ -2,6 +2,7 @@
 
 import json
 import requests
+import random
 import platform
 import sys
 import subprocess
@@ -100,6 +101,31 @@ def fixusernamecase(username):
 
 def entertocontinue():
     input("\nPress " + c.aqua + "ENTER" + c.reset + " to return to main menu.\n")
+
+def randomquote():
+        randchoice = random.randint(1, 10)
+        if randchoice == 1:
+            print(c.yellow + "\"fer\" - Player" + c.reset)
+        elif randchoice == 2:
+            print(c.yellow + "\"fer\" - Player 2" + c.reset)
+        elif randchoice == 3:
+            print(c.yellow + "\"fer\" - Player 3" + c.reset)
+        elif randchoice == 4:
+            print(c.yellow + "\"fer\" - Player 4" + c.reset)
+        elif randchoice == 5:
+            print(c.yellow + "\"fer\" - Player 5" + c.reset)
+        elif randchoice == 6:
+            print(c.yellow + "\"fer\" - Player 6" + c.reset)
+        elif randchoice == 7:
+            print(c.yellow + "\"fer\" - Player 7" + c.reset)
+        elif randchoice == 8:
+            print(c.yellow + "\"fer\" - Player 8" + c.reset)
+        elif randchoice == 9:
+            print(c.yellow + "\"fer\" - Player 9" + c.reset)
+        elif randchoice == 10:
+            print(c.yellow + "\"fer\" - Player 10" + c.reset)
+        else:
+            print(c.red + "Error: random quote text picking failed" + c.reset)
 
 def playerlist():
     listfmt = "{display} | {user} | {uuid} | X:{xcoord}, Y:{ycoord}, Z:{zcoord}"
@@ -392,7 +418,8 @@ def main():
 ''' + c.aqua + '''|  8888888 ''' + c.reset + '''/8888888/  |  8888/|  8888888  |  8888//8888888/
  ''' + c.aqua + '''\\_______/''' + c.reset + '''|_______/    \\___/   \\_______/   \\___/ |_______/ 
 ''')
-            print(c.yellow + "\"fer\" - Krissofer" + c.reset)
+
+            # randomquote()
 
             print("Welcome to " + c.aqua + "cstats v" + version + c.reset + "!")
             print("Type the " + c.aqua + "name of a function " + c.reset + "or its " + c.aqua + "numerical ID " + c.reset + "from the list below and press " + c.aqua + "ENTER\n" + c.reset)
