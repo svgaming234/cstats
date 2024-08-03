@@ -8,7 +8,7 @@ import sys
 import subprocess
 from datetime import datetime
 
-version = "0.1.0"
+version = "v0.1.0"
 
 if platform.system() == 'Windows':
     # make color codes show up on windows properly, this library is not required on other operating systems
@@ -379,6 +379,12 @@ def playerstats():
     entertocontinue()
     main()
 
+def init():
+    global latestversion
+    request = requests.get("https://github.com/svgaming234/cstats/releases/latest")
+    latestversion = request.url.split("/")[-1]
+
+    main()
 
 def main():
     cls()
@@ -394,6 +400,9 @@ def main():
             cache = open("uuidusernamecache", "a")
             cache.close()
 
+            if version != latestversion:
+                print(c.yellow + "A new version is available! Please update to " + latestversion + c.reset)
+
             print('''
                       /88                 /88
                       | 88                | 88
@@ -407,7 +416,7 @@ def main():
 
             randomquote()
 
-            print("Welcome to " + c.aqua + "cstats v" + version + c.reset + "!")
+            print("Welcome to " + c.aqua + "cstats " + version + c.reset + "!")
             print("Type the " + c.aqua + "name of a function " + c.reset + "or its " + c.aqua + "numerical ID " + c.reset + "from the list below and press " + c.aqua + "ENTER\n" + c.reset)
             
             print(c.aqua + "1) "  + c.reset + "playerlist")
@@ -424,23 +433,18 @@ def main():
         if choose == "1" or choose == "playerlist":
             cls()
             playerlist()
-            cls()
         elif choose == "2" or choose == "chat":
             cls()
             chat()
-            cls()
         elif choose == "3" or choose == "villagelist":
             cls()
             villagelist()
-            cls()
         elif choose == "4" or choose == "villagedetails":
             cls()
             villagedetails()
-            cls()
         elif choose == "5" or choose == "playerstats":
             cls()
             playerstats()
-            cls()
         elif choose == "0" or choose == "exit":
             sys.exit(0)
         else:
@@ -448,4 +452,4 @@ def main():
             print(c.red + "Error: Invalid option!" + c.reset)
 
 if __name__ == '__main__':
-    main()
+    init()
