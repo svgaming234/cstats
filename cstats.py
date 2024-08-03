@@ -400,7 +400,7 @@ def main():
             print(c.aqua + "2) "  + c.reset + "chat")
             print(c.aqua + "3) "  + c.reset + "villagelist")
             print(c.aqua + "4) "  + c.reset + "villagedetails")
-            print(c.aqua + "5) "  + c.reset + "playerstats (WIP)")
+            print(c.aqua + "5) "  + c.reset + "playerstats")
             print(c.aqua + "0) "  + c.reset + "exit")
 
             print("\nThis program is still a work in progress, report issues to SvGaming")
