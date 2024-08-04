@@ -13,11 +13,18 @@ version = "v0.2.0"
 if platform.system() == 'Windows':
     # make color codes show up on windows properly, this library is not required on other operating systems
     from colorama import just_fix_windows_console
+    import ctypes
     just_fix_windows_console()
+
+    def setwindowtitle(title):
+        ctypes.windll.kernel32.SetConsoleTitleW("cstats " + version)
 
     def cls():
         subprocess.run(["cmd.exe", "/c", "cls"])
 else:
+    def setwindowtitle(title):
+        print("\033]0;" + title + "\007")
+
     def cls():
         subprocess.run("clear")
 
@@ -103,13 +110,15 @@ def entertocontinue():
     input("\nPress " + c.aqua + "ENTER" + c.reset + " to return to main menu.\n")
 
 def randomquote():
-        randchoice = random.randint(1, 3)
+        randchoice = random.randint(1, 4)
         if randchoice == 1:
             print(c.yellow + "\"GUI soon(tm)\" - samcraft3" + c.reset)
         elif randchoice == 2:
             print(c.yellow + "\"fer\" - Krissofer" + c.reset)
         elif randchoice == 3:
             print(c.yellow + "\"chatGPT-free code!\" - samcraft3" + c.reset)
+        elif randchoice == 4:
+            print(c.yellow + "\";3\" - ospence5" + c.reset)
         else:
             print(c.red + "Error: random quote text picking failed" + c.reset)
 
@@ -380,6 +389,7 @@ def playerstats():
     main()
 
 def init():
+    setwindowtitle("cstats " + version)
     global latestversion
     request = requests.get("https://github.com/svgaming234/cstats/releases/latest")
     latestversion = request.url.split("/")[-1]
@@ -446,6 +456,7 @@ def main():
             cls()
             playerstats()
         elif choose == "0" or choose == "exit":
+            setwindowtitle("")
             sys.exit(0)
         else:
             cls()
