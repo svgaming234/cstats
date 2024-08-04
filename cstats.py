@@ -110,7 +110,7 @@ def entertocontinue():
     input("\nPress " + c.aqua + "ENTER" + c.reset + " to return to main menu.\n")
 
 def randomquote():
-        randchoice = random.randint(1, 4)
+        randchoice = random.randint(1, 32)
         if randchoice == 1:
             print(c.yellow + "\"GUI soon(tm)\" - samcraft3" + c.reset)
         elif randchoice == 2:
@@ -119,6 +119,62 @@ def randomquote():
             print(c.yellow + "\"chatGPT-free code!\" - samcraft3" + c.reset)
         elif randchoice == 4:
             print(c.yellow + "\";3\" - ospence5" + c.reset)
+        elif randchoice == 5:
+            print(c.yellow + "\"Up to 4 times more Notchcode\" - Krissofer" + c.reset)
+        elif randchoice == 6:
+            print(c.yellow + "\"Now with more Notchcode(tm)\" - SvGaming234" + c.reset)
+        elif randchoice == 7:
+            print(c.yellow + "\"Maybe RetroMC is the friends we met along the way?\" - Pittofer" + c.reset)
+        elif randchoice == 8:
+            print(c.yellow + "\"Jthings are Just better\" - Pittofer" + c.reset)
+        elif randchoice == 9:
+            print(c.yellow + "\"Rewarded <idk>$ for killing a <idk>\" - Pittofer" + c.reset)
+        elif randchoice == 10:
+            print(c.yellow + "\"Coming soon(TM) to theaters and computers near you!\" - Noggisoggi" + c.reset)
+        elif randchoice == 11:
+            print(c.yellow + "\"Together, we are RetroMC!\" - Noggisoggi" + c.reset)
+        elif randchoice == 12:
+            print(c.yellow + "\"true and real\" - Noggisoggi" + c.reset)
+        elif randchoice == 13:
+            print(c.yellow + "\"wb\" - Noggisoggi" + c.reset)
+        elif randchoice == 14:
+            print(c.yellow + "\"fer fer\" - Noggisoggi" + c.reset)
+        elif randchoice == 15:
+            print(c.yellow + "\"hmmmm\" - Noggisoggi" + c.reset)
+        elif randchoice == 16:
+            print(c.yellow + "\"https://wiki.retromc.org/\" - Noggisoggi" + c.reset)
+        elif randchoice == 17:
+            print(c.yellow + "\"Now with less Notchcode(TM)\" - Noggisoggi" + c.reset)
+        elif randchoice == 18:
+            print(c.yellow + "\"holy\" - Noggisoggi" + c.reset)
+        elif randchoice == 19:
+            print(c.yellow + "\"h\" - Noggisoggi" + c.reset)
+        elif randchoice == 20:
+            print(c.yellow + "\"how dee feller\" - Noggisoggi" + c.reset)
+        elif randchoice == 21:
+            print(c.yellow + "\".;,;.\" - Noggisoggi" + c.reset)
+        elif randchoice == 22:
+            print(c.yellow + "\"/vote day\" - Noggisoggi" + c.reset)
+        elif randchoice == 23:
+            print(c.yellow + "\"Brown bricks in Minecrap\" - Noggisoggi" + c.reset)
+        elif randchoice == 24:
+            print(c.yellow + "\"All hail Scout (not the TF2 one)\" - Noggisoggi" + c.reset)
+        elif randchoice == 25:
+            print(c.yellow + "\"Crystallitis and plasmoids? In *my* RetroMC? It's more likely than you think.\" - Noggisoggi" + c.reset)
+        elif randchoice == 26:
+            print(c.yellow + "\"Authenticated with uhhhhhh Nodes.\" - Noggisoggi" + c.reset)
+        elif randchoice == 27:
+            print(c.yellow + "\"oh god Scout's staring into my soul pleas send help us help you help us all\" - Noggisoggi" + c.reset)
+        elif randchoice == 28:
+            print(c.yellow + "\"instructions unclear; found red crystals on the back of head\" - Noggisoggi" + c.reset)
+        elif randchoice == 29:
+            print(c.yellow + "\"A certain VC is known to be one of the epicenters of brane rot..\" - Noggisoggi" + c.reset)
+        elif randchoice == 30:
+            print(c.yellow + "\"wb\" - Literally everyone on the server" + c.reset)
+        elif randchoice == 31:
+            print(c.yellow + "\"/home supersecretduplicationstashferfer\" - SvGaming234" + c.reset)
+        elif randchoice == 32:
+            print(c.yellow + "\"ÂÂÂÂÂÂÂÂÂÂÂÂ\" - The RMC player list API for no reason" + c.reset)
         else:
             print(c.red + "Error: random quote text picking failed" + c.reset)
 
