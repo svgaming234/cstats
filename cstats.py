@@ -8,7 +8,7 @@ import sys
 import subprocess
 from datetime import datetime
 
-version = "v0.2.0"
+version = "v0.2.1"
 
 if platform.system() == 'Windows':
     # make color codes show up on windows properly, this library is not required on other operating systems

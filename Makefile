@@ -1,3 +1,5 @@
+.PHONY: build clean install_deps
+
 build:
 	pyinstaller --onefile cstats.py
 
