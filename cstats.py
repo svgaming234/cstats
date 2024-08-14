@@ -234,12 +234,17 @@ def villagelist():
     print("Displaying list of " + c.aqua + "all" + c.reset + " RetroMC villages.\n\nOutput format:")
     print("Village name | Village owner | Village UUID\n")
 
-    for i in range(0, len(request['villages'])): 
+    totalcount = len(request['villages'])
+    print("Total village count: " + str(totalcount) + "\n")
+
+    for i in range(0, totalcount): 
         print(listfmt.format(
             name = request['villages'][i]['name'], 
             owner = uuidtousername(request['villages'][i]['owner']),
             villageuuid = request['villages'][i]['uuid']
         ))
+
+    print("\nTotal village count: " + str(totalcount))
 
     entertocontinue()
     main()
