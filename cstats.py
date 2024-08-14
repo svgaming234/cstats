@@ -114,7 +114,6 @@ def removeweirda(strold):
     strnew = strold.replace("Â", "")
     return strnew
 
-
 def randomquote():
         randchoice = random.randint(1, 34)
         if randchoice == 1:
