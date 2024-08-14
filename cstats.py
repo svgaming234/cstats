@@ -109,6 +109,12 @@ def fixusernamecase(username):
 def entertocontinue():
     input("\nPress " + c.aqua + "ENTER" + c.reset + " to return to main menu.\n")
 
+def removeweirda(strold):
+    # remove Â from display names because the api puts them there for no reason
+    strnew = strold.replace("Â", "")
+    return strnew
+
+
 def randomquote():
         randchoice = random.randint(1, 32)
         if randchoice == 1:
@@ -187,7 +193,7 @@ def playerlist():
 
     for i in range(0, request["player_count"]):
         # remove Â from display names because the api puts them there for no reason
-        displayname = request['players'][i]['display_name'].replace("Â", "")
+        displayname = removeweirda(request['players'][i]['display_name'])
 
         print(listfmt.format(
             display = ccparser(displayname),
@@ -208,8 +214,11 @@ def chat():
     print("Displaying recently sent messages. (does " + c.aqua + "NOT" + c.reset + " display Discord messages)\n")
 
     for i in range(0, len(request['messages'])): 
+        # remove Â from display names because the api puts them there for no reason
+        displayname = removeweirda(request['messages'][i]['display_name'])
+
         print(listfmt.format(
-            display = ccparser(request['messages'][i]['display_name']), 
+            display = ccparser(displayname), 
             message = ccparser(request['messages'][i]['message'])
         ))
 
