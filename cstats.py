@@ -502,12 +502,12 @@ def main():
             print("Welcome to " + c.aqua + "cstats " + version + c.reset + "!")
             print("Type the " + c.aqua + "name of a function " + c.reset + "or its " + c.aqua + "numerical ID " + c.reset + "from the list below and press " + c.aqua + "ENTER\n" + c.reset)
             
-            print(c.aqua + "1) "  + c.reset + "playerlist")
-            print(c.aqua + "2) "  + c.reset + "chat")
-            print(c.aqua + "3) "  + c.reset + "villagelist")
-            print(c.aqua + "4) "  + c.reset + "villagedetails")
-            print(c.aqua + "5) "  + c.reset + "playerstats")
-            print(c.aqua + "0) "  + c.reset + "exit")
+            print(c.aqua + "1) " + c.reset + "playerlist")
+            print(c.aqua + "2) " + c.reset + "chat")
+            print(c.aqua + "3) " + c.reset + "villagelist")
+            print(c.aqua + "4) " + c.reset + "villagedetails")
+            print(c.aqua + "5) " + c.reset + "playerstats")
+            print(c.aqua + "0) " + c.reset + "exit")
 
             print("\nThis program is still a work in progress, report issues to SvGaming")
 
