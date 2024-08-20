@@ -72,9 +72,9 @@ def uuidtousername(uuid):
     content = cache.readlines()
 
     # this code is so janky and unreadable but it works somehow
-    for l in content:
-        if l.find(uuid) != -1:
-            readline = content[content.index(l) - 1]
+    for i in content:
+        if i.find(uuid) != -1:
+            readline = content[content.index(i) - 1]
             return readline[:-1]
     else:
         try:
