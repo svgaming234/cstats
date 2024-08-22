@@ -461,6 +461,76 @@ def playerstats():
     entertocontinue()
     main()
 
+def leaderboard():
+    print("Please select a " + c.aqua + "statistic type " + c.reset + "to view its leaderboard.\n")
+
+    print(c.aqua + "1) " + c.reset + "blocksPlaced")
+    print(c.aqua + "2) " + c.reset + "blocksDestroyed")
+    print(c.aqua + "3) " + c.reset + "metersTraveled")
+    print(c.aqua + "4) " + c.reset + "itemsDropped")
+    print(c.aqua + "5) " + c.reset + "playerDeaths")
+    print(c.aqua + "6) " + c.reset + "playersKilled")
+    print(c.aqua + "7) " + c.reset + "creaturesKilled")
+    print(c.aqua + "8) " + c.reset + "joinCount")
+    print(c.aqua + "9) " + c.reset + "playTime")
+    print(c.aqua + "10) " + c.reset + "trustLevel")
+    print(c.aqua + "11) " + c.reset + "trustScore")
+    print(c.aqua + "12) " + c.reset + "money")
+    print(c.aqua + "0) " + c.reset + "exit\n")
+
+    choose = input("> ").lower()
+
+    if choose == "1" or choose == "blocksplaced":
+        cls()
+        stattype = "blocksPlaced"
+    elif choose == "2" or choose == "blocksdestroyed":
+        cls()
+        stattype = "blocksDestroyed"
+    elif choose == "3" or choose == "meterstraveled":
+        cls()
+        stattype = "metersTraveled"
+    elif choose == "4" or choose == "itemsdropped":
+        cls()
+        stattype = "itemsDropped"
+    elif choose == "5" or choose == "playerdeaths":
+        cls()
+        stattype = "playerDeaths"
+    elif choose == "6" or choose == "playerskilled":
+        cls()
+        stattype = "playersKilled"
+    elif choose == "7" or choose == "creatureskilled":
+        cls()
+        stattype = "creaturesKilled"
+    elif choose == "8" or choose == "joincount":
+        cls()
+        stattype = "joinCount"
+    elif choose == "9" or choose == "playtime":
+        cls()
+        stattype = "playTime"
+    elif choose == "10" or choose == "trustlevel":
+        cls()
+        stattype = "trustLevel"
+    elif choose == "11" or choose == "trustscore":
+        cls()
+        stattype = "trustScore"
+    elif choose == "12" or choose == "money":
+        cls()
+        stattype = "money"
+    elif choose == "0" or choose == "exit":
+        main()
+    else:
+        cls()
+        print(c.red + "Error: Invalid statistic type!" + c.reset)
+        leaderboard()
+
+    request = json.loads(json.dumps(requests.get("https://statistics.retromc.org/api/leaderboard?type=" + stattype).json()))
+
+    for i in range(len(request["data"])):
+        print(str(i + 1) + ". " + request["data"][i]["username"] + " = " + str(request["data"][i][stattype]))
+
+    entertocontinue()
+    main()
+
 def init():
     setwindowtitle("cstats " + version)
     global latestversion
@@ -507,11 +577,12 @@ def main():
             print(c.aqua + "3) " + c.reset + "villagelist")
             print(c.aqua + "4) " + c.reset + "villagedetails")
             print(c.aqua + "5) " + c.reset + "playerstats")
+            print(c.aqua + "6) " + c.reset + "leaderboard")
             print(c.aqua + "0) " + c.reset + "exit")
 
             print("\nThis program is still a work in progress, report issues to SvGaming")
 
-            choose = input("> ")
+            choose = input("> ").lower()
 
         if choose == "1" or choose == "playerlist":
             cls()
@@ -528,6 +599,9 @@ def main():
         elif choose == "5" or choose == "playerstats":
             cls()
             playerstats()
+        elif choose == "6" or choose == "leaderboard":
+            cls()
+            leaderboard()
         elif choose == "0" or choose == "exit":
             setwindowtitle("")
             sys.exit(0)
