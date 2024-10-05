@@ -533,6 +533,7 @@ def leaderboard():
 
     request = json.loads(json.dumps(requests.get("https://statistics.retromc.org/api/leaderboard?type=" + stattype).json()))
 
+    print("Leaderboard for " + c.aqua + stattype + c.reset + ":")
     for i in range(len(request["data"])):
         print(str(i + 1) + ". " + request["data"][i]["username"] + " = " + str(request["data"][i][stattype]))
 
