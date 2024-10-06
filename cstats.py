@@ -6,9 +6,19 @@ import random
 import platform
 import sys
 import subprocess
+import os
+import errno
 from datetime import datetime
 
 version = "v0.3.1"
+
+def mkdir_p(newdir):
+    try: 
+        os.makedirs(newdir)
+    except OSError as err:
+        # reraise the error unless it's about an already existing directory 
+        if err.errno != errno.EEXIST or not os.path.isdir(newdir): 
+            raise
 
 if platform.system() == 'Windows':
     # make color codes show up on windows properly, this library is not required on other operating systems
@@ -16,12 +26,28 @@ if platform.system() == 'Windows':
     import ctypes
     just_fix_windows_console()
 
+    if os.getenv("APPDATA"):
+        confpath = os.getenv("APPDATA") + "/cstats/"
+    else:
+        confpath = "cstats-config/"
+
+    mkdir_p(confpath)
+
     def setwindowtitle(title):
         ctypes.windll.kernel32.SetConsoleTitleW("cstats " + version)
 
     def cls():
         subprocess.run(["cmd.exe", "/c", "cls"])
 else:
+    if os.getenv("XDG_CONFIG_HOME"):
+        confpath = os.getenv("XDG_CONFIG_HOME") + "/cstats/"
+    elif os.getenv("HOME"):
+        confpath = os.getenv("HOME") + "/.config/cstats/"
+    else:
+        confpath = "./cstats-config/"
+
+    mkdir_p(confpath)
+
     def setwindowtitle(title):
         print("\033]0;" + title + "\007")
 
@@ -68,7 +94,7 @@ def unixtimetotime(unixtime):
 def uuidtousername(uuid):
     mojangapiurl = "https://sessionserver.mojang.com/session/minecraft/profile/" + uuid
 
-    cache = open("uuidusernamecache", "r+")
+    cache = open(confpath + "uuidusernamecache", "r+")
     content = cache.readlines()
 
     # this code is so janky and unreadable but it works somehow
@@ -559,7 +585,7 @@ def main():
             choose = sys.argv[1]
             argused = True
         else:
-            cache = open("uuidusernamecache", "a")
+            cache = open(confpath + "uuidusernamecache", "a")
             cache.close()
 
             if version != latestversion:
@@ -577,6 +603,8 @@ def main():
 ''')
 
             randomquote()
+
+            print(confpath)
 
             print("Welcome to " + c.aqua + "cstats " + version + c.reset + "!")
             print("Type the " + c.aqua + "name of a function " + c.reset + "or its " + c.aqua + "numerical ID " + c.reset + "from the list below and press " + c.aqua + "ENTER\n" + c.reset)
