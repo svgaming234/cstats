@@ -604,8 +604,6 @@ def main():
 
             randomquote()
 
-            print(confpath)
-
             print("Welcome to " + c.aqua + "cstats " + version + c.reset + "!")
             print("Type the " + c.aqua + "name of a function " + c.reset + "or its " + c.aqua + "numerical ID " + c.reset + "from the list below and press " + c.aqua + "ENTER\n" + c.reset)
             
