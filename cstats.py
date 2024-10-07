@@ -20,7 +20,7 @@ def mkdir_p(newdir):
         if err.errno != errno.EEXIST or not os.path.isdir(newdir): 
             raise
 
-if platform.system() == 'Windows':
+if platform.system() == "Windows":
     # make color codes show up on windows properly, this library is not required on other operating systems
     from colorama import just_fix_windows_console
     import ctypes
@@ -57,11 +57,11 @@ else:
 
 # not using ccparser for colors everywhere for performance reasons
 class colors:
-    reset = '\033[0m'
-    red = '\033[91m'
-    aqua = '\033[96m'
-    yellow = '\033[93m'
-    white = '\033[39m'
+    reset = "\033[0m"
+    red = "\033[91m"
+    aqua = "\033[96m"
+    yellow = "\033[93m"
+    white = "\033[39m"
 
 c = colors()
 
@@ -90,7 +90,7 @@ def ccparser(s):
     return s
 
 def unixtimetotime(unixtime):
-    return datetime.fromtimestamp(unixtime).strftime('%Y-%m-%d %H:%M:%S')
+    return datetime.fromtimestamp(unixtime).strftime("%Y-%m-%d %H:%M:%S")
 
 def uuidtousername(uuid):
     mojangapiurl = "https://sessionserver.mojang.com/session/minecraft/profile/" + uuid
@@ -224,22 +224,22 @@ def randomquote():
 
 def playerlist():
     listfmt = "{display} | {user} | {uuid} | X:{xcoord}, Y:{ycoord}, Z:{zcoord}"
-    request = json.loads(json.dumps(requests.get('http://api.retromc.org/api/v1/server/players').json()))
+    request = json.loads(json.dumps(requests.get("http://api.retromc.org/api/v1/server/players").json()))
 
     print("There are " + c.aqua + str(request["player_count"]) + c.reset + " out of a maximum " + c.aqua + str(request["max_players"]) + c.reset + " players online.\n\nOutput format:")
     print("Rank and display name | Username | Player UUID | X coord | Y coord | Z coord\n")
 
     for i in range(0, request["player_count"]):
         # remove Â from display names because the api puts them there for no reason
-        displayname = removeweirda(request['players'][i]['display_name'])
+        displayname = removeweirda(request["players"][i]["display_name"])
 
         print(listfmt.format(
             display = ccparser(displayname),
-            user = request['players'][i]['name'], 
-            uuid = request['players'][i]['uuid'], 
-            xcoord = str(round(request['players'][i]['x'], 1)),
-            ycoord = str(round(request['players'][i]['y'], 1)),
-            zcoord = str(round(request['players'][i]['z'], 1))
+            user = request["players"][i]["name"], 
+            uuid = request["players"][i]["uuid"], 
+            xcoord = str(round(request["players"][i]["x"], 1)),
+            ycoord = str(round(request["players"][i]["y"], 1)),
+            zcoord = str(round(request["players"][i]["z"], 1))
         ))
 
     entertocontinue()
@@ -247,17 +247,17 @@ def playerlist():
 
 def chat():
     listfmt = "{display}: {message}"
-    request = json.loads(json.dumps(requests.get('http://api.retromc.org/api/v1/server/chat').json()))
+    request = json.loads(json.dumps(requests.get("http://api.retromc.org/api/v1/server/chat").json()))
 
     print("Displaying recently sent messages. (does " + c.aqua + "NOT" + c.reset + " display Discord messages)\n")
 
-    for i in range(0, len(request['messages'])): 
+    for i in range(0, len(request["messages"])): 
         # remove Â from display names because the api puts them there for no reason
-        displayname = removeweirda(request['messages'][i]['display_name'])
+        displayname = removeweirda(request["messages"][i]["display_name"])
 
         print(listfmt.format(
             display = ccparser(displayname), 
-            message = ccparser(request['messages'][i]['message'])
+            message = ccparser(request["messages"][i]["message"])
         ))
 
     entertocontinue()
@@ -265,19 +265,19 @@ def chat():
 
 def villagelist():
     listfmt = "{name} | {owner} | {villageuuid}"
-    request = json.loads(json.dumps(requests.get('http://api.retromc.org/api/v1/village/getVillageList').json()))
+    request = json.loads(json.dumps(requests.get("http://api.retromc.org/api/v1/village/getVillageList").json()))
 
     print("Displaying list of " + c.aqua + "all" + c.reset + " RetroMC villages.\n\nOutput format:")
     print("Village name | Village owner | Village UUID\n")
 
-    totalcount = len(request['villages'])
+    totalcount = len(request["villages"])
     print("Total village count: " + str(totalcount) + "\n")
 
     for i in range(0, totalcount): 
         print(listfmt.format(
-            name = request['villages'][i]['name'], 
-            owner = uuidtousername(request['villages'][i]['owner']),
-            villageuuid = request['villages'][i]['uuid']
+            name = request["villages"][i]["name"], 
+            owner = uuidtousername(request["villages"][i]["owner"]),
+            villageuuid = request["villages"][i]["uuid"]
         ))
 
     print("\nTotal village count: " + str(totalcount))
@@ -292,28 +292,28 @@ def villagedetails():
     if village == "exit" or village == "0":
         main()
 
-    request = json.loads(json.dumps(requests.get('http://api.retromc.org/api/v1/village/getVillageList').json()))
+    request = json.loads(json.dumps(requests.get("http://api.retromc.org/api/v1/village/getVillageList").json()))
 
     print("\nDisplaying " + c.aqua + "village details" + c.reset + ".\n")
 
-    for i in range(0, len(request['villages'])): 
-        if request['villages'][i]['name'].lower() == village:
-            villageuuid = request['villages'][i]['uuid']
+    for i in range(0, len(request["villages"])): 
+        if request["villages"][i]["name"].lower() == village:
+            villageuuid = request["villages"][i]["uuid"]
             break
     else:
         cls()
         print(c.red + "Error: Village not found." + c.reset)
         villagedetails()
 
-    request2 = json.loads(json.dumps(requests.get('http://api.retromc.org/api/v1/village/getVillage?uuid=' + villageuuid).json()))
+    request2 = json.loads(json.dumps(requests.get("http://api.retromc.org/api/v1/village/getVillage?uuid=" + villageuuid).json()))
     
     print("Name: " + str(request2["name"]))
     print("Village UUID: " + str(request2["uuid"]))
-    print("Owner: " + uuidtousername(request2['owner']))
+    print("Owner: " + uuidtousername(request2["owner"]))
     print("Location: X:" + str(request2["spawn"]["x"]) + ", Y:" + str(request2["spawn"]["y"]) + ", Z:" + str(request2["spawn"]["z"]) + " in world " + request2["spawn"]["world"])
 
-    if request2['creationTime'] != 1640995200:
-        print("Creation time: " + unixtimetotime(request2['creationTime']))
+    if request2["creationTime"] != 1640995200:
+        print("Creation time: " + unixtimetotime(request2["creationTime"]))
     else:
         print("Creation time: Unknown (likely lost in Towny > JVillage transfer)")
         
@@ -369,14 +369,14 @@ def playerstats():
 
     playeruuid = usernametouuid(playerusernamefixed)
 
-    request4 = json.loads(json.dumps(requests.get('https://statistics.johnymuffin.com/api/v1/getUser?serverID=0&uuid=' + playeruuid).json()))
+    request4 = json.loads(json.dumps(requests.get("https://statistics.johnymuffin.com/api/v1/getUser?serverID=0&uuid=" + playeruuid).json()))
 
     if "msg" in request4:
         cls()
         print(c.red + "Error: This player has not played on RetroMC." + c.reset)
         playerstats()
 
-    request = json.loads(json.dumps(requests.get('https://statistics.retromc.org/api/online?username=' + playerusernamefixed).json()))
+    request = json.loads(json.dumps(requests.get("https://statistics.retromc.org/api/online?username=" + playerusernamefixed).json()))
 
     print("\nDisplaying " + c.aqua + "player statistics" + c.reset + ".\n")
 
@@ -450,7 +450,7 @@ def playerstats():
     except:
         print("Coordinates: Player is offline")
 
-    request2 = json.loads(json.dumps(requests.get('https://statistics.retromc.org/api/bans?uuid=' + str(playeruuid)).json()))
+    request2 = json.loads(json.dumps(requests.get("https://statistics.retromc.org/api/bans?uuid=" + str(playeruuid)).json()))
 
     print("\nCurrently banned: " + str(request2["banned"]))
     
@@ -469,7 +469,7 @@ def playerstats():
 
             print("Pardoned: " + str(request2["bans"][i]["pardoned"]) + ", Ban issue date: " + unixtimetotime(request2["bans"][i]["date"]))
 
-    request3 = json.loads(json.dumps(requests.get('https://statistics.retromc.org/api/user_villages?uuid=' + str(playeruuid)).json()))
+    request3 = json.loads(json.dumps(requests.get("https://statistics.retromc.org/api/user_villages?uuid=" + str(playeruuid)).json()))
 
     print("\nOwner of villages: ", end="")
     if len(request3["data"]["owner"]) == 0:
@@ -630,16 +630,16 @@ def main():
             if version != latestversion:
                 print(c.yellow + "A new version is available! Please update to " + latestversion + c.reset)
 
-            print('''
+            print("""
                       /88                 /88
                       | 88                | 88
-  ''' + c.aqua + '''/8888888  ''' + c.reset + '''/8888888 /888888    /888888  /888888   /8888888
- ''' + c.aqua + '''/88_____/ ''' + c.reset + '''/88_____/|_  88_/   |____  88|_  88_/  /88_____/
-''' + c.aqua + '''| 88      ''' + c.reset + '''|  888888   | 88      /8888888  | 88   |  888888 
-''' + c.aqua + '''| 88       ''' + c.reset + '''\\____  88  | 88 /88 /88__  88  | 88 /88\\____  88
-''' + c.aqua + '''|  8888888 ''' + c.reset + '''/8888888/  |  8888/|  8888888  |  8888//8888888/
- ''' + c.aqua + '''\\_______/''' + c.reset + '''|_______/    \\___/   \\_______/   \\___/ |_______/ 
-''')
+  """ + c.aqua + """/8888888  """ + c.reset + """/8888888 /888888    /888888  /888888   /8888888
+ """ + c.aqua + """/88_____/ """ + c.reset + """/88_____/|_  88_/   |____  88|_  88_/  /88_____/
+""" + c.aqua + """| 88      """ + c.reset + """|  888888   | 88      /8888888  | 88   |  888888 
+""" + c.aqua + """| 88       """ + c.reset + """\\____  88  | 88 /88 /88__  88  | 88 /88\\____  88
+""" + c.aqua + """|  8888888 """ + c.reset + """/8888888/  |  8888/|  8888888  |  8888//8888888/
+ """ + c.aqua + """\\_______/""" + c.reset + """|_______/    \\___/   \\_______/   \\___/ |_______/ 
+""")
 
             randomquote()
 
@@ -687,5 +687,5 @@ def main():
             cls()
             print(c.red + "Error: Invalid option!" + c.reset)
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     init()
