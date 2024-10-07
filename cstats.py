@@ -8,6 +8,7 @@ import sys
 import subprocess
 import os
 import errno
+import base64
 from datetime import datetime
 
 version = "v0.3.1"
@@ -27,9 +28,9 @@ if platform.system() == 'Windows':
     just_fix_windows_console()
 
     if os.getenv("APPDATA"):
-        confpath = os.getenv("APPDATA") + "/cstats/"
+        confpath = os.getenv("APPDATA") + "\\cstats\\"
     else:
-        confpath = "cstats-config/"
+        confpath = "cstats-config\\"
 
     mkdir_p(confpath)
 
@@ -47,6 +48,7 @@ else:
         confpath = "./cstats-config/"
 
     mkdir_p(confpath)
+    mkdir_p(confpath + "capes/")
 
     def setwindowtitle(title):
         print("\033]0;" + title + "\007")
@@ -566,6 +568,44 @@ def leaderboard():
     entertocontinue()
     main()
 
+def capes():
+    print("Enter the " + c.aqua + "player name" + c.reset + ":")
+    player = input("> ")
+
+    if player == "exit" or player == "0":
+        main()
+
+    try:
+        playerusernamefixed = fixusernamecase(player)
+    except KeyError:
+        cls()
+        print(c.red + "Error: A player going by this username does not exist." + c.reset)
+        capes()
+
+    playeruuid = usernametouuid(playerusernamefixed)
+
+    request = requests.get("https://capes.johnymuffin.com/getCape.php?username=" + playerusernamefixed)
+
+    if request.status_code == 200:
+        print("Name: " + playerusernamefixed)
+        print("Player UUID: " + playeruuid)
+        print("\nBetaEvo cape: " + c.aqua + "Yes" + c.reset)
+
+        capepath = confpath + "capes/" + playerusernamefixed + "_cape.png"
+
+        image = open(capepath, "wb")
+        image.write(request.content)
+        image.close()
+
+        print("\nCape has been saved to " + c.aqua + capepath + c.reset)
+
+        entertocontinue()
+        main()
+    else:
+        cls()
+        print(c.red + "Error: This user is not wearing a BetaEvo cape." + c.reset)
+        capes()
+
 def init():
     setwindowtitle("cstats " + version)
     global latestversion
@@ -613,6 +653,7 @@ def main():
             print(c.aqua + "4) " + c.reset + "villagedetails")
             print(c.aqua + "5) " + c.reset + "playerstats")
             print(c.aqua + "6) " + c.reset + "leaderboard")
+            print(c.aqua + "7) " + c.reset + "capes")
             print(c.aqua + "0) " + c.reset + "exit")
 
             print("\nThis program is still a work in progress, report issues to SvGaming")
@@ -637,6 +678,9 @@ def main():
         elif choose == "6" or choose == "leaderboard":
             cls()
             leaderboard()
+        elif choose == "7" or choose == "capes":
+            cls()
+            capes()
         elif choose == "0" or choose == "exit":
             setwindowtitle("")
             sys.exit(0)
