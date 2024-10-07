@@ -31,8 +31,6 @@ if platform.system() == "Windows":
     else:
         confpath = "cstats-config\\"
 
-    mkdir_p(confpath)
-
     def setwindowtitle(title):
         ctypes.windll.kernel32.SetConsoleTitleW("cstats " + version)
 
@@ -45,9 +43,6 @@ else:
         confpath = os.getenv("HOME") + "/.config/cstats/"
     else:
         confpath = "./cstats-config/"
-
-    mkdir_p(confpath)
-    mkdir_p(confpath + "capes/")
 
     def setwindowtitle(title):
         print("\033]0;" + title + "\007")
@@ -64,6 +59,12 @@ class colors:
     white = "\033[39m"
 
 c = colors()
+
+def generateconfig():
+    mkdir_p(confpath)
+    mkdir_p(confpath + "capes/")
+    cache = open(confpath + "uuidusernamecache", "a")
+    cache.close()
 
 def ccparser(s):
     # this is very jank feeling but it works i guess
@@ -610,6 +611,7 @@ def init():
     global latestversion
     request = requests.get("https://github.com/svgaming234/cstats/releases/latest")
     latestversion = request.url.split("/")[-1]
+    generateconfig()
 
     main()
 
@@ -624,8 +626,7 @@ def main():
             choose = sys.argv[1]
             argused = True
         else:
-            cache = open(confpath + "uuidusernamecache", "a")
-            cache.close()
+
 
             if version != latestversion:
                 print(c.yellow + "A new version is available! Please update to " + latestversion + c.reset)
