@@ -8,7 +8,6 @@ import sys
 import subprocess
 import os
 import errno
-import base64
 from datetime import datetime
 
 version = "v0.3.1"
