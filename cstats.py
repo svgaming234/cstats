@@ -143,7 +143,7 @@ def removeweirda(strold):
     return strnew
 
 def randomquote():
-        randchoice = random.randint(1, 38)
+        randchoice = random.randint(1, 41)
         if randchoice == 1:
             print(c.yellow + "\"GUI soon(tm)\" - samcraft3" + c.reset)
         elif randchoice == 2:
@@ -220,6 +220,12 @@ def randomquote():
             print(c.yellow + "\"Is it C-stats, Cstats, or c-stats, cstats? That is the question.\" - Ade1ie" + c.reset)
         elif randchoice == 38:
             print(c.yellow + "\"its cstats ferfer\" - SvGaming234" + c.reset)
+        elif randchoice == 39:
+            print(c.yellow + "\"MOAR SPLASHES\" - zavdav" + c.reset)
+        elif randchoice == 40:
+            print(c.yellow + "\"ChestShopHistory\" - zavdav" + c.reset)
+        elif randchoice == 41:
+            print(c.yellow + "\"plugin.getFundamentalsLanguageConfig.getMessage(\"player_not_found_full\");\" - zavdav" + c.reset)
         else:
             print(c.red + "Error: random quote text picking failed" + c.reset)
 
