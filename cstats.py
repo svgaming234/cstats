@@ -60,7 +60,7 @@ class colors:
 
 c = colors()
 
-def generateconfig():
+def generatefilestructure():
     mkdir_p(confpath)
     mkdir_p(confpath + "capes/")
     cache = open(confpath + "uuidusernamecache", "a")
@@ -608,10 +608,12 @@ def capes():
 
 def init():
     setwindowtitle("cstats " + version)
+
     global latestversion
     request = requests.get("https://github.com/svgaming234/cstats/releases/latest")
     latestversion = request.url.split("/")[-1]
-    generateconfig()
+    
+    generatefilestructure()
 
     main()
 
