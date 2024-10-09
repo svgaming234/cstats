@@ -134,8 +134,8 @@ def fixusernamecase(username):
     usernamefixed = request["name"]
     return usernamefixed
 
-def entertocontinue():
-    input("\nPress " + c.aqua + "ENTER" + c.reset + " to return to main menu.\n")
+def entertocontinue(message = "\nPress " + c.aqua + "ENTER" + c.reset + " to return to main menu.\n"):
+    input(message)
 
 def removeweirda(strold):
     # remove Â from display names because the api puts them there for no reason
@@ -522,42 +522,56 @@ def leaderboard():
 
     choose = input("> ").lower()
 
+    dataprefix = ""
+    datasuffix = ""
+
     if choose == "1" or choose == "blocksplaced":
         cls()
         stattype = "blocksPlaced"
+        datasuffix = " blocks"
     elif choose == "2" or choose == "blocksdestroyed":
         cls()
         stattype = "blocksDestroyed"
+        datasuffix = " blocks"
     elif choose == "3" or choose == "meterstraveled":
         cls()
         stattype = "metersTraveled"
+        datasuffix = " meters"
     elif choose == "4" or choose == "itemsdropped":
         cls()
         stattype = "itemsDropped"
+        datasuffix = " items"
     elif choose == "5" or choose == "playerdeaths":
         cls()
         stattype = "playerDeaths"
+        datasuffix = " deaths"
     elif choose == "6" or choose == "playerskilled":
         cls()
         stattype = "playersKilled"
+        datasuffix = " kills"
     elif choose == "7" or choose == "creatureskilled":
         cls()
         stattype = "creaturesKilled"
+        datasuffix = " kills"
     elif choose == "8" or choose == "joincount":
         cls()
         stattype = "joinCount"
+        datasuffix = " joins"
     elif choose == "9" or choose == "playtime":
         cls()
         stattype = "playTime"
     elif choose == "10" or choose == "trustlevel":
         cls()
         stattype = "trustLevel"
+        dataprefix = "Level "
     elif choose == "11" or choose == "trustscore":
         cls()
         stattype = "trustScore"
+        dataprefix = "Score "
     elif choose == "12" or choose == "money":
         cls()
         stattype = "money"
+        dataprefix = "$"
     elif choose == "0" or choose == "exit":
         main()
     else:
@@ -568,11 +582,17 @@ def leaderboard():
     request = json.loads(json.dumps(requests.get("https://statistics.retromc.org/api/leaderboard?type=" + stattype).json()))
 
     print("Leaderboard for " + c.aqua + stattype + c.reset + ":")
-    for i in range(len(request["data"])):
-        print(str(i + 1) + ". " + request["data"][i]["username"] + " = " + str(request["data"][i][stattype]))
 
-    entertocontinue()
-    main()
+    if stattype == "playTime":
+        for i in range(len(request["data"])):
+            print(str(i + 1) + ". " + request["data"][i]["username"] + " = " + str(round(request["data"][i][stattype] / 60, 1)) + " minutes (" + str(round(request["data"][i][stattype] / 60 / 60, 1)) + " hours)")
+    else:
+        for i in range(len(request["data"])):
+            print(str(i + 1) + ". " + request["data"][i]["username"] + " = "  + dataprefix + str(request["data"][i][stattype]) + datasuffix)
+
+    entertocontinue("\nPress " + c.aqua + "ENTER" + c.reset + " to return to leaderboard menu.\n")
+    cls()
+    leaderboard()
 
 def capes():
     print("Enter the " + c.aqua + "player name" + c.reset + ":")
