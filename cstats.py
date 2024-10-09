@@ -606,6 +606,21 @@ def capes():
         print(c.red + "Error: This user is not wearing a BetaEvo cape." + c.reset)
         capes()
 
+def about():
+    print("About " + c.aqua + "cstats " + version + c.reset + ":")
+
+    print("\nCredits:")
+    print(c.aqua + "SvGaming" + c.reset + " - Project lead")
+    print(c.aqua + "Noggisoggi" + c.reset + " - Creator of player list API which cstats is based on")
+    print(c.aqua + "JohnyMuffin" + c.reset + " - Creator of APIs utilized by cstats")
+    print(c.aqua + "zavdav" + c.reset + " - Lead tester, told me about the getUser API")
+
+    print("\nGitHub repository: " + c.aqua + "https://github.com/svgaming234/cstats" + c.reset)
+    print("Licensed under the MIT license. Read " + c.aqua + "https://github.com/svgaming234/cstats/blob/master/LICENSE" + c.reset + " for more info.")
+
+    entertocontinue()
+    main()
+
 def init():
     setwindowtitle("cstats " + version)
 
@@ -656,6 +671,7 @@ def main():
             print(c.aqua + "5) " + c.reset + "playerstats")
             print(c.aqua + "6) " + c.reset + "leaderboard")
             print(c.aqua + "7) " + c.reset + "capes")
+            print(c.aqua + "9) " + c.reset + "about")
             print(c.aqua + "0) " + c.reset + "exit")
 
             print("\nThis program is still a work in progress, report issues to SvGaming")
@@ -683,6 +699,9 @@ def main():
         elif choose == "7" or choose == "capes":
             cls()
             capes()
+        elif choose == "9" or choose == "about":
+            cls()
+            about()
         elif choose == "0" or choose == "exit":
             setwindowtitle("")
             sys.exit(0)

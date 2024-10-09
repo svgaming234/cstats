@@ -42,6 +42,7 @@ Afterwards you can run `make_windows.bat` on Windows or the Makefile (`make buil
 
 ## Credits
 
-Based on a player list Python script created by Noggisoggi  
-API by JohnyMuffin  
-zavdav for telling me about the `getUser` api on `statistics.retromc.org` and for testing
+SvGaming - Project lead
+Noggisoggi - Creator of player list API which cstats is based on
+JohnyMuffin - Creator of APIs utilized by cstats
+zavdav - Lead tester, told me about the getUser API
