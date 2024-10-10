@@ -651,8 +651,12 @@ def init():
     setwindowtitle("cstats " + version)
 
     global latestversion
-    request = requests.get("https://github.com/svgaming234/cstats/releases/latest")
-    latestversion = request.url.split("/")[-1]
+
+    try:
+        request = requests.get("https://github.com/svgaming234/cstats/releases/latest")
+        latestversion = request.url.split("/")[-1]
+    except:
+        latestversion = "Error"
     
     generatefilestructure()
 
@@ -669,9 +673,9 @@ def main():
             choose = sys.argv[1]
             argused = True
         else:
-
-
-            if version != latestversion:
+            if latestversion == "Error":
+                print(c.red + "Failed to check for updates! Please check your internet connection." + c.reset)
+            elif version != latestversion:
                 print(c.yellow + "A new version is available! Please update to " + latestversion + c.reset)
 
             print("""
