@@ -617,7 +617,10 @@ def capes():
         print("Player UUID: " + playeruuid)
         print("\nBetaEvo cape: " + c.aqua + "Yes" + c.reset)
 
-        capepath = confpath + "capes/" + playerusernamefixed + "_cape.png"
+        if platform.system() == "Windows":
+            capepath = confpath + "capes\\" + playerusernamefixed + "_cape.png"
+        else:
+            capepath = confpath + "capes/" + playerusernamefixed + "_cape.png"
 
         image = open(capepath, "wb")
         image.write(request.content)
