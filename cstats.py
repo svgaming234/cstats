@@ -637,7 +637,7 @@ def about():
 
     print("\nCredits:")
     print(c.aqua + "SvGaming" + c.reset + " - Project lead")
-    print(c.aqua + "Noggisoggi" + c.reset + " - Creator of player list API which cstats is based on")
+    print(c.aqua + "Noggisoggi" + c.reset + " - Creator of player list script which cstats is based on")
     print(c.aqua + "JohnyMuffin" + c.reset + " - Creator of APIs utilized by cstats")
     print(c.aqua + "zavdav" + c.reset + " - Lead tester, told me about the getUser API")
 

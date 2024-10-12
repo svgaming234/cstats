@@ -43,6 +43,6 @@ Afterwards you can run `make_windows.bat` on Windows or the Makefile (`make buil
 ## Credits
 
 SvGaming - Project lead
-Noggisoggi - Creator of player list API which cstats is based on
+Noggisoggi - Creator of player list script which cstats is based on
 JohnyMuffin - Creator of APIs utilized by cstats
 zavdav - Lead tester, told me about the getUser API
