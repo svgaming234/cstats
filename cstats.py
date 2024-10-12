@@ -10,7 +10,7 @@ import os
 import errno
 from datetime import datetime
 
-version = "v0.3.1"
+version = "v0.4.0"
 
 def mkdir_p(newdir):
     try: 
