@@ -230,7 +230,6 @@ def randomquote():
             print(c.red + "Error: random quote text picking failed" + c.reset)
 
 def playerlist():
-    listfmt = "{display} | {user} | {uuid} | X:{xcoord}, Y:{ycoord}, Z:{zcoord}"
     request = json.loads(json.dumps(requests.get("http://api.retromc.org/api/v1/server/players").json()))
 
     print("There are " + c.aqua + str(request["player_count"]) + c.reset + " out of a maximum " + c.aqua + str(request["max_players"]) + c.reset + " players online.\n\nOutput format:")
@@ -240,14 +239,25 @@ def playerlist():
         # remove Â from display names because the api puts them there for no reason
         displayname = removeweirda(request["players"][i]["display_name"])
 
-        print(listfmt.format(
-            display = ccparser(displayname),
-            user = request["players"][i]["name"], 
-            uuid = request["players"][i]["uuid"], 
-            xcoord = str(round(request["players"][i]["x"], 1)),
-            ycoord = str(round(request["players"][i]["y"], 1)),
-            zcoord = str(round(request["players"][i]["z"], 1))
-        ))
+        if request["players"][i]["x"] == 0 and request["players"][i]["y"] == 0 and request["players"][i]["z"] == 0:
+            listfmt = "{display} | {user} | {uuid} | Coordinates: Unknown, player is in vanish"
+
+            print(listfmt.format(
+                display = ccparser(displayname),
+                user = request["players"][i]["name"], 
+                uuid = request["players"][i]["uuid"]
+            ))
+        else:
+            listfmt = "{display} | {user} | {uuid} | X:{xcoord}, Y:{ycoord}, Z:{zcoord}"
+
+            print(listfmt.format(
+                display = ccparser(displayname),
+                user = request["players"][i]["name"], 
+                uuid = request["players"][i]["uuid"], 
+                xcoord = str(round(request["players"][i]["x"], 1)),
+                ycoord = str(round(request["players"][i]["y"], 1)),
+                zcoord = str(round(request["players"][i]["z"], 1))
+            ))
 
     entertocontinue()
     main()
@@ -448,12 +458,14 @@ def playerstats():
     print("\nOnline: " + str(request["online"]))
 
     try:
-        x = str(request["x"])
-        y = str(request["y"])
-        z = str(request["z"])
+        if request["x"] == 0 and request["y"] == 0 and request["z"] == 0:
+            print("Coordinates: Unknown, player is in vanish")
+        else:
+            x = str(request["x"])
+            y = str(request["y"])
+            z = str(request["z"])
 
-        print("Coordinates:")
-        print("X: " + x + ", Y: " + y + ", Z: " + z)
+            print("Coordinates: X: " + x + ", Y: " + y + ", Z: " + z)
     except:
         print("Coordinates: Player is offline")
 
