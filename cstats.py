@@ -52,11 +52,30 @@ else:
 
 # not using ccparser for colors everywhere for performance reasons
 class colors:
+    # cstats color scheme colors
     reset = "\033[0m"
     red = "\033[91m"
     aqua = "\033[96m"
     yellow = "\033[93m"
     white = "\033[39m"
+
+    # mc colors
+    mc0 = "\033[30m"
+    mc1 = "\033[34m"
+    mc2 = "\033[32m"
+    mc3 = "\033[36m"
+    mc4 = "\033[31m"
+    mc5 = "\033[35m"
+    mc6 = "\033[33m"
+    mc7 = "\033[37m"
+    mc8 = "\033[90m"
+    mc9 = "\033[94m"
+    mca = "\033[92m"
+    mcb = "\033[96m"
+    mcc = "\033[91m"
+    mcd = "\033[95m"
+    mce = "\033[93m"
+    mcf = "\033[97m"
 
 c = colors()
 
@@ -70,24 +89,24 @@ def ccparser(s):
     # this is very jank feeling but it works i guess
     s = s.replace("&", "§")
     
-    s = s.replace("§0", "\033[30m")
-    s = s.replace("§1", "\033[34m")
-    s = s.replace("§2", "\033[32m")
-    s = s.replace("§3", "\033[36m")
-    s = s.replace("§4", "\033[31m")
-    s = s.replace("§5", "\033[35m")
-    s = s.replace("§6", "\033[33m")
-    s = s.replace("§7", "\033[37m")
-    s = s.replace("§8", "\033[90m")
-    s = s.replace("§9", "\033[94m")
-    s = s.replace("§a", "\033[92m")
-    s = s.replace("§b", "\033[96m")
-    s = s.replace("§c", "\033[91m")
-    s = s.replace("§d", "\033[95m")
-    s = s.replace("§e", "\033[93m")
-    s = s.replace("§f", "\033[97m")
+    s = s.replace("§0", c.mc0)
+    s = s.replace("§1", c.mc1)
+    s = s.replace("§2", c.mc2)
+    s = s.replace("§3", c.mc3)
+    s = s.replace("§4", c.mc4)
+    s = s.replace("§5", c.mc5)
+    s = s.replace("§6", c.mc6)
+    s = s.replace("§7", c.mc7)
+    s = s.replace("§8", c.mc8)
+    s = s.replace("§9", c.mc9)
+    s = s.replace("§a", c.mca)
+    s = s.replace("§b", c.mcb)
+    s = s.replace("§c", c.mcc)
+    s = s.replace("§d", c.mcd)
+    s = s.replace("§e", c.mce)
+    s = s.replace("§f", c.mcf)
 
-    s = s + "\033[0m"    
+    s = s + c.reset
     return s
 
 def unixtimetotime(unixtime):
