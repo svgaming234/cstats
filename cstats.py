@@ -383,8 +383,7 @@ def villagedetails():
     else:
         print("No members", end="")
 
-    # Add newline to the end of the members output
-    print("")
+    print("\n\nView on world viewer:\nhttps://world.retromc.org/#/" + str(request2["spawn"]["x"])  + "/64/" + str(request2["spawn"]["z"]) +"/-3/")
 
     entertocontinue()
     main()
