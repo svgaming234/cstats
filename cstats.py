@@ -634,17 +634,36 @@ def leaderboard():
 def serverping():
     print(c.yellow + "WARNING: This feature has very questionable accuracy." + c.reset)
     
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    start_time = time.time()
+    timedout = False
+    pingattempts = 5
+    pingresultlist = []
+    
+    print("\nPinging RetroMC " + c.aqua + str(pingattempts) + c.reset + " times:\n")
 
-    s.connect(("mc.retromc.org", 25565))
+    for i in range(pingattempts):
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.settimeout(5)
 
-    ping = time.time() - start_time
-    print("Ping to mc.retromc.org: " + c.aqua + str(round(ping * 1000, 2)) + c.reset + " ms")
+        try:
+            start_time = time.time()
 
-    s.shutdown(socket.SHUT_RDWR)
-    s.close()
+            s.connect(("mc.retromc.org", 25565))
 
+            ping = time.time() - start_time
+            pingresultlist.append(ping)
+            print("Ping " + str(i + 1) + " to mc.retromc.org: " + c.aqua + str(round(ping * 1000, 2)) + c.reset + " ms")
+
+            s.shutdown(socket.SHUT_RDWR)
+            s.close()
+        except TimeoutError:
+            print("Ping " + str(i + 1) + " to mc.retromc.org: " + c.red + "Timed out" + c.reset)
+            timedout = True
+
+    print("\nAverage ping: " + c.aqua + str(round(sum(pingresultlist) / len(pingresultlist) * 1000, 2)) + c.reset + " ms")
+
+    if timedout:
+        print(c.yellow + "NOTE: When testing ping multiple times quickly in a row timeouts start to appear.\nWait a bit and try again." + c.reset)
+    
     entertocontinue()
     main()
 
