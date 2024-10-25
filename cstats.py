@@ -620,7 +620,7 @@ def leaderboard():
 
     if stattype == "playTime":
         for i in range(len(request["data"])):
-            print(str(i + 1) + ". " + request["data"][i]["username"] + " = " + str(round(request["data"][i][stattype] / 60, 1)) + " minutes (" + str(round(request["data"][i][stattype] / 60 / 60, 1)) + " hours)")
+            print(str(i + 1) + ". " + request["data"][i]["username"] + " = " + str(round(request["data"][i][stattype] / 60 / 60, 2)) + " hours (" + str(round(request["data"][i][stattype] / 60, 2)) + " minutes)")
     else:
         for i in range(len(request["data"])):
             print(str(i + 1) + ". " + request["data"][i]["username"] + " = "  + dataprefix + str(request["data"][i][stattype]) + datasuffix)
