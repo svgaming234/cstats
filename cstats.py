@@ -383,7 +383,10 @@ def villagedetails():
     else:
         print("No members", end="")
 
-    print("\n\nView on world viewer:\nhttps://world.retromc.org/#/" + str(request2["spawn"]["x"])  + "/64/" + str(request2["spawn"]["z"]) +"/-3/")
+    print("\n\nView on world viewer:\nhttps://world.retromc.org/#/"
+     + str(request2["spawn"]["x"])  + "/64/" + str(request2["spawn"]["z"]) +"/-3/")
+
+    print("\nView on J-Stats:\nhttps://j-stats.xyz/village/" + str(request2["uuid"]))
 
     entertocontinue()
     main()
@@ -530,6 +533,8 @@ def playerstats():
         for i in range(len(request3["data"]["member"])):
             print(request3["data"]["member"][i]["village"] + " (" + request3["data"]["member"][i]["village_uuid"] + ")")
     
+    print("\nView on J-Stats:\nhttps://j-stats.xyz/player/" + playeruuid)
+
     entertocontinue()
     main()
 
