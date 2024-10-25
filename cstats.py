@@ -8,6 +8,8 @@ import sys
 import subprocess
 import os
 import errno
+import socket
+import time
 from datetime import datetime
 
 version = "v0.4.0"
@@ -629,6 +631,23 @@ def leaderboard():
     cls()
     leaderboard()
 
+def serverping():
+    print(c.yellow + "WARNING: This feature has very questionable accuracy." + c.reset)
+    
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    start_time = time.time()
+
+    s.connect(("mc.retromc.org", 25565))
+
+    ping = time.time() - start_time
+    print("Ping to mc.retromc.org: " + c.aqua + str(round(ping * 1000, 2)) + c.reset + " ms")
+
+    s.shutdown(socket.SHUT_RDWR)
+    s.close()
+
+    entertocontinue()
+    main()
+
 def capes():
     print("Enter the " + c.aqua + "player name" + c.reset + ":")
     player = input("> ")
@@ -740,6 +759,7 @@ def main():
             print(c.aqua + "6) " + c.reset + "leaderboard")
             print(c.aqua + "7) " + c.reset + "capes")
             print(c.aqua + "8) " + c.reset + "about")
+            print(c.aqua + "9) " + c.reset + "serverping")
             print(c.aqua + "0) " + c.reset + "exit")
 
             print("\nThis program is still a work in progress, report issues to SvGaming")
@@ -770,6 +790,9 @@ def main():
         elif choose == "8" or choose == "about":
             cls()
             about()
+        elif choose == "9" or choose == "serverping":
+            cls()
+            serverping()
         elif choose == "0" or choose == "exit":
             setwindowtitle("")
             sys.exit(0)
