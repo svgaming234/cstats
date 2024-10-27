@@ -12,7 +12,7 @@ import socket
 import time
 from datetime import datetime
 
-version = "v0.4.0"
+version = "v0.5.0"
 
 def mkdir_p(newdir):
     try: 
