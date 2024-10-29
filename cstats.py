@@ -723,6 +723,45 @@ def about():
     entertocontinue()
     main()
 
+def resetcache():
+    print("This option resets the UUID-Username cache located at " + c.aqua + confpath + c.reset + ". Are you sure you want to reset it?\n")
+
+    print(c.aqua + "1) " + c.reset + "yes")
+    print(c.aqua + "0) " + c.reset + "no\n")
+
+    choose = input("> ").lower()
+
+    if choose == "1" or choose == "yes":
+        cache = open(confpath + "uuidusernamecache", "w")
+        cache.close()
+    elif choose == "0" or choose == "no" or choose == "exit":
+        return
+    else:
+        cls()
+        print(c.red + "Error: Invalid option!" + c.reset)
+        resetcache()
+
+
+def options():
+    print("Please select an " + c.aqua + "option.\n" + c.reset)
+
+    print(c.aqua + "1) " + c.reset + "resetCache")
+    print(c.aqua + "0) " + c.reset + "exit\n")
+
+    choose = input("> ").lower()
+
+    if choose == "1" or choose == "resetcache":
+        cls()
+        resetcache()
+        cls()
+        options()
+    elif choose == "0" or choose == "exit":
+        main()
+    else:
+        cls()
+        print(c.red + "Error: Invalid option!" + c.reset)
+        options()
+
 def init():
     setwindowtitle("cstats " + version)
 
@@ -779,6 +818,7 @@ def main():
             print(c.aqua + "7) " + c.reset + "capes")
             print(c.aqua + "8) " + c.reset + "about")
             print(c.aqua + "9) " + c.reset + "serverping")
+            print(c.aqua + "10) " + c.reset + "options")
             print(c.aqua + "0) " + c.reset + "exit")
 
             print("\nThis program is still a work in progress, report issues to SvGaming")
@@ -812,6 +852,9 @@ def main():
         elif choose == "9" or choose == "serverping":
             cls()
             serverping()
+        elif choose == "10" or choose == "options":
+            cls()
+            options()
         elif choose == "0" or choose == "exit":
             setwindowtitle("")
             sys.exit(0)
