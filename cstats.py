@@ -816,9 +816,9 @@ def main():
             print(c.aqua + "5) " + c.reset + "playerstats")
             print(c.aqua + "6) " + c.reset + "leaderboard")
             print(c.aqua + "7) " + c.reset + "capes")
-            print(c.aqua + "8) " + c.reset + "about")
-            print(c.aqua + "9) " + c.reset + "serverping")
-            print(c.aqua + "10) " + c.reset + "options")
+            print(c.aqua + "8) " + c.reset + "serverping")
+            print(c.aqua + "9) " + c.reset + "options")
+            print(c.aqua + "10) " + c.reset + "about")
             print(c.aqua + "0) " + c.reset + "exit")
 
             print("\nThis program is still a work in progress, report issues to SvGaming")
@@ -846,13 +846,13 @@ def main():
         elif choose == "7" or choose == "capes":
             cls()
             capes()
-        elif choose == "8" or choose == "about":
+        elif choose == "8" or choose == "serverping":
             cls()
             about()
-        elif choose == "9" or choose == "serverping":
+        elif choose == "9" or choose == "options":
             cls()
             serverping()
-        elif choose == "10" or choose == "options":
+        elif choose == "10" or choose == "about":
             cls()
             options()
         elif choose == "0" or choose == "exit":
