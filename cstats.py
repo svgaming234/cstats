@@ -716,6 +716,7 @@ def about():
     print(c.aqua + "Noggisoggi" + c.reset + " - Creator of player list script which cstats is based on")
     print(c.aqua + "JohnyMuffin" + c.reset + " - Creator of APIs utilized by cstats")
     print(c.aqua + "zavdav" + c.reset + " - Lead tester, told me about the getUser API, gave ideas for improving the ping feature")
+    print(c.aqua + "Jaoheah" + c.reset + " - Switched the options around on the menu")
 
     print("\nGitHub repository: " + c.aqua + "https://github.com/svgaming234/cstats" + c.reset)
     print("Licensed under the MIT license. Read " + c.aqua + "https://github.com/svgaming234/cstats/blob/master/LICENSE" + c.reset + " for more info.")
