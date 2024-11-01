@@ -848,13 +848,13 @@ def main():
             capes()
         elif choose == "8" or choose == "serverping":
             cls()
-            about()
+            serverping()
         elif choose == "9" or choose == "options":
             cls()
-            serverping()
+            options()
         elif choose == "10" or choose == "about":
             cls()
-            options()
+            about()
         elif choose == "0" or choose == "exit":
             setwindowtitle("")
             sys.exit(0)
