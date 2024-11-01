@@ -247,6 +247,10 @@ def randomquote():
             print(c.yellow + "\"ChestShopHistory\" - zavdav" + c.reset)
         elif randchoice == 41:
             print(c.yellow + "\"plugin.getFundamentalsLanguageConfig.getMessage(\"player_not_found_full\");\" - zavdav" + c.reset)
+        elif randchoice == 42:
+            print(c.yellow + "\"Is 42 the meaning of life?\" - Jaoheah" + c.reset)
+        elif randchoice == 43:
+            print(c.yellow + "\"Jaoheah was here on 10/31/2024 at 10:31 PM ET\" - Jaoheah" + c.reset)    
         else:
             print(c.red + "Error: random quote text picking failed" + c.reset)
 
