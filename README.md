@@ -44,7 +44,7 @@ Afterwards you can run `make_windows.bat` on Windows or the Makefile (`make buil
 
 ## Credits
 
-SvGaming - Project lead  
+SvGaming - Project lead  (test1234)
 Noggisoggi - Creator of player list script which cstats is based on  
 JohnyMuffin - Creator of APIs utilized by cstats  
 zavdav - Lead tester, told me about the getUser API, gave ideas for improving the ping feature
