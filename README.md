@@ -39,14 +39,13 @@ First, install Python. Afterwards, install colorama, requests and pyinstaller by
 ```sh
 python -m pip install colorama requests pyinstaller
 ```
-
 Afterwards you can run `make_windows.bat` on Windows or the Makefile (`make build`) on Linux included in the cstats repository to compile it. The executable will be located in the `dist` folder of the repository.
 
 ## Credits
 
-SvGaming - Project lead
-Noggisoggi - Creator of player list script which cstats is based on  
-JohnyMuffin - Creator of APIs utilized by cstats  
-zavdav - Lead tester, told me about the getUser API, gave ideas for improving the ping feature
-Jaoheah - Switched the options around on the menu
+  SvGaming - Project lead
+  Noggisoggi - Creator of player list script which cstats is based on  
+  JohnyMuffin - Creator of APIs utilized by cstats  
+  zavdav - Lead tester, told me about the getUser API, gave ideas for improving the ping feature
+  Jaoheah - Switched the options around on the menu
 
