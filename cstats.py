@@ -164,7 +164,7 @@ def removeweirda(strold):
     return strnew
 
 def randomquote():
-        randchoice = random.randint(1, 41)
+        randchoice = random.randint(1, 43)
         if randchoice == 1:
             print(c.yellow + "\"GUI soon(tm)\" - samcraft3" + c.reset)
         elif randchoice == 2:
