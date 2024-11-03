@@ -247,6 +247,10 @@ def randomquote():
             print(c.yellow + "\"ChestShopHistory\" - zavdav" + c.reset)
         elif randchoice == 41:
             print(c.yellow + "\"plugin.getFundamentalsLanguageConfig.getMessage(\"player_not_found_full\");\" - zavdav" + c.reset)
+        elif randchoice == 42:
+            print(c.yellow + "\"Is 42 the meaning of life?\" - Jaoheah" + c.reset)
+        elif randchoice == 43:
+            print(c.yellow + "\"Jaoheah was here on 10/31/2024 at 10:31 PM ET\" - Jaoheah" + c.reset)    
         else:
             print(c.red + "Error: random quote text picking failed" + c.reset)
 
@@ -716,6 +720,7 @@ def about():
     print(c.aqua + "Noggisoggi" + c.reset + " - Creator of player list script which cstats is based on")
     print(c.aqua + "JohnyMuffin" + c.reset + " - Creator of APIs utilized by cstats")
     print(c.aqua + "zavdav" + c.reset + " - Lead tester, told me about the getUser API, gave ideas for improving the ping feature")
+    print(c.aqua + "Jaoheah" + c.reset + " - Switched the options around on the menu")
 
     print("\nGitHub repository: " + c.aqua + "https://github.com/svgaming234/cstats" + c.reset)
     print("Licensed under the MIT license. Read " + c.aqua + "https://github.com/svgaming234/cstats/blob/master/LICENSE" + c.reset + " for more info.")
@@ -816,9 +821,9 @@ def main():
             print(c.aqua + "5) " + c.reset + "playerstats")
             print(c.aqua + "6) " + c.reset + "leaderboard")
             print(c.aqua + "7) " + c.reset + "capes")
-            print(c.aqua + "8) " + c.reset + "about")
-            print(c.aqua + "9) " + c.reset + "serverping")
-            print(c.aqua + "10) " + c.reset + "options")
+            print(c.aqua + "8) " + c.reset + "serverping")
+            print(c.aqua + "9) " + c.reset + "options")
+            print(c.aqua + "10) " + c.reset + "about")
             print(c.aqua + "0) " + c.reset + "exit")
 
             print("\nThis program is still a work in progress, report issues to SvGaming")
@@ -846,15 +851,15 @@ def main():
         elif choose == "7" or choose == "capes":
             cls()
             capes()
-        elif choose == "8" or choose == "about":
-            cls()
-            about()
-        elif choose == "9" or choose == "serverping":
+        elif choose == "8" or choose == "serverping":
             cls()
             serverping()
-        elif choose == "10" or choose == "options":
+        elif choose == "9" or choose == "options":
             cls()
             options()
+        elif choose == "10" or choose == "about":
+            cls()
+            about()
         elif choose == "0" or choose == "exit":
             setwindowtitle("")
             sys.exit(0)
