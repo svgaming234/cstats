@@ -164,95 +164,54 @@ def removeweirda(strold):
     return strnew
 
 def randomquote():
-        randchoice = random.randint(1, 43)
-        if randchoice == 1:
-            print(c.yellow + "\"GUI soon(tm)\" - samcraft3" + c.reset)
-        elif randchoice == 2:
-            print(c.yellow + "\"fer\" - Krissofer" + c.reset)
-        elif randchoice == 3:
-            print(c.yellow + "\"chatGPT-free code!\" - samcraft3" + c.reset)
-        elif randchoice == 4:
-            print(c.yellow + "\";3\" - ospence5" + c.reset)
-        elif randchoice == 5:
-            print(c.yellow + "\"Up to 4 times more Notchcode\" - Krissofer" + c.reset)
-        elif randchoice == 6:
-            print(c.yellow + "\"Now with more Notchcode(tm)\" - SvGaming234" + c.reset)
-        elif randchoice == 7:
-            print(c.yellow + "\"Maybe RetroMC is the friends we met along the way?\" - Pittofer" + c.reset)
-        elif randchoice == 8:
-            print(c.yellow + "\"Jthings are Just better\" - Pittofer" + c.reset)
-        elif randchoice == 9:
-            print(c.yellow + "\"guh\" - SvGaming234" + c.reset)
-        elif randchoice == 10:
-            print(c.yellow + "\"Coming soon(TM) to theaters and computers near you!\" - Noggisoggi" + c.reset)
-        elif randchoice == 11:
-            print(c.yellow + "\"Together, we are RetroMC!\" - Noggisoggi" + c.reset)
-        elif randchoice == 12:
-            print(c.yellow + "\"true and real\" - Noggisoggi" + c.reset)
-        elif randchoice == 13:
-            print(c.yellow + "\"wb\" - Noggisoggi" + c.reset)
-        elif randchoice == 14:
-            print(c.yellow + "\"fer fer\" - Noggisoggi" + c.reset)
-        elif randchoice == 15:
-            print(c.yellow + "\"hmmmm\" - Noggisoggi" + c.reset)
-        elif randchoice == 16:
-            print(c.yellow + "\"https://wiki.retromc.org/\" - Noggisoggi" + c.reset)
-        elif randchoice == 17:
-            print(c.yellow + "\"Now with less Notchcode(TM)\" - Noggisoggi" + c.reset)
-        elif randchoice == 18:
-            print(c.yellow + "\"holy\" - Noggisoggi" + c.reset)
-        elif randchoice == 19:
-            print(c.yellow + "\"h\" - Noggisoggi" + c.reset)
-        elif randchoice == 20:
-            print(c.yellow + "\"how dee feller\" - Noggisoggi" + c.reset)
-        elif randchoice == 21:
-            print(c.yellow + "\".;,;.\" - Noggisoggi" + c.reset)
-        elif randchoice == 22:
-            print(c.yellow + "\"/vote day\" - Noggisoggi" + c.reset)
-        elif randchoice == 23:
-            print(c.yellow + "\"Brown bricks in Minecrap\" - Noggisoggi" + c.reset)
-        elif randchoice == 24:
-            print(c.yellow + "\"All hail Scout (not the TF2 one)\" - Noggisoggi" + c.reset)
-        elif randchoice == 25:
-            print(c.yellow + "\"Crystallitis and plasmoids? In *my* RetroMC? It's more likely than you think.\" - Noggisoggi" + c.reset)
-        elif randchoice == 26:
-            print(c.yellow + "\"Authenticated with uhhhhhh Nodes.\" - Noggisoggi" + c.reset)
-        elif randchoice == 27:
-            print(c.yellow + "\"oh god Scout's staring into my soul pleas send help us help you help us all\" - Noggisoggi" + c.reset)
-        elif randchoice == 28:
-            print(c.yellow + "\"instructions unclear; found red crystals on the back of head\" - Noggisoggi" + c.reset)
-        elif randchoice == 29:
-            print(c.yellow + "\"A certain VC is known to be one of the epicenters of brane rot..\" - Noggisoggi" + c.reset)
-        elif randchoice == 30:
-            print(c.yellow + "\"wb\" - Literally everyone on the server" + c.reset)
-        elif randchoice == 31:
-            print(c.yellow + "\"/home supersecretduplicationstashferfer\" - SvGaming234" + c.reset)
-        elif randchoice == 32:
-            print(c.yellow + "\"ÂÂÂÂÂÂÂÂÂÂÂÂ\" - The RMC player list API for no reason" + c.reset)
-        elif randchoice == 33:
-            print(c.yellow + "\"h\" - Ade1ie" + c.reset)
-        elif randchoice == 34:
-            print(c.yellow + "\"its ferfer not fer fer\" - SvGaming234" + c.reset)
-        elif randchoice == 35:
-            print(c.yellow + "\"the retromc\" - Noggisoggi" + c.reset)
-        elif randchoice == 36:
-            print(c.yellow + "\"You cannot afford to kill a Wild_Wolf\" - zavdav" + c.reset)
-        elif randchoice == 37:
-            print(c.yellow + "\"Is it C-stats, Cstats, or c-stats, cstats? That is the question.\" - Ade1ie" + c.reset)
-        elif randchoice == 38:
-            print(c.yellow + "\"its cstats ferfer\" - SvGaming234" + c.reset)
-        elif randchoice == 39:
-            print(c.yellow + "\"MOAR SPLASHES\" - zavdav" + c.reset)
-        elif randchoice == 40:
-            print(c.yellow + "\"ChestShopHistory\" - zavdav" + c.reset)
-        elif randchoice == 41:
-            print(c.yellow + "\"plugin.getFundamentalsLanguageConfig.getMessage(\"player_not_found_full\");\" - zavdav" + c.reset)
-        elif randchoice == 42:
-            print(c.yellow + "\"Is 42 the meaning of life?\" - Jaoheah" + c.reset)
-        elif randchoice == 43:
-            print(c.yellow + "\"Jaoheah was here on 10/31/2024 at 10:31 PM ET\" - Jaoheah" + c.reset)    
-        else:
-            print(c.red + "Error: random quote text picking failed" + c.reset)
+    splashes = [
+        "\"GUI soon(tm)\" - samcraft3",
+        "\"fer\" - Krissofer",
+        "\"chatGPT-free code!\" - samcraft3",
+        "\";3\" - ospence5",
+        "\"Up to 4 times more Notchcode\" - Krissofer",
+        "\"Now with more Notchcode(tm)\" - SvGaming234",
+        "\"Maybe RetroMC is the friends we met along the way?\" - Pittofer",
+        "\"Jthings are Just better\" - Pittofer",
+        "\"guh\" - SvGaming234",
+        "\"Coming soon(TM) to theaters and computers near you!\" - Noggisoggi",
+        "\"Together, we are RetroMC!\" - Noggisoggi",
+        "\"true and real\" - Noggisoggi",
+        "\"wb\" - Noggisoggi",
+        "\"fer fer\" - Noggisoggi",
+        "\"hmmmm\" - Noggisoggi",
+        "\"https://wiki.retromc.org/\" - Noggisoggi",
+        "\"Now with less Notchcode(TM)\" - Noggisoggi",
+        "\"holy\" - Noggisoggi",
+        "\"h\" - Noggisoggi",
+        "\"how dee feller\" - Noggisoggi",
+        "\".;,;.\" - Noggisoggi",
+        "\"/vote day\" - Noggisoggi",
+        "\"Brown bricks in Minecrap\" - Noggisoggi",
+        "\"All hail Scout (not the TF2 one)\" - Noggisoggi",
+        "\"Crystallitis and plasmoids? In *my* RetroMC? It's more likely than you think.\" - Noggisoggi",
+        "\"Authenticated with uhhhhhh Nodes.\" - Noggisoggi",
+        "\"oh god Scout's staring into my soul pleas send help us help you help us all\" - Noggisoggi",
+        "\"instructions unclear; found red crystals on the back of head\" - Noggisoggi",
+        "\"A certain VC is known to be one of the epicenters of brane rot..\" - Noggisoggi",
+        "\"wb\" - Literally everyone on the server",
+        "\"/home supersecretduplicationstashferfer\" - SvGaming234",
+        "\"ÂÂÂÂÂÂÂÂÂÂÂÂ\" - The RMC player list API for no reason",
+        "\"h\" - Ade1ie",
+        "\"its ferfer not fer fer\" - SvGaming234",
+        "\"the retromc\" - Noggisoggi",
+        "\"You cannot afford to kill a Wild_Wolf\" - zavdav",
+        "\"Is it C-stats, Cstats, or c-stats, cstats? That is the question.\" - Ade1ie",
+        "\"its cstats ferfer\" - SvGaming234",
+        "\"MOAR SPLASHES\" - zavdav",
+        "\"ChestShopHistory\" - zavdav",
+        "\"plugin.getFundamentalsLanguageConfig.getMessage(\"player_not_found_full\");\" - zavdav",
+        "\"Is 42 the meaning of life?\" - Jaoheah",
+        "\"Jaoheah was here on 10/31/2024 at 10:31 PM ET\" - Jaoheah"
+    ]
+
+    print(c.yellow + splashes[random.randint(0, len(splashes) - 1)] + c.reset)
+
 
 def playerlist():
     request = json.loads(json.dumps(requests.get("http://api.retromc.org/api/v1/server/players").json()))
