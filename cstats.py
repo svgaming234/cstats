@@ -207,7 +207,21 @@ def randomquote():
         "\"ChestShopHistory\" - zavdav",
         "\"plugin.getFundamentalsLanguageConfig.getMessage(\"player_not_found_full\");\" - zavdav",
         "\"Is 42 the meaning of life?\" - Jaoheah",
-        "\"Jaoheah was here on 10/31/2024 at 10:31 PM ET\" - Jaoheah"
+        "\"Jaoheah was here on 10/31/2024 at 10:31 PM ET\" - Jaoheah",
+        "\"blue and teal\" - Grassboii",
+        "\"glue and seal\" - Grassboii",
+        "\"double it and give it to the next person\" - Grassboii",
+        "\"so real\" - Grassboii",
+        "\"zuh?\" - Grassboii",
+        "\"guh?\" - Grassboii",
+        "\"free cake!\" - Grassboii",
+        "\"/!\\ /!\\\" - Grassboii",
+        "\"/kit food\" - Grassboii",
+        "\"guys look, it's josh!\" - Grassboii",
+        "\"test toast\" - Grassboii",
+        "\"guhuhuhuh\" - Grassboii",
+        "\"har har har har har har har har har har. har har har har, har har har har...\" - Grassboii",
+        "\"plasmoid sighted\" - Grassboii"
     ]
 
     print(c.yellow + splashes[random.randint(0, len(splashes) - 1)] + c.reset)
