@@ -746,7 +746,7 @@ def init():
     global latestversion
 
     try:
-        request = requests.get("https://github.com/svgaming234/cstats/releases/latest")
+        request = requests.head("https://github.com/svgaming234/cstats/releases/latest", allow_redirects=True)
         latestversion = request.url.split("/")[-1]
     except:
         latestversion = "Error"
