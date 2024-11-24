@@ -10,6 +10,7 @@ import os
 import errno
 import socket
 import time
+import configparser
 from datetime import datetime
 
 version = "v0.5.0"
@@ -86,6 +87,38 @@ def generatefilestructure():
     mkdir_p(confpath + "capes/")
     cache = open(confpath + "uuidusernamecache", "a")
     cache.close()
+
+def generateconfig(confoption):
+    conf = configparser.ConfigParser()
+
+    conf.read(confpath + "config.ini")
+
+    if confoption == "checkForUpdates":
+        conf["general"] = {
+            "checkForUpdates": True,
+        }
+
+    confini = open(confpath + "config.ini", "w")
+    conf.write(confini)
+    confini.close()
+
+def generateallconfigs():
+    generateconfig("checkForUpdates")
+
+def readconfig():
+    global confvalues
+
+    conf = configparser.ConfigParser()
+    conf.read(confpath + "config.ini")
+
+    try:
+        confvalues = {
+            "checkForUpdates": conf.getboolean("general", "checkForUpdates")
+        }
+    except (configparser.NoOptionError, configparser.NoSectionError):
+        generateconfig("checkForUpdates")
+        readconfig()
+
 
 def ccparser(s):
     # this is very jank feeling but it works i guess
@@ -724,7 +757,7 @@ def about():
     main()
 
 def resetcache():
-    print("This option resets the UUID-Username cache located at " + c.aqua + confpath + c.reset + ". Are you sure you want to reset it?\n")
+    print("This option resets the UUID-Username cache located at " + c.aqua + confpath + "uuidusernamecache" + c.reset + ". Are you sure you want to reset it?\n")
 
     print(c.aqua + "1) " + c.reset + "yes")
     print(c.aqua + "0) " + c.reset + "no\n")
@@ -741,11 +774,31 @@ def resetcache():
         print(c.red + "Error: Invalid option!" + c.reset)
         resetcache()
 
+def resetconfig():
+    print("This option resets the configuration file located at " + c.aqua + confpath + "config.ini" + c.reset + ". Are you sure you want to reset it?\n")
+
+    print(c.aqua + "1) " + c.reset + "yes")
+    print(c.aqua + "0) " + c.reset + "no\n")
+
+    choose = input("> ").lower()
+
+    if choose == "1" or choose == "yes":
+        cache = open(confpath + "config.ini", "w")
+        cache.close()
+        generateconfig()
+    elif choose == "0" or choose == "no" or choose == "exit":
+        return
+    else:
+        cls()
+        print(c.red + "Error: Invalid option!" + c.reset)
+        resetcache()
+
 
 def options():
     print("Please select an " + c.aqua + "option.\n" + c.reset)
 
     print(c.aqua + "1) " + c.reset + "resetCache")
+    print(c.aqua + "2) " + c.reset + "resetConfig")
     print(c.aqua + "0) " + c.reset + "exit\n")
 
     choose = input("> ").lower()
@@ -753,6 +806,11 @@ def options():
     if choose == "1" or choose == "resetcache":
         cls()
         resetcache()
+        cls()
+        options()
+    if choose == "2" or choose == "resetconfig":
+        cls()
+        resetconfig()
         cls()
         options()
     elif choose == "0" or choose == "exit":
@@ -765,15 +823,19 @@ def options():
 def init():
     setwindowtitle("cstats " + version)
 
+    generatefilestructure()
+    readconfig()
+
     global latestversion
 
-    try:
-        request = requests.get("https://github.com/svgaming234/cstats/releases/latest")
-        latestversion = request.url.split("/")[-1]
-    except:
-        latestversion = "Error"
-    
-    generatefilestructure()
+    if confvalues["checkForUpdates"] == True:
+        try:
+            request = requests.get("https://github.com/svgaming234/cstats/releases/latest")
+            latestversion = request.url.split("/")[-1]
+        except:
+            latestversion = "Error"
+    else:
+        latestversion = "test"
 
     main()
 
