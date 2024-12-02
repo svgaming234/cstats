@@ -90,13 +90,22 @@ def generatefilestructure():
 
 def generateconfig(confoption):
     conf = configparser.ConfigParser()
+    conf.optionxform = str
 
-    conf.read(confpath + "config.ini")
+    try:
+        conf.read(confpath + "config.ini")
+    except configparser.MissingSectionHeaderError:
+        pass
+
+    try:
+        conf["general"]
+    except KeyError:
+        conf["general"] = {}
 
     if confoption == "checkForUpdates":
-        conf["general"] = {
-            "checkForUpdates": True,
-        }
+        conf["general"]["checkForUpdates"] = "True"
+    elif confoption == "changeWindowTitle":
+        conf["general"]["changeWindowTitle"] = "True"
 
     confini = open(confpath + "config.ini", "w")
     conf.write(confini)
@@ -104,21 +113,41 @@ def generateconfig(confoption):
 
 def generateallconfigs():
     generateconfig("checkForUpdates")
+    generateconfig("changeWindowTitle")
 
-def readconfig():
+def readconfig(confcategory, confoption):
     global confvalues
 
+    try:
+        confvalues
+    except NameError:
+        confvalues = {}
+
     conf = configparser.ConfigParser()
-    conf.read(confpath + "config.ini")
+    conf.optionxform = str
+    try:
+        conf.read(confpath + "config.ini")
+    except configparser.MissingSectionHeaderError:
+        cls()
+        print(c.red + "ERROR: Missing section headers! The config file will be reset upon pressing ENTER." + c.reset)
+        entertocontinue()
+        pass
 
     try:
-        confvalues = {
-            "checkForUpdates": conf.getboolean("general", "checkForUpdates")
-        }
+        confvalues[confoption] = conf.getboolean(confcategory, confoption)
     except (configparser.NoOptionError, configparser.NoSectionError):
-        generateconfig("checkForUpdates")
-        readconfig()
+        generateconfig(confoption)
+        readconfig(confcategory, confoption)
+    except ValueError:
+        cls()
+        print(c.red + "ERROR: Invalid data type for \"" + confoption + "\"! This option must be \"True\" or \"False\"!\nThis option will be reset automatically after you press ENTER." + c.reset)
+        entertocontinue()
+        generateconfig(confoption)
+        readconfig(confcategory, confoption)
 
+def readallconfigs():
+    readconfig("general", "checkForUpdates")
+    readconfig("general", "changeWindowTitle")
 
 def ccparser(s):
     # this is very jank feeling but it works i guess
@@ -753,7 +782,8 @@ def resetcache():
         resetcache()
 
 def resetconfig():
-    print("This option resets the configuration file located at " + c.aqua + confpath + "config.ini" + c.reset + ". Are you sure you want to reset it?\n")
+    print("This option resets the configuration file located at " + c.aqua + confpath + "config.ini" + c.reset + ". Are you sure you want to reset it?")
+    print(c.yellow + "NOTE: This option will also restart the program to make sure all changes are applied.\n" + c.reset)
 
     print(c.aqua + "1) " + c.reset + "yes")
     print(c.aqua + "0) " + c.reset + "no\n")
@@ -763,7 +793,8 @@ def resetconfig():
     if choose == "1" or choose == "yes":
         cache = open(confpath + "config.ini", "w")
         cache.close()
-        generateconfig()
+        generateallconfigs()
+        init()
     elif choose == "0" or choose == "no" or choose == "exit":
         return
     else:
@@ -799,11 +830,12 @@ def options():
         options()
 
 def init():
-    setwindowtitle("cstats " + version)
-
     generatefilestructure()
-    readconfig()
+    readallconfigs()
 
+    if confvalues["changeWindowTitle"] == True:
+        setwindowtitle("cstats " + version)
+    
     global latestversion
 
     if confvalues["checkForUpdates"] == True:
@@ -826,10 +858,11 @@ def main():
             choose = sys.argv[1]
             argused = True
         else:
-            if latestversion == "Error":
-                print(c.red + "Failed to check for updates! Please check your internet connection." + c.reset)
-            elif version != latestversion:
-                print(c.yellow + "A new version is available! Please update to " + latestversion + c.reset)
+            if confvalues["checkForUpdates"] == True:
+                if latestversion == "Error":
+                    print(c.red + "Failed to check for updates! Please check your internet connection." + c.reset)
+                elif version != latestversion:
+                    print(c.yellow + "A new version is available! Please update to " + latestversion + c.reset)
 
             print("""
                       /88                 /88
@@ -894,7 +927,8 @@ def main():
             cls()
             about()
         elif choose == "0" or choose == "exit":
-            setwindowtitle("")
+            if confvalues["changeWindowTitle"] == True:
+                setwindowtitle("")
             sys.exit(0)
         else:
             cls()
