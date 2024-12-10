@@ -673,12 +673,21 @@ def leaderboard():
 
 def serverping():
     print(c.yellow + "WARNING: This feature has very questionable accuracy." + c.reset)
+
+    print("Enter the " + c.aqua + "server IP" + c.reset + " (leave blank for " + c.aqua + "mc.retromc.org" + c.reset + "): ")
+    ip = input("> ")
+
+    if ip == "exit" or ip == "0":
+        main()
+    
+    if ip == "":
+        ip = "mc.retromc.org"
     
     timedout = False
     pingattempts = 5
     pingresultlist = []
     
-    print("\nPinging RetroMC " + c.aqua + str(pingattempts) + c.reset + " times:\n")
+    print("\nPinging " + ip + " " + c.aqua + str(pingattempts) + c.reset + " times:\n")
 
     for i in range(pingattempts):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -687,22 +696,29 @@ def serverping():
         try:
             start_time = time.time()
 
-            s.connect(("mc.retromc.org", 25565))
+            s.connect((ip, 25565))
 
             ping = time.time() - start_time
             pingresultlist.append(ping)
-            print("Ping " + str(i + 1) + " to mc.retromc.org: " + c.aqua + str(round(ping * 1000, 2)) + c.reset + " ms")
+            print("Ping " + str(i + 1) + " to " + ip + ": " + c.aqua + str(round(ping * 1000, 2)) + c.reset + " ms")
 
             s.shutdown(socket.SHUT_RDWR)
             s.close()
         except TimeoutError:
-            print("Ping " + str(i + 1) + " to mc.retromc.org: " + c.red + "Timed out" + c.reset)
+            print("Ping " + str(i + 1) + " to " + ip + ": " + c.red + "Timed out" + c.reset)
             timedout = True
+        except socket.gaierror:
+            cls()
+            print(c.red + "Error: Unknown server hostname." + c.reset)
+            serverping()
 
-    print("\nAverage ping: " + c.aqua + str(round(sum(pingresultlist) / len(pingresultlist) * 1000, 2)) + c.reset + " ms")
+    try:
+        print("\nAverage ping: " + c.aqua + str(round(sum(pingresultlist) / len(pingresultlist) * 1000, 2)) + c.reset + " ms")
+    except ZeroDivisionError:
+        print("\nAverage ping: " + c.red + "All pings timed out. Did you enter the right IP?" + c.reset)
 
     if timedout:
-        print(c.yellow + "NOTE: When testing ping multiple times quickly in a row timeouts start to appear.\nWait a bit and try again." + c.reset)
+        print(c.yellow + "\nNOTE: When testing ping multiple times quickly in a row timeouts can start to appear.\nWait a bit and try again." + c.reset)
     
     entertocontinue()
     main()
