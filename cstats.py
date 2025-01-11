@@ -13,7 +13,7 @@ import time
 import configparser
 from datetime import datetime
 
-version = "v0.6.0"
+version = "v0.6.1"
 
 def mkdir_p(newdir):
     try: 
