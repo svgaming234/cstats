@@ -291,7 +291,7 @@ def randomquote():
 
 
 def playerlist():
-    request = json.loads(json.dumps(requests.get("http://api.retromc.org/api/v1/server/players").json()))
+    request = json.loads(json.dumps(requests.get("https://api.retromc.org/api/v1/server/players").json()))
 
     print("There are " + c.aqua + str(request["player_count"]) + c.reset + " out of a maximum " + c.aqua + str(request["max_players"]) + c.reset + " players online.\n\nOutput format:")
     print("Rank and display name | Username | Player UUID | X coord | Y coord | Z coord\n")
@@ -325,7 +325,7 @@ def playerlist():
 
 def chat():
     listfmt = "{display}: {message}"
-    request = json.loads(json.dumps(requests.get("http://api.retromc.org/api/v1/server/chat").json()))
+    request = json.loads(json.dumps(requests.get("https://api.retromc.org/api/v1/server/chat").json()))
 
     print("Displaying recently sent messages. (does " + c.aqua + "NOT" + c.reset + " display Discord messages)\n")
 
@@ -343,7 +343,7 @@ def chat():
 
 def villagelist():
     listfmt = "{name} | {owner} | {villageuuid}"
-    request = json.loads(json.dumps(requests.get("http://api.retromc.org/api/v1/village/getVillageList").json()))
+    request = json.loads(json.dumps(requests.get("https://api.retromc.org/api/v1/village/getVillageList").json()))
 
     print("Displaying list of " + c.aqua + "all" + c.reset + " RetroMC villages.\n\nOutput format:")
     print("Village name | Village owner | Village UUID\n")
@@ -370,7 +370,7 @@ def villagedetails():
     if village == "exit" or village == "0":
         main()
 
-    request = json.loads(json.dumps(requests.get("http://api.retromc.org/api/v1/village/getVillageList").json()))
+    request = json.loads(json.dumps(requests.get("https://api.retromc.org/api/v1/village/getVillageList").json()))
 
     print("\nDisplaying " + c.aqua + "village details" + c.reset + ".\n")
 
@@ -383,7 +383,7 @@ def villagedetails():
         print(c.red + "Error: Village not found." + c.reset)
         villagedetails()
 
-    request2 = json.loads(json.dumps(requests.get("http://api.retromc.org/api/v1/village/getVillage?uuid=" + villageuuid).json()))
+    request2 = json.loads(json.dumps(requests.get("https://api.retromc.org/api/v1/village/getVillage?uuid=" + villageuuid).json()))
     
     print("Name: " + str(request2["name"]))
     print("Village UUID: " + str(request2["uuid"]))
