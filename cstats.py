@@ -284,7 +284,8 @@ def randomquote():
         "\"guhuhuhuh\" - Grassboii",
         "\"har har har har har har har har har har. har har har har, har har har har...\" - Grassboii",
         "\"plasmoid sighted\" - Grassboii",
-        "\"boy dinner recipe: one (1) hot pocket, fifteen (15) doritos\" - Golden_MC"
+        "\"boy dinner recipe: one (1) hot pocket, fifteen (15) doritos\" - Golden_MC",
+        "\"svgaming234.github.io/cactus\" - SvGaming234"
     ]
 
     print(c.yellow + splashes[random.randint(0, len(splashes) - 1)] + c.reset)
