@@ -877,8 +877,12 @@ def init():
 
     if confvalues["checkForUpdates"] == True:
         try:
-            request = requests.head("https://github.com/svgaming234/cstats/releases/latest", allow_redirects=True)
+            request = requests.head("https://github.com/svgaming234/cstats/releases/latest", allow_redirects=True, timeout = 3)
             latestversion = request.url.split("/")[-1]
+        except requests.exceptions.Timeout:
+            latestversion = "TimeoutError"
+        except requests.exceptions.ConnectionError:
+            latestversion = "ConnectionError"
         except:
             latestversion = "Error"
 
@@ -896,8 +900,12 @@ def main():
             argused = True
         else:
             if confvalues["checkForUpdates"] == True:
-                if latestversion == "Error":
-                    print(c.red + "Failed to check for updates! Please check your internet connection." + c.reset)
+                if latestversion == "TimeoutError":
+                    print(c.red + "Failed to check for updates (timed out)! Please check your internet connection." + c.reset)
+                elif latestversion == "ConnectionError":
+                    print(c.red + "Failed to check for updates (connection error)! Please check your internet connection." + c.reset)
+                elif latestversion == "Error":
+                    print(c.red + "Failed to check for updates (unspecified error)! Please check your internet connection." + c.reset)
                 elif version != latestversion:
                     print(c.yellow + "A new version is available! Please update to " + latestversion + c.reset)
 
