@@ -765,6 +765,25 @@ def capes():
         print(c.red + "Error: This user is not wearing a BetaEvo cape." + c.reset)
         capes()
 
+def legacytracker():
+    request = json.loads(json.dumps(requests.get("https://servers.legacyminecraft.com/api/getStats").json()))
+
+    print("Total current server count: " + str(request["totalServers"]))
+    print("Total of unique user joins: " + str(request["totalUsers"]))
+    print("Total users online: " + str(request["totalUsersOnline"]) + "\n")
+
+
+    request2 = json.loads(json.dumps(requests.get("https://servers.legacyminecraft.com/api/getGlobalHistory").json()))
+
+    for i in range(len(request2["servers"])):
+        print("Server: " + request2["servers"][i]["name"])
+        print("UUID: " + request2["servers"][i]["uuid"] + " (ID " + str(request2["servers"][i]["id"]) + ")")
+        request3 = json.loads(json.dumps(requests.get("https://servers.legacyminecraft.com/api/getPlayersOnline?id=" + str(request2["servers"][i]["id"])).json()))
+        print("Players online: " + str(request3["count"]) + "\n")
+
+    entertocontinue()
+    main()
+
 def about():
     print("About " + c.aqua + "cstats " + version + c.reset + ":")
 
@@ -906,8 +925,9 @@ def main():
             print(c.aqua + "6) " + c.reset + "leaderboard")
             print(c.aqua + "7) " + c.reset + "capes")
             print(c.aqua + "8) " + c.reset + "serverping")
-            print(c.aqua + "9) " + c.reset + "options")
-            print(c.aqua + "10) " + c.reset + "about")
+            print(c.aqua + "9) " + c.reset + "legacytracker")
+            print(c.aqua + "10) " + c.reset + "options")
+            print(c.aqua + "11) " + c.reset + "about")
             print(c.aqua + "0) " + c.reset + "exit")
 
             print("\nThis program is still a work in progress, report issues to SvGaming")
@@ -938,10 +958,13 @@ def main():
         elif choose == "8" or choose == "serverping":
             cls()
             serverping()
-        elif choose == "9" or choose == "options":
+        elif choose == "9" or choose == "legacytracker":
+            cls()
+            legacytracker()
+        elif choose == "10" or choose == "options":
             cls()
             options()
-        elif choose == "10" or choose == "about":
+        elif choose == "11" or choose == "about":
             cls()
             about()
         elif choose == "0" or choose == "exit":
