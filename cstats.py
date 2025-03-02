@@ -225,6 +225,10 @@ def removeweirda(strold):
     strnew = strold.replace("Â", "")
     return strnew
 
+def commaloop(value, separator = ", "):
+    if value != 0:
+        print(separator, end = "")
+
 def randomquote():
     splashes = [
         "\"GUI soon(tm)\" - samcraft3",
@@ -411,18 +415,16 @@ def villagedetails():
     print("\nAssistants:")
     if len(request2["assistants"]) != 0:    
         for i in range(0, len(request2["assistants"])):
+            commaloop(i)
             print(uuidtousername(request2["assistants"][i]), end="")
-            if len(request2["assistants"]) - 1 != i:
-                print(", ", end="")
     else:
         print("No assistants", end="")
 
     print("\n\nMembers:")
     if len(request2["members"]) != 0:
         for i in range(0, len(request2["members"])):
+            commaloop(i)
             print(uuidtousername(request2["members"][i]), end="")
-            if len(request2["members"]) - 1 != i:
-                print(", ", end="")
     else:
         print("No members", end="")
 
@@ -765,21 +767,49 @@ def capes():
         print(c.red + "Error: This user is not wearing a BetaEvo cape." + c.reset)
         capes()
 
+def loadingscreen(totalcount, current):
+    cls()
+    print("Loading server information... (" + c.aqua + str(round(current / totalcount * 100, 1)) + "%" + c.reset + ")")
+
+def sortbycount(infoapi):
+    return infoapi["count"]
+
 def legacytracker():
+    print("Loading server information...")
     request = json.loads(json.dumps(requests.get("https://servers.legacyminecraft.com/api/getStats").json()))
+    totalrequests = request["totalServers"] + 2
+    loadingscreen(totalrequests, 2)
+    request2 = json.loads(json.dumps(requests.get("https://servers.legacyminecraft.com/api/getGlobalHistory").json()))
+    serverlist = []
+    for i in range(len(request2["servers"])):
+        loadingscreen(totalrequests, i + 3)
+        request3 = json.loads(json.dumps(requests.get("https://servers.legacyminecraft.com/api/getPlayersOnline?id=" + str(request2["servers"][i]["id"])).json()))
+        request3.update(request2["servers"][i])
+        serverlist.append(request3)
+    cls()
+    serverlist.sort(key = sortbycount, reverse = True)
 
     print("Total current server count: " + str(request["totalServers"]))
     print("Total of unique user joins: " + str(request["totalUsers"]))
     print("Total users online: " + str(request["totalUsersOnline"]) + "\n")
 
+    for i in range(len(serverlist)):
+        print(c.aqua + str(i + 1) + ") " + c.reset + serverlist[i]["name"] + 
+        " (" + c.aqua + str(serverlist[i]["count"]) + c.reset + " players online)")
 
-    request2 = json.loads(json.dumps(requests.get("https://servers.legacyminecraft.com/api/getGlobalHistory").json()))
+        print("UUID: " + c.aqua + serverlist[i]["uuid"] + c.reset
+         + " (ID " + c.aqua + str(serverlist[i]["id"]) + c.reset + ")")
 
-    for i in range(len(request2["servers"])):
-        print("Server: " + request2["servers"][i]["name"])
-        print("UUID: " + request2["servers"][i]["uuid"] + " (ID " + str(request2["servers"][i]["id"]) + ")")
-        request3 = json.loads(json.dumps(requests.get("https://servers.legacyminecraft.com/api/getPlayersOnline?id=" + str(request2["servers"][i]["id"])).json()))
-        print("Players online: " + str(request3["count"]) + "\n")
+        print("Player list: ", end = "")
+
+        if len(serverlist[i]["players"]) != 0:
+            for j in range(len(serverlist[i]["players"])):
+                commaloop(j)
+                print(serverlist[i]["players"][j], end = "")
+        else:
+            print("No players online :(", end = "")
+        
+        print("\n")
 
     entertocontinue()
     main()
