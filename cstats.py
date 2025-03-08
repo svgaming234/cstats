@@ -428,8 +428,16 @@ def villagedetails():
     else:
         print("No members", end="")
 
-    print("\n\nView on world viewer:\nhttps://world.retromc.org/#/"
-     + str(request2["spawn"]["x"])  + "/64/" + str(request2["spawn"]["z"]) +"/-3/")
+    worldviewer = "\n\nView on world viewer:\nhttps://world.retromc.org/#/" + str(request2["spawn"]["x"])  + "/64/" + str(request2["spawn"]["z"]) +"/-3/"
+
+    if request2["spawn"]["world"] == "retromc":
+        worldviewer = worldviewer + "Overworld/overworldday"
+    elif request2["spawn"]["world"] == "skylands":
+        worldviewer = worldviewer + "Skylands/skylandsday"
+    else:
+        worldviewer = "\n\nView on world viewer:\nWorld viewer not available for this dimension!"
+    
+    print(worldviewer)
 
     print("\nView on J-Stats:\nhttps://statistics.retromc.org/village/" + str(request2["uuid"]))
 
