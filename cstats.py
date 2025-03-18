@@ -289,7 +289,10 @@ def randomquote():
         "\"har har har har har har har har har har. har har har har, har har har har...\" - Grassboii",
         "\"plasmoid sighted\" - Grassboii",
         "\"boy dinner recipe: one (1) hot pocket, fifteen (15) doritos\" - Golden_MC",
-        "\"svgaming234.github.io/cactus\" - SvGaming234"
+        "\"svgaming234.github.io/cactus\" - SvGaming234",
+        "\"ok\" - ScaryAdmin",
+        "\"admin\" - bb771",
+        "\"anyone wanna place a hit on someone\" - bb771"
     ]
 
     print(c.yellow + splashes[random.randint(0, len(splashes) - 1)] + c.reset)
