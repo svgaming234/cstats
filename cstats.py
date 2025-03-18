@@ -12,6 +12,7 @@ import socket
 import time
 import configparser
 from datetime import datetime
+from urllib3.exceptions import InsecureRequestWarning
 
 version = "v0.7.0"
 
@@ -826,21 +827,25 @@ def legacytracker():
     main()
 
 def bmcplayerlist():
-    request = json.loads(json.dumps(requests.get("http://betamc.org:8080/playerlist").json()))
+    requests.packages.urllib3.disable_warnings(category=InsecureRequestWarning)
+    request = json.loads(json.dumps(requests.get("https://betamc.org:8080/api/players", verify=False).json()))
 
     print("There are " + c.aqua + str(request["player_count"]) + c.reset + " out of a maximum " + c.aqua + str(request["max_players"]) + c.reset + " players online.\n\nOutput format:")
-    print("Rank and display name | Username | Player UUID\n")
+    print("Rank and display name | Username | Player UUID\nFirst join | Balance | Playtime\n")
 
     for i in range(0, request["player_count"]):
         stri = str(i)
         displayname = ccparser(request[stri]["display_name"])
 
-        listfmt = "{display} | {user} | {uuid}"
+        listfmt = "{display} | {user} | {uuid}\n{firstjoin} | ${balance} | {playtime}h\n"
 
         print(listfmt.format(
             display = displayname,
             user = request[stri]["username"], 
-            uuid = request[stri]["uuid"]
+            uuid = request[stri]["uuid"],
+            firstjoin = unixtimetotime(request[stri]["first_join"] / 1000),
+            balance = request[stri]["balance"],
+            playtime = round(request[stri]["playtime"] / 1000 / 60 / 60, 1)
         ))
 
     entertocontinue()
