@@ -48,8 +48,8 @@ SvGaming - Project lead
 
 Noggisoggi - Creator of player list script which cstats is based on  
 
-JohnyMuffin - Creator of APIs utilized by cstats  
+JohnyMuffin - Creator of RetroMC and Legacy Tracker related APIs utilized by cstats  
 
-zavdav - Lead tester, told me about the getUser API, gave ideas for improving the ping feature
+zavdav - Tester, told me about the getUser API, gave ideas for improving the ping feature, creator of BetaMC APIs used by cstats
 
 Jaoheah - Switched the options around on the menu

@@ -326,7 +326,7 @@ def playerlist():
             ))
 
     entertocontinue()
-    main()
+    rmcmenu()
 
 def chat():
     listfmt = "{display}: {message}"
@@ -344,7 +344,7 @@ def chat():
         ))
 
     entertocontinue()
-    main()
+    rmcmenu()
 
 def villagelist():
     listfmt = "{name} | {owner} | {villageuuid}"
@@ -366,14 +366,14 @@ def villagelist():
     print("\nTotal village count: " + str(totalcount))
 
     entertocontinue()
-    main()
+    rmcmenu()
 
 def villagedetails():
     print("Enter the " + c.aqua + "village name" + c.reset + ":")
     village = input("> ").lower()
 
     if village == "exit" or village == "0":
-        main()
+        rmcmenu()
 
     request = json.loads(json.dumps(requests.get("https://api.retromc.org/api/v1/village/getVillageList").json()))
 
@@ -442,14 +442,14 @@ def villagedetails():
     print("\nView on J-Stats:\nhttps://statistics.retromc.org/village/" + str(request2["uuid"]))
 
     entertocontinue()
-    main()
+    rmcmenu()
 
 def playerstats():
     print("Enter the " + c.aqua + "player name" + c.reset + ":")
     player = input("> ")
 
     if player == "exit" or player == "0":
-        main()
+        rmcmenu()
 
     try:
         playerusernamefixed = fixusernamecase(player)
@@ -589,7 +589,7 @@ def playerstats():
     print("\nView on J-Stats:\nhttps://statistics.retromc.org/player/" + playeruuid)
 
     entertocontinue()
-    main()
+    rmcmenu()
 
 def leaderboard():
     print("Please select a " + c.aqua + "statistic type " + c.reset + "to view its leaderboard.\n")
@@ -661,7 +661,7 @@ def leaderboard():
         stattype = "money"
         dataprefix = "$"
     elif choose == "0" or choose == "exit":
-        main()
+        rmcmenu()
     else:
         cls()
         print(c.red + "Error: Invalid statistic type!" + c.reset)
@@ -739,7 +739,7 @@ def capes():
     player = input("> ")
 
     if player == "exit" or player == "0":
-        main()
+        rmcmenu()
 
     try:
         playerusernamefixed = fixusernamecase(player)
@@ -769,7 +769,7 @@ def capes():
         print("\nCape has been saved to " + c.aqua + capepath + c.reset)
 
         entertocontinue()
-        main()
+        rmcmenu()
     else:
         cls()
         print(c.red + "Error: This user is not wearing a BetaEvo cape." + c.reset)
@@ -822,14 +822,35 @@ def legacytracker():
     entertocontinue()
     main()
 
+def bmcplayerlist():
+    request = json.loads(json.dumps(requests.get("http://betamc.org:8080/playerlist").json()))
+
+    print("There are " + c.aqua + str(request["player_count"]) + c.reset + " out of a maximum " + c.aqua + str(request["max_players"]) + c.reset + " players online.\n\nOutput format:")
+    print("Rank and display name | Username | Player UUID\n")
+
+    for i in range(0, request["player_count"]):
+        stri = str(i)
+        displayname = ccparser(request[stri]["display_name"])
+
+        listfmt = "{display} | {user} | {uuid}"
+
+        print(listfmt.format(
+            display = displayname,
+            user = request[stri]["username"], 
+            uuid = request[stri]["uuid"]
+        ))
+
+    entertocontinue()
+    bmcmenu()
+
 def about():
     print("About " + c.aqua + "cstats " + version + c.reset + ":")
 
     print("\nCredits:")
     print(c.aqua + "SvGaming" + c.reset + " - Project lead")
     print(c.aqua + "Noggisoggi" + c.reset + " - Creator of player list script which cstats is based on")
-    print(c.aqua + "JohnyMuffin" + c.reset + " - Creator of APIs utilized by cstats")
-    print(c.aqua + "zavdav" + c.reset + " - Lead tester, told me about the getUser API, gave ideas for improving the ping feature")
+    print(c.aqua + "JohnyMuffin" + c.reset + " - Creator of RetroMC and Legacy Tracker related APIs utilized by cstats")
+    print(c.aqua + "zavdav" + c.reset + " - Tester, told me about the getUser API, gave ideas for improving the ping feature, creator of BetaMC APIs used by cstats")
     print(c.aqua + "Jaoheah" + c.reset + " - Switched the options around on the menu")
 
     print("\nGitHub repository: " + c.aqua + "https://github.com/svgaming234/cstats" + c.reset)
@@ -904,6 +925,99 @@ def options():
         print(c.red + "Error: Invalid option!" + c.reset)
         options()
 
+def asciilogo():
+    print("""
+                      /88                 /88
+                      | 88                | 88
+  """ + c.aqua + """/8888888  """ + c.reset + """/8888888 /888888    /888888  /888888   /8888888
+ """ + c.aqua + """/88_____/ """ + c.reset + """/88_____/|_  88_/   |____  88|_  88_/  /88_____/
+""" + c.aqua + """| 88      """ + c.reset + """|  888888   | 88      /8888888  | 88   |  888888 
+""" + c.aqua + """| 88       """ + c.reset + """\\____  88  | 88 /88 /88__  88  | 88 /88\\____  88
+""" + c.aqua + """|  8888888 """ + c.reset + """/8888888/  |  8888/|  8888888  |  8888//8888888/
+ """ + c.aqua + """\\_______/""" + c.reset + """|_______/    \\___/   \\_______/   \\___/ |_______/ 
+""")
+
+def rmcmenu():
+    cls()
+
+    while True:
+        asciilogo()
+
+        randomquote()
+
+        print("Welcome to " + c.aqua + "cstats " + version + c.reset + "!")
+        print("Type the " + c.aqua + "name of a function " + c.reset + "or its " + c.aqua + "numerical ID " + c.reset + "from the list below and press " + c.aqua + "ENTER\n" + c.reset)
+        print(c.aqua + "RetroMC" + c.reset + " menu\n")
+
+        print(c.aqua + "1) " + c.reset + "playerlist")
+        print(c.aqua + "2) " + c.reset + "chat")
+        print(c.aqua + "3) " + c.reset + "villagelist")
+        print(c.aqua + "4) " + c.reset + "villagedetails")
+        print(c.aqua + "5) " + c.reset + "playerstats")
+        print(c.aqua + "6) " + c.reset + "leaderboard")
+        print(c.aqua + "7) " + c.reset + "capes")
+        print(c.aqua + "0) " + c.reset + "exit")
+
+        print("\nThis program is still a work in progress, report issues to SvGaming")
+
+        choose = input("> ").lower()
+
+        if choose == "1" or choose == "playerlist":
+            cls()
+            playerlist()
+        elif choose == "2" or choose == "chat":
+            cls()
+            chat()
+        elif choose == "3" or choose == "villagelist":
+            cls()
+            villagelist()
+        elif choose == "4" or choose == "villagedetails":
+            cls()
+            villagedetails()
+        elif choose == "5" or choose == "playerstats":
+            cls()
+            playerstats()
+        elif choose == "6" or choose == "leaderboard":
+            cls()
+            leaderboard()
+        elif choose == "7" or choose == "capes":
+            cls()
+            capes()
+        elif choose == "0" or choose == "exit":
+            main()
+        else:
+            cls()
+            print(c.red + "Error: Invalid option!" + c.reset)
+
+def bmcmenu():
+    cls()
+
+    while True:
+        cls()
+        asciilogo()
+
+        randomquote()
+
+        print("Welcome to " + c.aqua + "cstats " + version + c.reset + "!")
+        print("Type the " + c.aqua + "name of a function " + c.reset + "or its " + c.aqua + "numerical ID " + c.reset + "from the list below and press " + c.aqua + "ENTER\n" + c.reset)
+        print(c.aqua + "BetaMC" + c.reset + " menu\n")
+
+        print(c.aqua + "1) " + c.reset + "playerlist")
+        print(c.aqua + "0) " + c.reset + "exit")
+
+        print("\nThis program is still a work in progress, report issues to SvGaming")
+
+        choose = input("> ").lower()
+
+        if choose == "1" or choose == "playerlist":
+            cls()
+            bmcplayerlist()
+        elif choose == "0" or choose == "exit":
+            main()
+        else:
+            cls()
+            print(c.red + "Error: Invalid option!" + c.reset)
+
 def init():
     generatefilestructure()
     readallconfigs()
@@ -928,7 +1042,8 @@ def init():
 
 def main():
     cls()
-    while(True):
+    global argused
+    while True:
         try:
             argused
         except NameError:
@@ -936,6 +1051,8 @@ def main():
         if len(sys.argv) > 1 and argused == False:
             choose = sys.argv[1]
             argused = True
+        elif argused == True:
+            sys.exit(0)
         else:
             if confvalues["checkForUpdates"] == True:
                 if latestversion == "TimeoutError":
@@ -947,70 +1064,43 @@ def main():
                 elif version != latestversion:
                     print(c.yellow + "A new version is available! Please update to " + latestversion + c.reset)
 
-            print("""
-                      /88                 /88
-                      | 88                | 88
-  """ + c.aqua + """/8888888  """ + c.reset + """/8888888 /888888    /888888  /888888   /8888888
- """ + c.aqua + """/88_____/ """ + c.reset + """/88_____/|_  88_/   |____  88|_  88_/  /88_____/
-""" + c.aqua + """| 88      """ + c.reset + """|  888888   | 88      /8888888  | 88   |  888888 
-""" + c.aqua + """| 88       """ + c.reset + """\\____  88  | 88 /88 /88__  88  | 88 /88\\____  88
-""" + c.aqua + """|  8888888 """ + c.reset + """/8888888/  |  8888/|  8888888  |  8888//8888888/
- """ + c.aqua + """\\_______/""" + c.reset + """|_______/    \\___/   \\_______/   \\___/ |_______/ 
-""")
+            asciilogo()
 
             randomquote()
 
             print("Welcome to " + c.aqua + "cstats " + version + c.reset + "!")
             print("Type the " + c.aqua + "name of a function " + c.reset + "or its " + c.aqua + "numerical ID " + c.reset + "from the list below and press " + c.aqua + "ENTER\n" + c.reset)
-            
-            print(c.aqua + "1) " + c.reset + "playerlist")
-            print(c.aqua + "2) " + c.reset + "chat")
-            print(c.aqua + "3) " + c.reset + "villagelist")
-            print(c.aqua + "4) " + c.reset + "villagedetails")
-            print(c.aqua + "5) " + c.reset + "playerstats")
-            print(c.aqua + "6) " + c.reset + "leaderboard")
-            print(c.aqua + "7) " + c.reset + "capes")
-            print(c.aqua + "8) " + c.reset + "serverping")
-            print(c.aqua + "9) " + c.reset + "legacytracker")
-            print(c.aqua + "10) " + c.reset + "options")
-            print(c.aqua + "11) " + c.reset + "about")
+
+            print(c.aqua + "Main" + c.reset + " menu, select a " + c.aqua + "server" + c.reset + " to view stats specific to it\n")
+
+            print(c.aqua + "1) " + c.reset + "retromc")
+            print(c.aqua + "2) " + c.reset + "betamc")
+            print(c.aqua + "3) " + c.reset + "serverping")
+            print(c.aqua + "4) " + c.reset + "legacytracker")
+            print(c.aqua + "8) " + c.reset + "options")
+            print(c.aqua + "9) " + c.reset + "about")
             print(c.aqua + "0) " + c.reset + "exit")
 
             print("\nThis program is still a work in progress, report issues to SvGaming")
 
             choose = input("> ").lower()
 
-        if choose == "1" or choose == "playerlist":
+        if choose == "1" or choose == "retromc":
+            rmcmenu()
             cls()
-            playerlist()
-        elif choose == "2" or choose == "chat":
+        elif choose == "2" or choose == "betamc":
+            bmcmenu()
             cls()
-            chat()
-        elif choose == "3" or choose == "villagelist":
-            cls()
-            villagelist()
-        elif choose == "4" or choose == "villagedetails":
-            cls()
-            villagedetails()
-        elif choose == "5" or choose == "playerstats":
-            cls()
-            playerstats()
-        elif choose == "6" or choose == "leaderboard":
-            cls()
-            leaderboard()
-        elif choose == "7" or choose == "capes":
-            cls()
-            capes()
-        elif choose == "8" or choose == "serverping":
+        elif choose == "3" or choose == "serverping":
             cls()
             serverping()
-        elif choose == "9" or choose == "legacytracker":
+        elif choose == "4" or choose == "legacytracker":
             cls()
             legacytracker()
-        elif choose == "10" or choose == "options":
+        elif choose == "8" or choose == "options":
             cls()
             options()
-        elif choose == "11" or choose == "about":
+        elif choose == "9" or choose == "about":
             cls()
             about()
         elif choose == "0" or choose == "exit":
