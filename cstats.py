@@ -14,7 +14,7 @@ import configparser
 from datetime import datetime
 from urllib3.exceptions import InsecureRequestWarning
 
-version = "v0.7.0"
+version = "v0.8.0"
 
 def mkdir_p(newdir):
     try: 
@@ -107,6 +107,8 @@ def generateconfig(confoption):
         conf["general"]["checkForUpdates"] = "True"
     elif confoption == "changeWindowTitle":
         conf["general"]["changeWindowTitle"] = "True"
+    elif confoption == "defaultSubMenu":
+        conf["general"]["defaultSubMenu"] = "None"
 
     confini = open(confpath + "config.ini", "w")
     conf.write(confini)
@@ -115,6 +117,7 @@ def generateconfig(confoption):
 def generateallconfigs():
     generateconfig("checkForUpdates")
     generateconfig("changeWindowTitle")
+    generateconfig("defaultSubMenu")
 
 def readconfig(confcategory, confoption):
     global confvalues
@@ -140,15 +143,19 @@ def readconfig(confcategory, confoption):
         generateconfig(confoption)
         readconfig(confcategory, confoption)
     except ValueError:
-        cls()
-        print(c.red + "ERROR: Invalid data type for \"" + confoption + "\"! This option must be \"True\" or \"False\"!\nThis option will be reset automatically after you press ENTER." + c.reset)
-        entertocontinue()
-        generateconfig(confoption)
-        readconfig(confcategory, confoption)
+        try:
+            confvalues[confoption] = conf.get(confcategory, confoption)
+        except ValueError:
+            cls()
+            print(c.red + "ERROR: Invalid data type for \"" + confoption + "\"! This option must be \"True\" or \"False\"!\nThis option will be reset automatically after you press ENTER." + c.reset)
+            entertocontinue()
+            generateconfig(confoption)
+            readconfig(confcategory, confoption)
 
 def readallconfigs():
     readconfig("general", "checkForUpdates")
     readconfig("general", "changeWindowTitle")
+    readconfig("general", "defaultSubMenu")
 
 def ccparser(s):
     # this is very jank feeling but it works i guess
@@ -1057,14 +1064,21 @@ def init():
 def main():
     cls()
     global argused
+    global confargused
     while True:
         try:
             argused
+            confargused
         except NameError:
             argused = False
+            confargused = False
+
         if len(sys.argv) > 1 and argused == False:
             choose = sys.argv[1]
             argused = True
+        elif confvalues["defaultSubMenu"].lower() != "none" and argused == False and confargused == False:
+            choose = confvalues["defaultSubMenu"]
+            confargused = True
         elif argused == True:
             sys.exit(0)
         else:
