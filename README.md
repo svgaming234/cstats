@@ -1,6 +1,6 @@
 # cstats
 
-Unofficial command line based statistics program for RetroMC and BetaMC 
+Unofficial command line based statistics program for RetroMC and BetaMC  
 
 ## Running the program (recommended way)
 
