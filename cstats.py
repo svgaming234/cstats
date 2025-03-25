@@ -864,8 +864,24 @@ def bmcplayerlist():
     entertocontinue()
     bmcmenu()
 
+def asciilogo():
+    print("""
+                      /88                 /88
+                      | 88                | 88
+  """ + c.aqua + """/8888888  """ + c.reset + """/8888888 /888888    /888888  /888888   /8888888
+ """ + c.aqua + """/88_____/ """ + c.reset + """/88_____/|_  88_/   |____  88|_  88_/  /88_____/
+""" + c.aqua + """| 88      """ + c.reset + """|  888888   | 88      /8888888  | 88   |  888888 
+""" + c.aqua + """| 88       """ + c.reset + """\\____  88  | 88 /88 /88__  88  | 88 /88\\____  88
+""" + c.aqua + """|  8888888 """ + c.reset + """/8888888/  |  8888/|  8888888  |  8888//8888888/
+ """ + c.aqua + """\\_______/""" + c.reset + """|_______/    \\___/   \\_______/   \\___/ |_______/ 
+""")
+
 def about():
     print("About " + c.aqua + "cstats " + version + c.reset + ":")
+
+    asciilogo()
+
+    print("Unofficial command line based statistics program for RetroMC and BetaMC")
 
     print("\nCredits:")
     print(c.aqua + "SvGaming" + c.reset + " - Project lead")
@@ -945,18 +961,6 @@ def options():
         cls()
         print(c.red + "Error: Invalid option!" + c.reset)
         options()
-
-def asciilogo():
-    print("""
-                      /88                 /88
-                      | 88                | 88
-  """ + c.aqua + """/8888888  """ + c.reset + """/8888888 /888888    /888888  /888888   /8888888
- """ + c.aqua + """/88_____/ """ + c.reset + """/88_____/|_  88_/   |____  88|_  88_/  /88_____/
-""" + c.aqua + """| 88      """ + c.reset + """|  888888   | 88      /8888888  | 88   |  888888 
-""" + c.aqua + """| 88       """ + c.reset + """\\____  88  | 88 /88 /88__  88  | 88 /88\\____  88
-""" + c.aqua + """|  8888888 """ + c.reset + """/8888888/  |  8888/|  8888888  |  8888//8888888/
- """ + c.aqua + """\\_______/""" + c.reset + """|_______/    \\___/   \\_______/   \\___/ |_______/ 
-""")
 
 def init():
     generatefilestructure()
