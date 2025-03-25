@@ -958,10 +958,38 @@ def asciilogo():
  """ + c.aqua + """\\_______/""" + c.reset + """|_______/    \\___/   \\_______/   \\___/ |_______/ 
 """)
 
+def init():
+    generatefilestructure()
+    readallconfigs()
+
+    if confvalues["changeWindowTitle"] == True:
+        setwindowtitle("cstats " + version)
+    
+    global latestversionstr
+    latestversionstr = ""
+
+    if confvalues["checkForUpdates"] == True:
+        try:
+            request = requests.head("https://github.com/svgaming234/cstats/releases/latest", allow_redirects=True, timeout = 3)
+            latestversion = request.url.split("/")[-1]
+        except requests.exceptions.Timeout:
+            latestversionstr = c.red + "Failed to check for updates (timed out)! Please check your internet connection." + c.reset
+        except requests.exceptions.ConnectionError:
+            latestversionstr = c.red + "Failed to check for updates (connection error)! Please check your internet connection." + c.reset
+        except:
+            latestversionstr = c.red + "Failed to check for updates (unspecified error)! Please check your internet connection." + c.reset
+            
+        if version != latestversion:
+            latestversionstr = c.yellow + "A new version is available! Please update to " + latestversion + c.reset
+
+    main()
+
 def rmcmenu():
     cls()
 
     while True:
+        print(latestversionstr, end="")
+
         asciilogo()
 
         randomquote()
@@ -1014,7 +1042,8 @@ def bmcmenu():
     cls()
 
     while True:
-        cls()
+        print(latestversionstr, end="")
+
         asciilogo()
 
         randomquote()
@@ -1039,28 +1068,6 @@ def bmcmenu():
             cls()
             print(c.red + "Error: Invalid option!" + c.reset)
 
-def init():
-    generatefilestructure()
-    readallconfigs()
-
-    if confvalues["changeWindowTitle"] == True:
-        setwindowtitle("cstats " + version)
-    
-    global latestversion
-
-    if confvalues["checkForUpdates"] == True:
-        try:
-            request = requests.head("https://github.com/svgaming234/cstats/releases/latest", allow_redirects=True, timeout = 3)
-            latestversion = request.url.split("/")[-1]
-        except requests.exceptions.Timeout:
-            latestversion = "TimeoutError"
-        except requests.exceptions.ConnectionError:
-            latestversion = "ConnectionError"
-        except:
-            latestversion = "Error"
-
-    main()
-
 def main():
     cls()
     global argused
@@ -1082,15 +1089,7 @@ def main():
         elif argused == True:
             sys.exit(0)
         else:
-            if confvalues["checkForUpdates"] == True:
-                if latestversion == "TimeoutError":
-                    print(c.red + "Failed to check for updates (timed out)! Please check your internet connection." + c.reset)
-                elif latestversion == "ConnectionError":
-                    print(c.red + "Failed to check for updates (connection error)! Please check your internet connection." + c.reset)
-                elif latestversion == "Error":
-                    print(c.red + "Failed to check for updates (unspecified error)! Please check your internet connection." + c.reset)
-                elif version != latestversion:
-                    print(c.yellow + "A new version is available! Please update to " + latestversion + c.reset)
+            print(latestversionstr, end="")
 
             asciilogo()
 
