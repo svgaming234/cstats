@@ -857,7 +857,7 @@ def bmcplayerlist():
             user = request[stri]["username"], 
             uuid = request[stri]["uuid"],
             firstjoin = unixtimetotime(request[stri]["first_join"] / 1000),
-            balance = request[stri]["balance"],
+            balance = round(request[stri]["balance"], 2),
             playtime = round(request[stri]["playtime"] / 1000 / 60 / 60, 1)
         ))
 
