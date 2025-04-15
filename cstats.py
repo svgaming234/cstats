@@ -12,7 +12,8 @@ import socket
 import time
 import configparser
 from datetime import datetime
-from urllib3.exceptions import InsecureRequestWarning
+import urllib3.exceptions
+import warnings
 
 version = "v0.8.0"
 
@@ -840,8 +841,10 @@ def legacytracker():
     main()
 
 def bmcplayerlist():
-    requests.packages.urllib3.disable_warnings(category=InsecureRequestWarning)
-    request = json.loads(json.dumps(requests.get("https://betamc.org:8080/api/players", verify=False).json()))
+    # warning disabling required due to this api having a self signed certificate
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", urllib3.exceptions.InsecureRequestWarning)
+        request = json.loads(json.dumps(requests.get("https://betamc.org:8080/api/players", verify=False).json()))
 
     print("There are " + c.aqua + str(request["player_count"]) + c.reset + " out of a maximum " + c.aqua + str(request["max_players"]) + c.reset + " players online.\n\nOutput format:")
     print("Rank and display name | Username | Player UUID\nFirst join | Balance | Playtime\n")
