@@ -40,8 +40,6 @@ if platform.system() == "Windows":
     def setwindowtitle(title):
         ctypes.windll.kernel32.SetConsoleTitleW("cstats " + version)
 
-    def cls():
-        subprocess.run(["cmd.exe", "/c", "cls"])
 else:
     if os.getenv("XDG_CONFIG_HOME"):
         confpath = os.getenv("XDG_CONFIG_HOME") + "/cstats/"
@@ -53,8 +51,8 @@ else:
     def setwindowtitle(title):
         print("\033]0;" + title + "\007")
 
-    def cls():
-        print("\033c", end="")
+def cls():
+    print("\033c", end="")
 
 # not using ccparser for colors everywhere for performance reasons
 class colors:
