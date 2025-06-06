@@ -52,7 +52,7 @@ else:
         print("\033]0;" + title + "\007")
 
 def cls():
-    print("\033c", end="")
+    print("\033[H\033[J", end="")
 
 # not using ccparser for colors everywhere for performance reasons
 class colors:
@@ -793,8 +793,7 @@ def capes():
         capes()
 
 def loadingscreen(totalcount, current):
-    cls()
-    print("Loading server information... (" + c.aqua + str(round(current / totalcount * 100, 1)) + "%" + c.reset + ")")
+    print("\rLoading server information... (" + c.aqua + str(round(current / totalcount * 100, 1)) + "%" + c.reset + ")", end = "", flush = True)
 
 def sortbycount(infoapi):
     return infoapi["count"]
@@ -802,7 +801,7 @@ def sortbycount(infoapi):
 def ltthread(stopevent, init = False):
     while True:
         if init == True:
-            print("Loading server information...")
+            loadingscreen(1, 0)
 
         if stopevent.is_set():
             break
