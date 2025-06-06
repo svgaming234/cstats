@@ -11,6 +11,7 @@ import errno
 import socket
 import time
 import configparser
+import threading
 from datetime import datetime
 import urllib3.exceptions
 import warnings
@@ -800,44 +801,76 @@ def loadingscreen(totalcount, current):
 def sortbycount(infoapi):
     return infoapi["count"]
 
-def legacytracker():
-    print("Loading server information...")
-    request = json.loads(json.dumps(requests.get("https://servers.legacyminecraft.com/api/getStats").json()))
-    totalrequests = request["totalServers"] + 2
-    loadingscreen(totalrequests, 2)
-    request2 = json.loads(json.dumps(requests.get("https://servers.legacyminecraft.com/api/getGlobalHistory").json()))
-    serverlist = []
-    for i in range(len(request2["servers"])):
-        loadingscreen(totalrequests, i + 3)
-        request3 = json.loads(json.dumps(requests.get("https://servers.legacyminecraft.com/api/getPlayersOnline?id=" + str(request2["servers"][i]["id"])).json()))
-        request3.update(request2["servers"][i])
-        serverlist.append(request3)
-    cls()
-    serverlist.sort(key = sortbycount, reverse = True)
+def ltthread(stopevent, init = False):
+    while True:
+        if init == True:
+            print("Loading server information...")
 
-    print("Total current server count: " + str(request["totalServers"]))
-    print("Total of unique user joins: " + str(request["totalUsers"]))
-    print("Total users online: " + str(request["totalUsersOnline"]) + "\n")
+        if stopevent.is_set():
+            break
+        request = json.loads(json.dumps(requests.get("https://servers.legacyminecraft.com/api/getStats").json()))
 
-    for i in range(len(serverlist)):
-        print(c.aqua + str(i + 1) + ") " + c.reset + serverlist[i]["name"] + 
-        " (" + c.aqua + str(serverlist[i]["count"]) + c.reset + " players online)")
+        if init == True:
+            totalrequests = request["totalServers"] + 2
+            loadingscreen(totalrequests, 2)
 
-        print("UUID: " + c.aqua + serverlist[i]["uuid"] + c.reset
-         + " (ID " + c.aqua + str(serverlist[i]["id"]) + c.reset + ")")
-
-        print("Player list: ", end = "")
-
-        if len(serverlist[i]["players"]) != 0:
-            for j in range(len(serverlist[i]["players"])):
-                commaloop(j)
-                print(serverlist[i]["players"][j], end = "")
-        else:
-            print("No players online :(", end = "")
+        if stopevent.is_set():
+            break
+        request2 = json.loads(json.dumps(requests.get("https://servers.legacyminecraft.com/api/getGlobalHistory").json()))
         
-        print("\n")
+        serverlist = []
+        for i in range(len(request2["servers"])):
+            if init == True:
+                loadingscreen(totalrequests, i + 3)
 
-    entertocontinue()
+            if stopevent.is_set():
+                return
+            request3 = json.loads(json.dumps(requests.get("https://servers.legacyminecraft.com/api/getPlayersOnline?id=" + str(request2["servers"][i]["id"])).json()))
+            request3.update(request2["servers"][i])
+            serverlist.append(request3)
+        cls()
+        serverlist.sort(key = sortbycount, reverse = True)
+
+        print("Total current server count: " + str(request["totalServers"]))
+        print("Total of unique user joins: " + str(request["totalUsers"]))
+        print("Total users online: " + str(request["totalUsersOnline"]) + "\n")
+
+        if stopevent.is_set():
+            break
+        for i in range(len(serverlist)):
+            print(c.aqua + str(i + 1) + ") " + c.reset + serverlist[i]["name"] + 
+            " (" + c.aqua + str(serverlist[i]["count"]) + c.reset + " players online)")
+
+            print("UUID: " + c.aqua + serverlist[i]["uuid"] + c.reset
+            + " (ID " + c.aqua + str(serverlist[i]["id"]) + c.reset + ")")
+
+            print("Player list: ", end = "")
+
+            if len(serverlist[i]["players"]) != 0:
+                for j in range(len(serverlist[i]["players"])):
+                    commaloop(j)
+                    print(serverlist[i]["players"][j], end = "")
+            else:
+                print("No players online :(", end = "")
+            
+            print("\n")
+        print("\nPress " + c.aqua + "ENTER" + c.reset + " to return to main menu.\n")
+        if init == True:
+            break
+
+
+def legacytracker():
+    stopevent = threading.Event()
+    initthread = threading.Thread(target=ltthread, args=(stopevent,True,))
+    initthread.start()
+    initthread.join()
+
+    loopthread = threading.Thread(target=ltthread, args=(stopevent,False,))
+    loopthread.start()
+
+    input()
+    stopevent.set()
+    loopthread.join()
     main()
 
 def bmcplayerlist():
