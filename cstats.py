@@ -54,7 +54,7 @@ else:
         print("\033]0;" + title + "\007")
 
     def cls():
-        subprocess.run("clear")
+        print("\033c", end="")
 
 # not using ccparser for colors everywhere for performance reasons
 class colors:
