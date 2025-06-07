@@ -52,7 +52,7 @@ else:
         print("\033]0;" + title + "\007")
 
 def cls():
-    print("\033[H\033[J", end="")
+    print("\033[H\033[2J\033[3J", end="")
 
 # not using ccparser for colors everywhere for performance reasons
 class colors:
