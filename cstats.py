@@ -157,6 +157,9 @@ def readallconfigs():
     readconfig("general", "changeWindowTitle")
     readconfig("general", "defaultSubMenu")
 
+def getapi(url, verify = True):
+    return json.loads(json.dumps(requests.get(url, verify = verify).json()))
+
 def ccparser(s):
     # this is very jank feeling but it works i guess
     s = s.replace("&", "§")
@@ -197,7 +200,7 @@ def uuidtousername(uuid):
             return readline[:-1]
     else:
         try:
-            request = json.loads(json.dumps(requests.get(mojangapiurl).json()))
+            request = getapi(mojangapiurl)
             username = request["name"]
         except:
             username = uuid
@@ -211,7 +214,7 @@ def uuidtousername(uuid):
 def usernametouuid(username):
     mojangapiurl = "https://api.mojang.com/users/profiles/minecraft/" + username
 
-    request = json.loads(json.dumps(requests.get(mojangapiurl).json()))
+    request = getapi(mojangapiurl)
     
     uuid = request["id"]
     uuidwithdashes = uuid[:8] + "-" + uuid[8:12] + "-" + uuid[12:16] + "-" + uuid[16:20] + "-" + uuid[20:]
@@ -220,7 +223,7 @@ def usernametouuid(username):
 
 def fixusernamecase(username):
     mojangapiurl = "https://api.mojang.com/users/profiles/minecraft/" + username
-    request = json.loads(json.dumps(requests.get(mojangapiurl).json()))
+    request = getapi(mojangapiurl)
 
     usernamefixed = request["name"]
     return usernamefixed
@@ -307,7 +310,7 @@ def randomquote():
 
 
 def playerlist():
-    request = json.loads(json.dumps(requests.get("https://api.retromc.org/api/v1/server/players").json()))
+    request = getapi("https://api.retromc.org/api/v1/server/players")
 
     print("There are " + c.aqua + str(request["player_count"]) + c.reset + " out of a maximum " + c.aqua + str(request["max_players"]) + c.reset + " players online.\n\nOutput format:")
     print("Rank and display name | Username | Player UUID | X coord | Y coord | Z coord\n")
@@ -341,7 +344,7 @@ def playerlist():
 
 def chat():
     listfmt = "{display}: {message}"
-    request = json.loads(json.dumps(requests.get("https://api.retromc.org/api/v1/server/chat").json()))
+    request = getapi("https://api.retromc.org/api/v1/server/chat")
 
     print("Displaying recently sent messages. (does " + c.aqua + "NOT" + c.reset + " display Discord messages)\n")
 
@@ -359,7 +362,7 @@ def chat():
 
 def villagelist():
     listfmt = "{name} | {owner} | {villageuuid}"
-    request = json.loads(json.dumps(requests.get("https://api.retromc.org/api/v1/village/getVillageList").json()))
+    request = getapi("https://api.retromc.org/api/v1/village/getVillageList")
 
     print("Displaying list of " + c.aqua + "all" + c.reset + " RetroMC villages.\n\nOutput format:")
     print("Village name | Village owner | Village UUID\n")
@@ -386,7 +389,7 @@ def villagedetails():
     if village == "exit" or village == "0":
         rmcmenu()
 
-    request = json.loads(json.dumps(requests.get("https://api.retromc.org/api/v1/village/getVillageList").json()))
+    request = getapi("https://api.retromc.org/api/v1/village/getVillageList")
 
     print("\nDisplaying " + c.aqua + "village details" + c.reset + ".\n")
 
@@ -399,7 +402,7 @@ def villagedetails():
         print(c.red + "Error: Village not found." + c.reset)
         villagedetails()
 
-    request2 = json.loads(json.dumps(requests.get("https://api.retromc.org/api/v1/village/getVillage?uuid=" + villageuuid).json()))
+    request2 = getapi("https://api.retromc.org/api/v1/village/getVillage?uuid=" + villageuuid)
     
     print("Name: " + str(request2["name"]))
     print("Village UUID: " + str(request2["uuid"]))
@@ -471,14 +474,14 @@ def playerstats():
 
     playeruuid = usernametouuid(playerusernamefixed)
 
-    request4 = json.loads(json.dumps(requests.get("https://statistics.johnymuffin.com/api/v1/getUser?serverID=0&uuid=" + playeruuid).json()))
+    request4 = getapi("https://statistics.johnymuffin.com/api/v1/getUser?serverID=0&uuid=" + playeruuid)
 
     if "msg" in request4:
         cls()
         print(c.red + "Error: This player has not played on RetroMC." + c.reset)
         playerstats()
 
-    request = json.loads(json.dumps(requests.get("https://statistics.retromc.org/api/online?username=" + playerusernamefixed).json()))
+    request = getapi("https://statistics.retromc.org/api/online?username=" + playerusernamefixed)
 
     print("\nDisplaying " + c.aqua + "player statistics" + c.reset + ".\n")
 
@@ -554,7 +557,7 @@ def playerstats():
     except:
         print("Coordinates: Player is offline")
 
-    request2 = json.loads(json.dumps(requests.get("https://statistics.retromc.org/api/bans?uuid=" + str(playeruuid)).json()))
+    request2 = getapi("https://statistics.retromc.org/api/bans?uuid=" + str(playeruuid))
 
     print("\nCurrently banned: " + str(request2["banned"]))
     
@@ -573,7 +576,7 @@ def playerstats():
 
             print("Pardoned: " + str(request2["bans"][i]["pardoned"]) + ", Ban issue date: " + unixtimetotime(request2["bans"][i]["date"]))
 
-    request3 = json.loads(json.dumps(requests.get("https://statistics.retromc.org/api/user_villages?uuid=" + str(playeruuid)).json()))
+    request3 = getapi("https://statistics.retromc.org/api/user_villages?uuid=" + str(playeruuid))
 
     novillages = False
     if request3["status"] == False and request3["message"] == "no villages for this user":
@@ -684,7 +687,7 @@ def leaderboard():
         print(c.red + "Error: Invalid statistic type!" + c.reset)
         leaderboard()
 
-    request = json.loads(json.dumps(requests.get("https://statistics.retromc.org/api/leaderboard?type=" + stattype).json()))
+    request = getapi("https://statistics.retromc.org/api/leaderboard?type=" + stattype)
 
     print("Leaderboard for " + c.aqua + stattype + c.reset + ":")
 
@@ -805,7 +808,7 @@ def ltthread(stopevent, init = False):
 
         if stopevent.is_set():
             break
-        request = json.loads(json.dumps(requests.get("https://servers.legacyminecraft.com/api/getStats").json()))
+        request = getapi("https://servers.legacyminecraft.com/api/getStats")
 
         if init == True:
             totalrequests = request["totalServers"] + 2
@@ -813,7 +816,7 @@ def ltthread(stopevent, init = False):
 
         if stopevent.is_set():
             break
-        request2 = json.loads(json.dumps(requests.get("https://servers.legacyminecraft.com/api/getGlobalHistory").json()))
+        request2 = getapi("https://servers.legacyminecraft.com/api/getGlobalHistory")
         
         serverlist = []
         for i in range(len(request2["servers"])):
@@ -822,7 +825,7 @@ def ltthread(stopevent, init = False):
 
             if stopevent.is_set():
                 return
-            request3 = json.loads(json.dumps(requests.get("https://servers.legacyminecraft.com/api/getPlayersOnline?id=" + str(request2["servers"][i]["id"])).json()))
+            request3 = getapi("https://servers.legacyminecraft.com/api/getPlayersOnline?id=" + str(request2["servers"][i]["id"]))
             request3.update(request2["servers"][i])
             serverlist.append(request3)
         cls()
@@ -874,7 +877,7 @@ def bmcplayerlist():
     # warning disabling required due to this api having a self signed certificate
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", urllib3.exceptions.InsecureRequestWarning)
-        request = json.loads(json.dumps(requests.get("https://betamc.org:8080/api/players", verify=False).json()))
+        request = getapi("https://betamc.org:8080/api/players", False)
 
     print("There are " + c.aqua + str(request["player_count"]) + c.reset + " out of a maximum " + c.aqua + str(request["max_players"]) + c.reset + " players online.\n\nOutput format:")
     print("Rank and display name | Username | Player UUID\nFirst join | Balance | Playtime\n")
