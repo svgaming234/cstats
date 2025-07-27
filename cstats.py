@@ -971,12 +971,18 @@ def resetconfig():
         print(c.red + "Error: Invalid option!" + c.reset)
         resetcache()
 
+def showconfigpath():
+    print("Your cstats configuration directory is located at: " + c.aqua + confpath + c.reset)
+    print("Additional configuration options can be adjusted within that file.")
+
+    entertocontinue()
 
 def options():
     print("Please select an " + c.aqua + "option.\n" + c.reset)
 
     print(c.aqua + "1) " + c.reset + "resetCache")
     print(c.aqua + "2) " + c.reset + "resetConfig")
+    print(c.aqua + "3) " + c.reset + "showConfigPath")
     print(c.aqua + "0) " + c.reset + "exit\n")
 
     choose = input("> ").lower()
@@ -989,6 +995,11 @@ def options():
     if choose == "2" or choose == "resetconfig":
         cls()
         resetconfig()
+        cls()
+        options()
+    if choose == "3" or choose == "showconfigpath":
+        cls()
+        showconfigpath()
         cls()
         options()
     elif choose == "0" or choose == "exit":
