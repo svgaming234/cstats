@@ -228,7 +228,7 @@ def fixusernamecase(username):
     usernamefixed = request["name"]
     return usernamefixed
 
-def entertocontinue(message = "\nPress " + c.aqua + "ENTER" + c.reset + " to return to main menu.\n"):
+def entertocontinue(message = "\nPress " + c.aqua + "ENTER" + c.reset + " to return to previous menu.\n"):
     input(message)
 
 def removeweirda(strold):
@@ -854,7 +854,7 @@ def ltthread(stopevent, init = False):
                 print("No players online :(", end = "")
             
             print("\n")
-        print("\nPress " + c.aqua + "ENTER" + c.reset + " to return to main menu.\n")
+        print("\nPress " + c.aqua + "ENTER" + c.reset + " to return to previous menu.\n")
         if init == True:
             break
 
