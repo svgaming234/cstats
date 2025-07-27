@@ -107,6 +107,8 @@ def generateconfig(confoption):
         conf["general"]["checkForUpdates"] = "True"
     elif confoption == "changeWindowTitle":
         conf["general"]["changeWindowTitle"] = "True"
+    elif confoption == "enableLegacyTrackerAutoRefresh":
+        conf["general"]["enableLegacyTrackerAutoRefresh"] = "True"
     elif confoption == "defaultSubMenu":
         conf["general"]["defaultSubMenu"] = "None"
 
@@ -117,6 +119,7 @@ def generateconfig(confoption):
 def generateallconfigs():
     generateconfig("checkForUpdates")
     generateconfig("changeWindowTitle")
+    generateconfig("enableLegacyTrackerAutoRefresh")
     generateconfig("defaultSubMenu")
 
 def readconfig(confcategory, confoption):
@@ -155,6 +158,7 @@ def readconfig(confcategory, confoption):
 def readallconfigs():
     readconfig("general", "checkForUpdates")
     readconfig("general", "changeWindowTitle")
+    readconfig("general", "enableLegacyTrackerAutoRefresh")
     readconfig("general", "defaultSubMenu")
 
 def getapi(url, verify = True):
@@ -865,12 +869,16 @@ def legacytracker():
     initthread.start()
     initthread.join()
 
-    loopthread = threading.Thread(target=ltthread, args=(stopevent,False,))
-    loopthread.start()
+    if confvalues["enableLegacyTrackerAutoRefresh"] == True:
+        loopthread = threading.Thread(target=ltthread, args=(stopevent,False,))
+        loopthread.start()
 
     input()
     stopevent.set()
-    loopthread.join()
+
+    if confvalues["enableLegacyTrackerAutoRefresh"] == True:
+        loopthread.join()
+    
     main()
 
 def bmcplayerlist():
