@@ -16,7 +16,7 @@ from datetime import datetime
 import urllib3.exceptions
 import warnings
 
-version = "v0.8.0"
+version = "v0.9.0"
 
 def mkdir_p(newdir):
     try: 
