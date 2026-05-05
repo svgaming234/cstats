@@ -768,7 +768,7 @@ def capes():
 
     playeruuid = usernametouuid(playerusernamefixed)
 
-    request = requests.get("https://capes.johnymuffin.com/getCape.php?username=" + playerusernamefixed)
+    request = requests.get("https://skins.legacyminecraft.com/api/cape/" + playerusernamefixed)
 
     if request.status_code == 200:
         print("Name: " + playerusernamefixed)
