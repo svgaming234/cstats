@@ -5,7 +5,6 @@ import requests
 import random
 import platform
 import sys
-import subprocess
 import os
 import errno
 import socket
