@@ -1106,7 +1106,7 @@ def bmcmenu():
         print("Type the " + c.aqua + "name of a function " + c.reset + "or its " + c.aqua + "numerical ID " + c.reset + "from the list below and press " + c.aqua + "ENTER\n" + c.reset)
         print(c.aqua + "BetaMC" + c.reset + " menu\n")
 
-        print(c.red + "Note:\nThe BMC playerlist function is currently not usable since the ZCore 2 migration removed the underlying plugin.\nNew BMC API features will probably be implemented in the future.\n" + c.reset)
+        print(c.red + "NOTE:\nThe BMC playerlist function is currently not usable (at the time of pushing this version) since the ZCore 2 migration removed the underlying plugin.\nNew BMC API features will probably be implemented in the future.\n" + c.reset)
 
         print(c.aqua + "1) " + c.reset + "playerlist")
         print(c.aqua + "0) " + c.reset + "exit")
