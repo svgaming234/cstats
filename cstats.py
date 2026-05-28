@@ -239,8 +239,10 @@ def removeweirda(strold):
     strnew = strold.replace("Â", "")
     return strnew
 
-def displayWorldMap(x, z):
+def displayWorldMap(x, y, z):
     print("\n\nView on Overviewer:\nhttps://world.retromc.org/overviewer/#/" + str(x)  + "/64/" + str(z) +"/-3/")
+    # y level is incremented by 2 to make the player not spawn in the floor
+    print("\nView on Bluemap:\nhttps://world.retromc.org/bluemap/#overworld:" + str(x) + ":" + str(y + 2) + ":" + str(z) + ":0:0:0:0:0:free")
 
 def commaloop(value, separator = ", "):
     if value != 0:
@@ -448,7 +450,7 @@ def villagedetails():
     else:
         print("No members", end="")
 
-    displayWorldMap(request2["spawn"]["x"], request2["spawn"]["z"])
+    displayWorldMap(request2["spawn"]["x"], request2["spawn"]["y"], request2["spawn"]["z"])
 
     print("\nView on J-Stats:\nhttps://statistics.retromc.org/village/" + str(request2["uuid"]))
 
