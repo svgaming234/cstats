@@ -428,11 +428,9 @@ def villagedetails():
     print("Members: " + str(len(request2["members"])))
 
     print("\nVillage flags: ")
-    print("Members can invite: " + str(request2["flags"]["MEMBERS_CAN_INVITE"]))
-    print("Random can alter: " + str(request2["flags"]["RANDOM_CAN_ALTER"]))
-    print("Mobs can spawn: " + str(request2["flags"]["MOBS_CAN_SPAWN"]))
-    print("Assistant can withdraw: " + str(request2["flags"]["ASSISTANT_CAN_WITHDRAW"]))
-    print("Mob spawner bypass: " + str(request2["flags"]["MOB_SPAWNER_BYPASS"]))
+
+    for flag in request2["flags"]:
+        print(flag + ": " + str(request2["flags"][flag]))
 
     print("\nAssistants:")
     if len(request2["assistants"]) != 0:    
