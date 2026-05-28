@@ -1,10 +1,8 @@
-.PHONY: build clean install_deps
+.PHONY: build clean
 
 build:
-	pyinstaller --onefile cstats.py
+	python -m PyInstaller --onefile cstats.py
 
 clean:
 	rm -rf build/ dist/ cstats.spec
 
-install_deps:
-	python -m pip install requests pyinstaller
