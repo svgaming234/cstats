@@ -1,2 +1,2 @@
 @echo off
-pyinstaller --onefile --icon=cstats.ico cstats.py
+python -m PyInstaller --onefile --icon=cstats.ico cstats.py
