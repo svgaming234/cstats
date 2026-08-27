@@ -12,6 +12,7 @@ import time
 import configparser
 import threading
 from datetime import datetime
+from simplejson import JSONDecodeError
 import urllib3.exceptions
 import warnings
 
@@ -161,7 +162,12 @@ def readallconfigs():
     readconfig("general", "defaultSubMenu")
 
 def getapi(url, verify = True):
-    return json.loads(json.dumps(requests.get(url, verify = verify).json()))
+    request = requests.get(url, verify = verify)
+
+    try:
+        return json.loads(json.dumps(request.json())), request.status_code
+    except JSONDecodeError:
+        return True, request.status_code
 
 def ccparser(s):
     # this is very jank feeling but it works i guess
@@ -203,7 +209,7 @@ def uuidtousername(uuid):
             return readline[:-1]
     else:
         try:
-            request = getapi(mojangapiurl)
+            request, status = getapi(mojangapiurl)
             username = request["name"]
         except:
             username = uuid
@@ -217,7 +223,7 @@ def uuidtousername(uuid):
 def usernametouuid(username):
     mojangapiurl = "https://api.mojang.com/users/profiles/minecraft/" + username
 
-    request = getapi(mojangapiurl)
+    request, status = getapi(mojangapiurl)
     
     uuid = request["id"]
     uuidwithdashes = uuid[:8] + "-" + uuid[8:12] + "-" + uuid[12:16] + "-" + uuid[16:20] + "-" + uuid[20:]
@@ -226,7 +232,7 @@ def usernametouuid(username):
 
 def fixusernamecase(username):
     mojangapiurl = "https://api.mojang.com/users/profiles/minecraft/" + username
-    request = getapi(mojangapiurl)
+    request, status = getapi(mojangapiurl)
 
     usernamefixed = request["name"]
     return usernamefixed
@@ -318,7 +324,7 @@ def randomquote():
 
 
 def playerlist():
-    request = getapi("https://api.retromc.org/api/v1/server/players")
+    request, status = getapi("https://api.retromc.org/api/v1/server/players")
 
     print("There are " + c.aqua + str(request["player_count"]) + c.reset + " out of a maximum " + c.aqua + str(request["max_players"]) + c.reset + " players online.\n\nOutput format:")
     print("Rank and display name | Username | Player UUID | X coord | Y coord | Z coord\n")
@@ -352,7 +358,7 @@ def playerlist():
 
 def chat():
     listfmt = "{display}: {message}"
-    request = getapi("https://api.retromc.org/api/v1/server/chat")
+    request, status = getapi("https://api.retromc.org/api/v1/server/chat")
 
     print("Displaying recently sent messages. (does " + c.aqua + "NOT" + c.reset + " display Discord messages)\n")
 
@@ -370,7 +376,7 @@ def chat():
 
 def villagelist():
     listfmt = "{name} | {owner} | {villageuuid}"
-    request = getapi("https://api.retromc.org/api/v1/village/getVillageList")
+    request, status = getapi("https://api.retromc.org/api/v1/village/getVillageList")
 
     print("Displaying list of " + c.aqua + "all" + c.reset + " RetroMC villages.\n\nOutput format:")
     print("Village name | Village owner | Village UUID\n")
@@ -397,7 +403,7 @@ def villagedetails():
     if village == "exit" or village == "0":
         rmcmenu()
 
-    request = getapi("https://api.retromc.org/api/v1/village/getVillageList")
+    request, status = getapi("https://api.retromc.org/api/v1/village/getVillageList")
 
     print("\nDisplaying " + c.aqua + "village details" + c.reset + ".\n")
 
@@ -410,7 +416,7 @@ def villagedetails():
         print(c.red + "Error: Village not found." + c.reset)
         villagedetails()
 
-    request2 = getapi("https://api.retromc.org/api/v1/village/getVillage?uuid=" + villageuuid)
+    request2, status2 = getapi("https://api.retromc.org/api/v1/village/getVillage?uuid=" + villageuuid)
     
     print("Name: " + str(request2["name"]))
     print("Village UUID: " + str(request2["uuid"]))
@@ -471,14 +477,14 @@ def playerstats():
 
     playeruuid = usernametouuid(playerusernamefixed)
 
-    request4 = getapi("https://statistics.johnymuffin.com/api/v1/getUser?serverID=0&uuid=" + playeruuid)
+    request4, status4 = getapi("https://statistics.johnymuffin.com/api/v1/getUser?serverID=0&uuid=" + playeruuid)
 
     if "msg" in request4:
         cls()
         print(c.red + "Error: This player has not played on RetroMC." + c.reset)
         playerstats()
 
-    request = getapi("https://statistics.retromc.org/api/online?username=" + playerusernamefixed)
+    request, status = getapi("https://statistics.retromc.org/api/online?username=" + playerusernamefixed)
 
     print("\nDisplaying " + c.aqua + "player statistics" + c.reset + ".\n")
 
@@ -554,7 +560,7 @@ def playerstats():
     except:
         print("Coordinates: Player is offline")
 
-    request2 = getapi("https://statistics.retromc.org/api/bans?uuid=" + str(playeruuid))
+    request2, status2 = getapi("https://statistics.retromc.org/api/bans?uuid=" + str(playeruuid))
 
     print("\nCurrently banned: " + str(request2["banned"]))
     
@@ -573,7 +579,7 @@ def playerstats():
 
             print("Pardoned: " + str(request2["bans"][i]["pardoned"]) + ", Ban issue date: " + unixtimetotime(request2["bans"][i]["date"]))
 
-    request3 = getapi("https://statistics.retromc.org/api/user_villages?uuid=" + str(playeruuid))
+    request3, status3 = getapi("https://statistics.retromc.org/api/user_villages?uuid=" + str(playeruuid))
 
     novillages = False
     if request3["status"] == False and request3["message"] == "no villages for this user":
@@ -684,7 +690,7 @@ def leaderboard():
         print(c.red + "Error: Invalid statistic type!" + c.reset)
         leaderboard()
 
-    request = getapi("https://statistics.retromc.org/api/leaderboard?type=" + stattype)
+    request, status = getapi("https://statistics.retromc.org/api/leaderboard?type=" + stattype)
 
     print("Leaderboard for " + c.aqua + stattype + c.reset + ":")
 
@@ -805,7 +811,7 @@ def ltthread(stopevent, init = False):
 
         if stopevent.is_set():
             break
-        request = getapi("https://servers.legacyminecraft.com/api/getStats")
+        request, status = getapi("https://servers.legacyminecraft.com/api/getStats")
 
         if init == True:
             totalrequests = request["totalServers"] + 2
@@ -813,7 +819,7 @@ def ltthread(stopevent, init = False):
 
         if stopevent.is_set():
             break
-        request2 = getapi("https://servers.legacyminecraft.com/api/getGlobalHistory")
+        request2, status2 = getapi("https://servers.legacyminecraft.com/api/getGlobalHistory")
         
         serverlist = []
         for i in range(len(request2["servers"])):
@@ -822,7 +828,7 @@ def ltthread(stopevent, init = False):
 
             if stopevent.is_set():
                 return
-            request3 = getapi("https://servers.legacyminecraft.com/api/getPlayersOnline?id=" + str(request2["servers"][i]["id"]))
+            request3, status3 = getapi("https://servers.legacyminecraft.com/api/getPlayersOnline?id=" + str(request2["servers"][i]["id"]))
             request3.update(request2["servers"][i])
             serverlist.append(request3)
         cls()
@@ -875,7 +881,7 @@ def legacytracker():
     main()
 
 def bmcplayerlist():
-    request = getapi("https://api.betamc.org/api/v1/server/players")
+    request, status = getapi("https://api.betamc.org/api/v1/server/players")
 
     print("There are " + c.aqua + str(request["online"]) + c.reset + " out of a maximum " + c.aqua + str(request["max"]) + c.reset + " players online.\n\nOutput format:")
     print("Rank | Username | UUID\n")
@@ -888,6 +894,47 @@ def bmcplayerlist():
             name = request["players"][i]["name"], 
             uuid = request["players"][i]["uuid"],
         ))
+
+    entertocontinue()
+    bmcmenu()
+
+def bmcplayerstats():
+    print("Enter the " + c.aqua + "player name or dashed UUID" + c.reset + ":")
+    player = input("> ")
+
+    if player == "exit" or player == "0":
+        bmcmenu()
+
+    request, status = getapi("https://api.betamc.org/api/v1/player/" + player)
+
+    if status == 404:
+        cls()
+        print(c.red + "Error: This player has not played on BetaMC." + c.reset)
+        bmcplayerstats()
+
+    print("\nDisplaying " + c.aqua + "player statistics" + c.reset + ".\n")
+
+    print("Name: " + request["name"])
+    print("Player UUID: " + request["uuid"])
+    print("Rank: " + ccparser(request["prefix"]))
+    print("Balance: $" + str(round(request["balance"], 2)))
+
+    print("\nOnline: " + str(request["online"]))
+
+    print("\nPlaytime: " + str(round(request["playtime"] / 1000 / 60 / 60, 2)) + " hours")
+    print("First join: " + unixtimetotime(request["first_join"] / 1000))
+    print("Last join: " + unixtimetotime(request["last_join"] / 1000))
+
+    print("\nOverall score: " + str(round(request["overall"], 2)))
+
+    print("\nBlocks traveled: " + str(int(request["blocks_traveled"])))
+    print("Blocks broken: " + str(request["blocks_broken"]))
+    print("Blocks placed: " + str(request["blocks_placed"]))
+    print("Deaths: " + str(request["deaths"]))
+    print("Players killed: " + str(request["players_killed"]))
+    print("Mobs killed: " + str(request["mobs_killed"]))
+    print("Damage dealt: " + str(request["damage_dealt"]))
+    print("Damage taken: " + str(request["damage_taken"]))
 
     entertocontinue()
     bmcmenu()
@@ -1097,6 +1144,7 @@ def bmcmenu():
         print(c.aqua + "BetaMC" + c.reset + " menu\n")
 
         print(c.aqua + "1) " + c.reset + "playerlist")
+        print(c.aqua + "2) " + c.reset + "playerstats")
         print(c.aqua + "0) " + c.reset + "exit")
 
         print("\nThis program is still a work in progress, report issues to SvGaming")
@@ -1106,6 +1154,9 @@ def bmcmenu():
         if choose == "1" or choose == "playerlist":
             cls()
             bmcplayerlist()
+        if choose == "2" or choose == "playerstats":
+            cls()
+            bmcplayerstats()
         elif choose == "0" or choose == "exit":
             main()
         else:
