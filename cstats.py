@@ -875,27 +875,18 @@ def legacytracker():
     main()
 
 def bmcplayerlist():
-    # warning disabling required due to this api having a self signed certificate
-    with warnings.catch_warnings():
-        warnings.simplefilter("ignore", urllib3.exceptions.InsecureRequestWarning)
-        request = getapi("https://betamc.org:8080/api/players", False)
+    request = getapi("https://api.betamc.org/api/v1/server/players")
 
-    print("There are " + c.aqua + str(request["player_count"]) + c.reset + " out of a maximum " + c.aqua + str(request["max_players"]) + c.reset + " players online.\n\nOutput format:")
-    print("Rank and display name | Username | Player UUID\nFirst join | Balance | Playtime\n")
+    print("There are " + c.aqua + str(request["online"]) + c.reset + " out of a maximum " + c.aqua + str(request["max"]) + c.reset + " players online.\n\nOutput format:")
+    print("Rank | Username | UUID\n")
 
-    for i in range(0, request["player_count"]):
-        stri = str(i)
-        displayname = ccparser(request[stri]["display_name"])
-
-        listfmt = "{display} | {user} | {uuid}\n{firstjoin} | ${balance} | {playtime}h\n"
+    for i in range(0, len(request["players"])):
+        listfmt = "{rank} | {name} | {uuid}"
 
         print(listfmt.format(
-            display = displayname,
-            user = request[stri]["username"], 
-            uuid = request[stri]["uuid"],
-            firstjoin = unixtimetotime(request[stri]["first_join"] / 1000),
-            balance = round(request[stri]["balance"], 2),
-            playtime = round(request[stri]["playtime"] / 1000 / 60 / 60, 1)
+            rank = ccparser(request["players"][i]["prefix"]),
+            name = request["players"][i]["name"], 
+            uuid = request["players"][i]["uuid"],
         ))
 
     entertocontinue()
@@ -1104,8 +1095,6 @@ def bmcmenu():
         welcomescreen()
 
         print(c.aqua + "BetaMC" + c.reset + " menu\n")
-
-        print(c.red + "NOTE:\nThe BMC playerlist function is currently not usable (at the time of pushing this version) since the ZCore 2 migration removed the underlying plugin.\nNew BMC API features will probably be implemented in the future.\n" + c.reset)
 
         print(c.aqua + "1) " + c.reset + "playerlist")
         print(c.aqua + "0) " + c.reset + "exit")
