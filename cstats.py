@@ -913,6 +913,15 @@ def asciilogo():
  """ + c.aqua + """\\_______/""" + c.reset + """|_______/    \\___/   \\_______/   \\___/ |_______/ 
 """)
 
+def welcometext():
+    print("Welcome to " + c.aqua + "cstats " + version + c.reset + "!")
+    print("Type the " + c.aqua + "name of a function " + c.reset + "or its " + c.aqua + "numerical ID " + c.reset + "from the list below and press " + c.aqua + "ENTER\n" + c.reset)
+
+def welcomescreen():
+    asciilogo()
+    randomquote()
+    welcometext()
+
 def about():
     print("About " + c.aqua + "cstats " + version + c.reset + ":")
 
@@ -1042,12 +1051,8 @@ def rmcmenu():
     while True:
         print(latestversionstr, end="")
 
-        asciilogo()
+        welcomescreen()
 
-        randomquote()
-
-        print("Welcome to " + c.aqua + "cstats " + version + c.reset + "!")
-        print("Type the " + c.aqua + "name of a function " + c.reset + "or its " + c.aqua + "numerical ID " + c.reset + "from the list below and press " + c.aqua + "ENTER\n" + c.reset)
         print(c.aqua + "RetroMC" + c.reset + " menu\n")
 
         print(c.aqua + "1) " + c.reset + "playerlist")
@@ -1096,12 +1101,8 @@ def bmcmenu():
     while True:
         print(latestversionstr, end="")
 
-        asciilogo()
+        welcomescreen()
 
-        randomquote()
-
-        print("Welcome to " + c.aqua + "cstats " + version + c.reset + "!")
-        print("Type the " + c.aqua + "name of a function " + c.reset + "or its " + c.aqua + "numerical ID " + c.reset + "from the list below and press " + c.aqua + "ENTER\n" + c.reset)
         print(c.aqua + "BetaMC" + c.reset + " menu\n")
 
         print(c.red + "NOTE:\nThe BMC playerlist function is currently not usable (at the time of pushing this version) since the ZCore 2 migration removed the underlying plugin.\nNew BMC API features will probably be implemented in the future.\n" + c.reset)
@@ -1145,12 +1146,7 @@ def main():
         else:
             print(latestversionstr, end="")
 
-            asciilogo()
-
-            randomquote()
-
-            print("Welcome to " + c.aqua + "cstats " + version + c.reset + "!")
-            print("Type the " + c.aqua + "name of a function " + c.reset + "or its " + c.aqua + "numerical ID " + c.reset + "from the list below and press " + c.aqua + "ENTER\n" + c.reset)
+            welcomescreen()
 
             print(c.aqua + "Main" + c.reset + " menu, select a " + c.aqua + "server" + c.reset + " to view stats specific to it\n")
 
