@@ -355,7 +355,7 @@ class RetroMC:
                 ))
 
         entertocontinue()
-        rmcmenu()
+        rmc.menu()
 
     @staticmethod
     def chat():
@@ -374,7 +374,7 @@ class RetroMC:
             ))
 
         entertocontinue()
-        rmcmenu()
+        rmc.menu()
 
     @staticmethod
     def villagelist():
@@ -397,7 +397,7 @@ class RetroMC:
         print("\nTotal village count: " + str(totalcount))
 
         entertocontinue()
-        rmcmenu()
+        rmc.menu()
 
     @staticmethod
     def villagedetails():
@@ -405,7 +405,7 @@ class RetroMC:
         village = input("> ").lower()
 
         if village == "exit" or village == "0":
-            rmcmenu()
+            rmc.menu()
 
         request, status = getapi("https://api.retromc.org/api/v1/village/getVillageList")
 
@@ -463,7 +463,7 @@ class RetroMC:
         print("\nView on J-Stats:\nhttps://statistics.retromc.org/village/" + str(request2["uuid"]))
 
         entertocontinue()
-        rmcmenu()
+        rmc.menu()
 
     @staticmethod
     def playerstats():
@@ -471,7 +471,7 @@ class RetroMC:
         player = input("> ")
 
         if player == "exit" or player == "0":
-            rmcmenu()
+            rmc.menu()
 
         try:
             playerusernamefixed = fixusernamecase(player)
@@ -617,7 +617,7 @@ class RetroMC:
         print("\nView on J-Stats:\nhttps://statistics.retromc.org/player/" + playeruuid)
 
         entertocontinue()
-        rmcmenu()
+        rmc.menu()
 
     @staticmethod
     def leaderboard():
@@ -690,7 +690,7 @@ class RetroMC:
             stattype = "money"
             dataprefix = "$"
         elif choose == "0" or choose == "exit":
-            rmcmenu()
+            rmc.menu()
         else:
             cls()
             print(c.red + "Error: Invalid statistic type!" + c.reset)
@@ -717,7 +717,7 @@ class RetroMC:
         player = input("> ")
 
         if player == "exit" or player == "0":
-            rmcmenu()
+            rmc.menu()
 
         try:
             playerusernamefixed = fixusernamecase(player)
@@ -747,11 +747,62 @@ class RetroMC:
             print("\nCape has been saved to " + c.aqua + capepath + c.reset)
 
             entertocontinue()
-            rmcmenu()
+            rmc.menu()
         else:
             cls()
             print(c.red + "Error: This user is not wearing a BetaEvo cape." + c.reset)
             rmc.capes()
+
+    @staticmethod
+    def menu():
+        cls()
+
+        while True:
+            print(latestversionstr, end="")
+
+            welcomescreen()
+
+            print(c.aqua + "RetroMC" + c.reset + " menu\n")
+
+            print(c.aqua + "1) " + c.reset + "playerlist")
+            print(c.aqua + "2) " + c.reset + "chat")
+            print(c.aqua + "3) " + c.reset + "villagelist")
+            print(c.aqua + "4) " + c.reset + "villagedetails")
+            print(c.aqua + "5) " + c.reset + "playerstats")
+            print(c.aqua + "6) " + c.reset + "leaderboard")
+            print(c.aqua + "7) " + c.reset + "capes")
+            print(c.aqua + "0) " + c.reset + "exit")
+
+            print("\nThis program is still a work in progress, report issues to SvGaming")
+
+            choose = input("> ").lower()
+
+            if choose == "1" or choose == "playerlist":
+                cls()
+                rmc.playerlist()
+            elif choose == "2" or choose == "chat":
+                cls()
+                rmc.chat()
+            elif choose == "3" or choose == "villagelist":
+                cls()
+                rmc.villagelist()
+            elif choose == "4" or choose == "villagedetails":
+                cls()
+                rmc.villagedetails()
+            elif choose == "5" or choose == "playerstats":
+                cls()
+                rmc.playerstats()
+            elif choose == "6" or choose == "leaderboard":
+                cls()
+                rmc.leaderboard()
+            elif choose == "7" or choose == "capes":
+                cls()
+                rmc.capes()
+            elif choose == "0" or choose == "exit":
+                main()
+            else:
+                cls()
+                print(c.red + "Error: Invalid option!" + c.reset)
 
 rmc = RetroMC()
 
@@ -773,7 +824,7 @@ class BetaMC:
             ))
 
         entertocontinue()
-        bmcmenu()
+        bmc.menu()
 
     @staticmethod
     def playerstats():
@@ -781,7 +832,7 @@ class BetaMC:
         player = input("> ")
 
         if player == "exit" or player == "0":
-            bmcmenu()
+            bmc.menu()
 
         request, status = getapi("https://api.betamc.org/api/v1/player/" + player)
 
@@ -815,7 +866,38 @@ class BetaMC:
         print("Damage taken: " + str(request["damage_taken"]))
 
         entertocontinue()
-        bmcmenu()
+        bmc.menu()
+    
+    @staticmethod
+    def menu():
+        cls()
+
+        while True:
+            print(latestversionstr, end="")
+
+            welcomescreen()
+
+            print(c.aqua + "BetaMC" + c.reset + " menu\n")
+
+            print(c.aqua + "1) " + c.reset + "playerlist")
+            print(c.aqua + "2) " + c.reset + "playerstats")
+            print(c.aqua + "0) " + c.reset + "exit")
+
+            print("\nThis program is still a work in progress, report issues to SvGaming")
+
+            choose = input("> ").lower()
+
+            if choose == "1" or choose == "playerlist":
+                cls()
+                bmc.playerlist()
+            if choose == "2" or choose == "playerstats":
+                cls()
+                bmc.playerstats()
+            elif choose == "0" or choose == "exit":
+                main()
+            else:
+                cls()
+                print(c.red + "Error: Invalid option!" + c.reset)
 
 bmc = BetaMC()
 
@@ -1098,86 +1180,6 @@ def init():
 
     main()
 
-def rmcmenu():
-    cls()
-
-    while True:
-        print(latestversionstr, end="")
-
-        welcomescreen()
-
-        print(c.aqua + "RetroMC" + c.reset + " menu\n")
-
-        print(c.aqua + "1) " + c.reset + "playerlist")
-        print(c.aqua + "2) " + c.reset + "chat")
-        print(c.aqua + "3) " + c.reset + "villagelist")
-        print(c.aqua + "4) " + c.reset + "villagedetails")
-        print(c.aqua + "5) " + c.reset + "playerstats")
-        print(c.aqua + "6) " + c.reset + "leaderboard")
-        print(c.aqua + "7) " + c.reset + "capes")
-        print(c.aqua + "0) " + c.reset + "exit")
-
-        print("\nThis program is still a work in progress, report issues to SvGaming")
-
-        choose = input("> ").lower()
-
-        if choose == "1" or choose == "playerlist":
-            cls()
-            rmc.playerlist()
-        elif choose == "2" or choose == "chat":
-            cls()
-            rmc.chat()
-        elif choose == "3" or choose == "villagelist":
-            cls()
-            rmc.villagelist()
-        elif choose == "4" or choose == "villagedetails":
-            cls()
-            rmc.villagedetails()
-        elif choose == "5" or choose == "playerstats":
-            cls()
-            rmc.playerstats()
-        elif choose == "6" or choose == "leaderboard":
-            cls()
-            rmc.leaderboard()
-        elif choose == "7" or choose == "capes":
-            cls()
-            rmc.capes()
-        elif choose == "0" or choose == "exit":
-            main()
-        else:
-            cls()
-            print(c.red + "Error: Invalid option!" + c.reset)
-
-def bmcmenu():
-    cls()
-
-    while True:
-        print(latestversionstr, end="")
-
-        welcomescreen()
-
-        print(c.aqua + "BetaMC" + c.reset + " menu\n")
-
-        print(c.aqua + "1) " + c.reset + "playerlist")
-        print(c.aqua + "2) " + c.reset + "playerstats")
-        print(c.aqua + "0) " + c.reset + "exit")
-
-        print("\nThis program is still a work in progress, report issues to SvGaming")
-
-        choose = input("> ").lower()
-
-        if choose == "1" or choose == "playerlist":
-            cls()
-            bmc.playerlist()
-        if choose == "2" or choose == "playerstats":
-            cls()
-            bmc.playerstats()
-        elif choose == "0" or choose == "exit":
-            main()
-        else:
-            cls()
-            print(c.red + "Error: Invalid option!" + c.reset)
-
 def main():
     cls()
     global argused
@@ -1218,10 +1220,10 @@ def main():
             choose = input("> ").lower()
 
         if choose == "1" or choose == "retromc":
-            rmcmenu()
+            rmc.menu()
             cls()
         elif choose == "2" or choose == "betamc":
-            bmcmenu()
+            bmc.menu()
             cls()
         elif choose == "3" or choose == "serverping":
             cls()
