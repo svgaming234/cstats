@@ -869,6 +869,93 @@ class BetaMC:
         bmc.menu()
     
     @staticmethod
+    def leaderboard():
+        print("Please select a " + c.aqua + "statistic type " + c.reset + "to view its leaderboard.\n")
+
+        print(c.aqua + "1) " + c.reset + "overallScore")
+        print(c.aqua + "2) " + c.reset + "playtime")
+        print(c.aqua + "3) " + c.reset + "balance")
+        print(c.aqua + "4) " + c.reset + "blocksPlaced")
+        print(c.aqua + "5) " + c.reset + "blocksBroken")
+        print(c.aqua + "6) " + c.reset + "blocksTraveled")
+        print(c.aqua + "7) " + c.reset + "playersKilled")
+        print(c.aqua + "8) " + c.reset + "mobsKilled")
+        print(c.aqua + "9) " + c.reset + "deaths")
+        print(c.aqua + "10) " + c.reset + "damageDealt")
+        print(c.aqua + "11) " + c.reset + "damageTaken")
+        print(c.aqua + "0) " + c.reset + "exit\n")
+
+        choose = input("> ").lower()
+
+        dataprefix = ""
+        datasuffix = ""
+
+        if choose == "1" or choose == "overallScore":
+            cls()
+            stattype = "overall"
+            datasuffix = " points"
+        elif choose == "2" or choose == "playtime":
+            cls()
+            stattype = "playtime"
+        elif choose == "3" or choose == "balance":
+            cls()
+            stattype = "balance"
+            dataprefix = "$"
+        elif choose == "4" or choose == "blocksplaced":
+            cls()
+            stattype = "blocks_placed"
+            datasuffix = " blocks"
+        elif choose == "5" or choose == "blocksbroken":
+            cls()
+            stattype = "blocks_broken"
+            datasuffix = " blocks"
+        elif choose == "6" or choose == "blockstraveled":
+            cls()
+            stattype = "blocks_traveled"
+            datasuffix = " blocks"
+        elif choose == "7" or choose == "playerskilled":
+            cls()
+            stattype = "players_killed"
+            datasuffix = " kills"
+        elif choose == "8" or choose == "mobskilled":
+            cls()
+            stattype = "mobs_killed"
+            datasuffix = " kills"
+        elif choose == "9" or choose == "deaths":
+            cls()
+            stattype = "deaths"
+            datasuffix = " deaths"
+        elif choose == "10" or choose == "damagedealt":
+            cls()
+            stattype = "damage_dealt"
+            datasuffix = " damage"
+        elif choose == "11" or choose == "damagetaken":
+            cls()
+            stattype = "damage_taken"
+            datasuffix = " damage"
+        elif choose == "0" or choose == "exit":
+            bmc.menu()
+        else:
+            cls()
+            print(c.red + "Error: Invalid statistic type!" + c.reset)
+            bmc.leaderboard()
+
+        request, status = getapi("https://api.betamc.org/api/v1/leaderboard?category=" + stattype)
+
+        print("Leaderboard for " + c.aqua + stattype + c.reset + ":")
+
+        if stattype == "playtime":
+            for i in range(len(request["players"])):
+                print(str(i + 1) + ". " + request["players"][i]["name"] + " = " + str(round(request["players"][i][stattype] / 1000 / 60 / 60, 2)) + " hours (" + str(round(request["players"][i][stattype] / 1000 / 60, 2)) + " minutes)")
+        else:
+           for i in range(len(request["players"])):
+                print(str(i + 1) + ". " + request["players"][i]["name"] + " = "  + dataprefix + str(round(request["players"][i][stattype], 2)) + datasuffix)
+
+        entertocontinue("\nPress " + c.aqua + "ENTER" + c.reset + " to return to leaderboard menu.\n")
+        cls()
+        bmc.leaderboard()
+
+    @staticmethod
     def menu():
         cls()
 
@@ -881,6 +968,7 @@ class BetaMC:
 
             print(c.aqua + "1) " + c.reset + "playerlist")
             print(c.aqua + "2) " + c.reset + "playerstats")
+            print(c.aqua + "3) " + c.reset + "leaderboard")
             print(c.aqua + "0) " + c.reset + "exit")
 
             print("\nThis program is still a work in progress, report issues to SvGaming")
@@ -893,6 +981,9 @@ class BetaMC:
             if choose == "2" or choose == "playerstats":
                 cls()
                 bmc.playerstats()
+            if choose == "3" or choose == "leaderboard":
+                cls()
+                bmc.leaderboard()
             elif choose == "0" or choose == "exit":
                 main()
             else:
