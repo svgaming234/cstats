@@ -823,6 +823,12 @@ class BetaMC:
                 uuid = request["players"][i]["uuid"],
             ))
 
+
+        request, status = getapi("https://api.betamc.org/api/v1/server/stats")
+        print("\nTotal unique players: " + str(request["unique_players"]))
+        print("Total economy size: $" + str(round(request["economy_size"], 2)))
+        print("Total playtime: " + str(round(request["total_playtime"] / 1000 / 60 / 60, 2)) + " hours")
+
         entertocontinue()
         bmc.menu()
 
