@@ -322,388 +322,502 @@ def randomquote():
 
     print(c.yellow + splashes[random.randint(0, len(splashes) - 1)] + c.reset)
 
+class RetroMC:
+    @staticmethod
+    def playerlist():
+        request, status = getapi("https://api.retromc.org/api/v1/server/players")
 
-def playerlist():
-    request, status = getapi("https://api.retromc.org/api/v1/server/players")
+        print("There are " + c.aqua + str(request["player_count"]) + c.reset + " out of a maximum " + c.aqua + str(request["max_players"]) + c.reset + " players online.\n\nOutput format:")
+        print("Rank and display name | Username | Player UUID | X coord | Y coord | Z coord\n")
 
-    print("There are " + c.aqua + str(request["player_count"]) + c.reset + " out of a maximum " + c.aqua + str(request["max_players"]) + c.reset + " players online.\n\nOutput format:")
-    print("Rank and display name | Username | Player UUID | X coord | Y coord | Z coord\n")
+        for i in range(0, request["player_count"]):
+            # remove Â from display names because the api puts them there for no reason
+            displayname = removeweirda(request["players"][i]["display_name"])
 
-    for i in range(0, request["player_count"]):
-        # remove Â from display names because the api puts them there for no reason
-        displayname = removeweirda(request["players"][i]["display_name"])
+            if request["players"][i]["x"] == 0 and request["players"][i]["y"] == 0 and request["players"][i]["z"] == 0:
+                listfmt = "{display} | {user} | {uuid} | Coordinates: Unknown, player is in vanish"
 
-        if request["players"][i]["x"] == 0 and request["players"][i]["y"] == 0 and request["players"][i]["z"] == 0:
-            listfmt = "{display} | {user} | {uuid} | Coordinates: Unknown, player is in vanish"
+                print(listfmt.format(
+                    display = ccparser(displayname),
+                    user = request["players"][i]["name"], 
+                    uuid = request["players"][i]["uuid"]
+                ))
+            else:
+                listfmt = "{display} | {user} | {uuid} | X:{xcoord}, Y:{ycoord}, Z:{zcoord}"
 
-            print(listfmt.format(
-                display = ccparser(displayname),
-                user = request["players"][i]["name"], 
-                uuid = request["players"][i]["uuid"]
-            ))
-        else:
-            listfmt = "{display} | {user} | {uuid} | X:{xcoord}, Y:{ycoord}, Z:{zcoord}"
+                print(listfmt.format(
+                    display = ccparser(displayname),
+                    user = request["players"][i]["name"], 
+                    uuid = request["players"][i]["uuid"], 
+                    xcoord = str(round(request["players"][i]["x"], 1)),
+                    ycoord = str(round(request["players"][i]["y"], 1)),
+                    zcoord = str(round(request["players"][i]["z"], 1))
+                ))
 
-            print(listfmt.format(
-                display = ccparser(displayname),
-                user = request["players"][i]["name"], 
-                uuid = request["players"][i]["uuid"], 
-                xcoord = str(round(request["players"][i]["x"], 1)),
-                ycoord = str(round(request["players"][i]["y"], 1)),
-                zcoord = str(round(request["players"][i]["z"], 1))
-            ))
-
-    entertocontinue()
-    rmcmenu()
-
-def chat():
-    listfmt = "{display}: {message}"
-    request, status = getapi("https://api.retromc.org/api/v1/server/chat")
-
-    print("Displaying recently sent messages. (does " + c.aqua + "NOT" + c.reset + " display Discord messages)\n")
-
-    for i in range(0, len(request["messages"])): 
-        # remove Â from display names because the api puts them there for no reason
-        displayname = removeweirda(request["messages"][i]["display_name"])
-
-        print(listfmt.format(
-            display = ccparser(displayname), 
-            message = ccparser(request["messages"][i]["message"])
-        ))
-
-    entertocontinue()
-    rmcmenu()
-
-def villagelist():
-    listfmt = "{name} | {owner} | {villageuuid}"
-    request, status = getapi("https://api.retromc.org/api/v1/village/getVillageList")
-
-    print("Displaying list of " + c.aqua + "all" + c.reset + " RetroMC villages.\n\nOutput format:")
-    print("Village name | Village owner | Village UUID\n")
-
-    totalcount = len(request["villages"])
-    print("Total village count: " + str(totalcount) + "\n")
-
-    for i in range(0, totalcount): 
-        print(listfmt.format(
-            name = request["villages"][i]["name"], 
-            owner = uuidtousername(request["villages"][i]["owner"]),
-            villageuuid = request["villages"][i]["uuid"]
-        ))
-
-    print("\nTotal village count: " + str(totalcount))
-
-    entertocontinue()
-    rmcmenu()
-
-def villagedetails():
-    print("Enter the " + c.aqua + "village name" + c.reset + ":")
-    village = input("> ").lower()
-
-    if village == "exit" or village == "0":
+        entertocontinue()
         rmcmenu()
 
-    request, status = getapi("https://api.retromc.org/api/v1/village/getVillageList")
+    @staticmethod
+    def chat():
+        listfmt = "{display}: {message}"
+        request, status = getapi("https://api.retromc.org/api/v1/server/chat")
 
-    print("\nDisplaying " + c.aqua + "village details" + c.reset + ".\n")
+        print("Displaying recently sent messages. (does " + c.aqua + "NOT" + c.reset + " display Discord messages)\n")
 
-    for i in range(0, len(request["villages"])): 
-        if request["villages"][i]["name"].lower() == village:
-            villageuuid = request["villages"][i]["uuid"]
-            break
-    else:
-        cls()
-        print(c.red + "Error: Village not found." + c.reset)
-        villagedetails()
+        for i in range(0, len(request["messages"])): 
+            # remove Â from display names because the api puts them there for no reason
+            displayname = removeweirda(request["messages"][i]["display_name"])
 
-    request2, status2 = getapi("https://api.retromc.org/api/v1/village/getVillage?uuid=" + villageuuid)
-    
-    print("Name: " + str(request2["name"]))
-    print("Village UUID: " + str(request2["uuid"]))
-    print("Owner: " + uuidtousername(request2["owner"]))
-    print("Location: X:" + str(request2["spawn"]["x"]) + ", Y:" + str(request2["spawn"]["y"]) + ", Z:" + str(request2["spawn"]["z"]) + " in world " + request2["spawn"]["world"])
+            print(listfmt.format(
+                display = ccparser(displayname), 
+                message = ccparser(request["messages"][i]["message"])
+            ))
 
-    if request2["creationTime"] != 1640995200:
-        print("Creation time: " + unixtimetotime(request2["creationTime"]))
-    else:
-        print("Creation time: Unknown (likely lost in Towny > JVillage transfer)")
+        entertocontinue()
+        rmcmenu()
+
+    @staticmethod
+    def villagelist():
+        listfmt = "{name} | {owner} | {villageuuid}"
+        request, status = getapi("https://api.retromc.org/api/v1/village/getVillageList")
+
+        print("Displaying list of " + c.aqua + "all" + c.reset + " RetroMC villages.\n\nOutput format:")
+        print("Village name | Village owner | Village UUID\n")
+
+        totalcount = len(request["villages"])
+        print("Total village count: " + str(totalcount) + "\n")
+
+        for i in range(0, totalcount): 
+            print(listfmt.format(
+                name = request["villages"][i]["name"], 
+                owner = uuidtousername(request["villages"][i]["owner"]),
+                villageuuid = request["villages"][i]["uuid"]
+            ))
+
+        print("\nTotal village count: " + str(totalcount))
+
+        entertocontinue()
+        rmcmenu()
+
+    @staticmethod
+    def villagedetails():
+        print("Enter the " + c.aqua + "village name" + c.reset + ":")
+        village = input("> ").lower()
+
+        if village == "exit" or village == "0":
+            rmcmenu()
+
+        request, status = getapi("https://api.retromc.org/api/v1/village/getVillageList")
+
+        print("\nDisplaying " + c.aqua + "village details" + c.reset + ".\n")
+
+        for i in range(0, len(request["villages"])): 
+            if request["villages"][i]["name"].lower() == village:
+                villageuuid = request["villages"][i]["uuid"]
+                break
+        else:
+            cls()
+            print(c.red + "Error: Village not found." + c.reset)
+            rmc.villagedetails()
+
+        request2, status2 = getapi("https://api.retromc.org/api/v1/village/getVillage?uuid=" + villageuuid)
         
-    print("Balance: " + str(round(request2["balance"], 2)))
-    print("Claim count: " + str(request2["claims"]))
-    print("Assistants: " + str(len(request2["assistants"])))
-    print("Members: " + str(len(request2["members"])))
+        print("Name: " + str(request2["name"]))
+        print("Village UUID: " + str(request2["uuid"]))
+        print("Owner: " + uuidtousername(request2["owner"]))
+        print("Location: X:" + str(request2["spawn"]["x"]) + ", Y:" + str(request2["spawn"]["y"]) + ", Z:" + str(request2["spawn"]["z"]) + " in world " + request2["spawn"]["world"])
 
-    print("\nVillage flags: ")
-
-    for flag in request2["flags"]:
-        print(flag + ": " + str(request2["flags"][flag]))
-
-    print("\nAssistants:")
-    if len(request2["assistants"]) != 0:    
-        for i in range(0, len(request2["assistants"])):
-            commaloop(i)
-            print(uuidtousername(request2["assistants"][i]), end="")
-    else:
-        print("No assistants", end="")
-
-    print("\n\nMembers:")
-    if len(request2["members"]) != 0:
-        for i in range(0, len(request2["members"])):
-            commaloop(i)
-            print(uuidtousername(request2["members"][i]), end="")
-    else:
-        print("No members", end="")
-
-    displayworldmap(request2["spawn"]["x"], request2["spawn"]["y"], request2["spawn"]["z"])
-
-    print("\nView on J-Stats:\nhttps://statistics.retromc.org/village/" + str(request2["uuid"]))
-
-    entertocontinue()
-    rmcmenu()
-
-def playerstats():
-    print("Enter the " + c.aqua + "player name" + c.reset + ":")
-    player = input("> ")
-
-    if player == "exit" or player == "0":
-        rmcmenu()
-
-    try:
-        playerusernamefixed = fixusernamecase(player)
-    except KeyError:
-        cls()
-        print(c.red + "Error: A player going by this username does not exist." + c.reset)
-        playerstats()
-
-    playeruuid = usernametouuid(playerusernamefixed)
-
-    request4, status4 = getapi("https://statistics.johnymuffin.com/api/v1/getUser?serverID=0&uuid=" + playeruuid)
-
-    if "msg" in request4:
-        cls()
-        print(c.red + "Error: This player has not played on RetroMC." + c.reset)
-        playerstats()
-
-    request, status = getapi("https://statistics.retromc.org/api/online?username=" + playerusernamefixed)
-
-    print("\nDisplaying " + c.aqua + "player statistics" + c.reset + ".\n")
-
-    print("Name: " + playerusernamefixed)
-    print("Player UUID: " + playeruuid)
-
-    if request4["groups"][0] == "wanderer":
-        rank = ccparser("&8[&7Wanderer&8]")
-    elif request4["groups"][0] == "citizen":
-        rank = ccparser("&f[&aCitizen&f]")
-    elif request4["groups"][0] == "trusted":
-        rank = ccparser("&6[&aCitizen&6]")
-    elif request4["groups"][0] == "diamondcitizen":
-        rank = ccparser("&b[&aCitizen&b]")
-    elif request4["groups"][0] == "hero":
-        rank = ccparser("&f[&2Hero&f]")
-    elif request4["groups"][0] == "legend":
-        rank = ccparser("&f[&9Legend&f]")
-    elif request4["groups"][0] == "mystic":
-        rank = ccparser("&f[&bMystic&f]")
-    elif request4["groups"][0] == "donator":
-        rank = ccparser("&8[&cDonator&8]")
-    elif request4["groups"][0] == "donator+":
-        rank = ccparser("&8[&cDonator&4+&8]")
-    elif request4["groups"][0] == "donatorplusplus":
-        rank = ccparser("&8[&cDonator&4++&8]")
-    elif request4["groups"][0] == "trooper":
-        rank = ccparser("&d[trooper]")
-    elif request4["groups"][0] == "helper":
-        rank = ccparser("&f[&3Helper&f]")
-    elif request4["groups"][0] == "trial":
-        rank = ccparser("&f[&aTrial Helper&f]")
-    elif request4["groups"][0] == "moderator":
-        rank = ccparser("&f[&6Moderator&f]")
-    elif request4["groups"][0] == "admin":
-        rank = ccparser("&f[&4Admin&f]")
-    elif request4["groups"][0] == "developer":
-        rank = ccparser("&f[&cDeveloper&f]")
-    else:
-        rank = request4["groups"][0]
-
-    print("Rank: " + rank)
-    print("Money: " + str(round(request4["money"], 2)) + "$\n")
-
-    print("Playtime: " + str(round(request4["playTime"] / 60 / 60, 2)) + " hours")
-    print("First join: " + unixtimetotime(request4["firstJoin"]))
-    print("Last join: " + unixtimetotime(request4["lastJoin"]))
-    print("Join count: " + str(request4["joinCount"]) + "\n")
-
-    print("Trust level: " + str(request4["trustLevel"]))
-    print("Trust score: " + str(round(request4["trustScore"], 2)))
-
-    print("Player deaths: " + str(request4["playerDeaths"]))
-    print("Players killed: " + str(request4["playersKilled"]))
-    print("Creatures killed: " + str(request4["creaturesKilled"]))
-
-    print("\nDistance traveled: " + str(request4["metersTraveled"]) + " blocks")
-    print("Blocks destroyed: " + str(request4["blocksDestroyed"]))
-    print("Blocks placed: " + str(request4["blocksPlaced"]))
-    print("Items dropped: " + str(request4["itemsDropped"]))
-    
-    print("\nOnline: " + str(request["online"]))
-
-    try:
-        if request["x"] == 0 and request["y"] == 0 and request["z"] == 0:
-            print("Coordinates: Unknown, player is in vanish")
+        if request2["creationTime"] != 1640995200:
+            print("Creation time: " + unixtimetotime(request2["creationTime"]))
         else:
-            x = str(request["x"])
-            y = str(request["y"])
-            z = str(request["z"])
+            print("Creation time: Unknown (likely lost in Towny > JVillage transfer)")
+            
+        print("Balance: " + str(round(request2["balance"], 2)))
+        print("Claim count: " + str(request2["claims"]))
+        print("Assistants: " + str(len(request2["assistants"])))
+        print("Members: " + str(len(request2["members"])))
 
-            print("Coordinates: X: " + x + ", Y: " + y + ", Z: " + z)
-    except:
-        print("Coordinates: Player is offline")
+        print("\nVillage flags: ")
 
-    request2, status2 = getapi("https://statistics.retromc.org/api/bans?uuid=" + str(playeruuid))
+        for flag in request2["flags"]:
+            print(flag + ": " + str(request2["flags"][flag]))
 
-    print("\nCurrently banned: " + str(request2["banned"]))
-    
-    if len(request2["bans"]) == 0:
-        print("Ban history: Player has never been banned")
-    else:
-        print("Ban history:")
-        for i in range(len(request2["bans"])):
-            banreason = request2["bans"][i]["reason"]
+        print("\nAssistants:")
+        if len(request2["assistants"]) != 0:    
+            for i in range(0, len(request2["assistants"])):
+                commaloop(i)
+                print(uuidtousername(request2["assistants"][i]), end="")
+        else:
+            print("No assistants", end="")
 
-            # remove trailing space on some ban reasons
-            if banreason[len(banreason) - 1] == " ":
-                banreason = banreason[:-1]
+        print("\n\nMembers:")
+        if len(request2["members"]) != 0:
+            for i in range(0, len(request2["members"])):
+                commaloop(i)
+                print(uuidtousername(request2["members"][i]), end="")
+        else:
+            print("No members", end="")
 
-            print("\nBanned for \"" + banreason + "\" by " + request2["bans"][i]["admin"][0])
+        displayworldmap(request2["spawn"]["x"], request2["spawn"]["y"], request2["spawn"]["z"])
 
-            print("Pardoned: " + str(request2["bans"][i]["pardoned"]) + ", Ban issue date: " + unixtimetotime(request2["bans"][i]["date"]))
+        print("\nView on J-Stats:\nhttps://statistics.retromc.org/village/" + str(request2["uuid"]))
 
-    request3, status3 = getapi("https://statistics.retromc.org/api/user_villages?uuid=" + str(playeruuid))
-
-    novillages = False
-    if request3["status"] == False and request3["message"] == "no villages for this user":
-        novillages = True
-
-    print("\nOwner of villages: ", end="")
-    if novillages == True or len(request3["data"]["owner"]) == 0:
-        print("None :(")
-    else:
-        print("")
-        for i in range(len(request3["data"]["owner"])):
-            print(request3["data"]["owner"][i]["village"] + " (" + request3["data"]["owner"][i]["village_uuid"] + ")")
-
-    print("\nAssistant of villages: ", end="")
-    if novillages == True or len(request3["data"]["assistant"]) == 0:
-        print("None :(")
-    else:
-        print("")
-        for i in range(len(request3["data"]["assistant"])):
-            print(request3["data"]["assistant"][i]["village"] + " (" + request3["data"]["assistant"][i]["village_uuid"] + ")")
-
-    print("\nMember of villages: ", end="")
-    if novillages == True or len(request3["data"]["member"]) == 0:
-        print("None :(")
-    else:
-        print("")
-        for i in range(len(request3["data"]["member"])):
-            print(request3["data"]["member"][i]["village"] + " (" + request3["data"]["member"][i]["village_uuid"] + ")")
-    
-    print("\nView on J-Stats:\nhttps://statistics.retromc.org/player/" + playeruuid)
-
-    entertocontinue()
-    rmcmenu()
-
-def leaderboard():
-    print("Please select a " + c.aqua + "statistic type " + c.reset + "to view its leaderboard.\n")
-
-    print(c.aqua + "1) " + c.reset + "blocksPlaced")
-    print(c.aqua + "2) " + c.reset + "blocksDestroyed")
-    print(c.aqua + "3) " + c.reset + "metersTraveled")
-    print(c.aqua + "4) " + c.reset + "itemsDropped")
-    print(c.aqua + "5) " + c.reset + "playerDeaths")
-    print(c.aqua + "6) " + c.reset + "playersKilled")
-    print(c.aqua + "7) " + c.reset + "creaturesKilled")
-    print(c.aqua + "8) " + c.reset + "joinCount")
-    print(c.aqua + "9) " + c.reset + "playTime")
-    print(c.aqua + "10) " + c.reset + "trustLevel")
-    print(c.aqua + "11) " + c.reset + "trustScore")
-    print(c.aqua + "12) " + c.reset + "money")
-    print(c.aqua + "0) " + c.reset + "exit\n")
-
-    choose = input("> ").lower()
-
-    dataprefix = ""
-    datasuffix = ""
-
-    if choose == "1" or choose == "blocksplaced":
-        cls()
-        stattype = "blocksPlaced"
-        datasuffix = " blocks"
-    elif choose == "2" or choose == "blocksdestroyed":
-        cls()
-        stattype = "blocksDestroyed"
-        datasuffix = " blocks"
-    elif choose == "3" or choose == "meterstraveled":
-        cls()
-        stattype = "metersTraveled"
-        datasuffix = " meters"
-    elif choose == "4" or choose == "itemsdropped":
-        cls()
-        stattype = "itemsDropped"
-        datasuffix = " items"
-    elif choose == "5" or choose == "playerdeaths":
-        cls()
-        stattype = "playerDeaths"
-        datasuffix = " deaths"
-    elif choose == "6" or choose == "playerskilled":
-        cls()
-        stattype = "playersKilled"
-        datasuffix = " kills"
-    elif choose == "7" or choose == "creatureskilled":
-        cls()
-        stattype = "creaturesKilled"
-        datasuffix = " kills"
-    elif choose == "8" or choose == "joincount":
-        cls()
-        stattype = "joinCount"
-        datasuffix = " joins"
-    elif choose == "9" or choose == "playtime":
-        cls()
-        stattype = "playTime"
-    elif choose == "10" or choose == "trustlevel":
-        cls()
-        stattype = "trustLevel"
-        dataprefix = "Level "
-    elif choose == "11" or choose == "trustscore":
-        cls()
-        stattype = "trustScore"
-        dataprefix = "Score "
-    elif choose == "12" or choose == "money":
-        cls()
-        stattype = "money"
-        dataprefix = "$"
-    elif choose == "0" or choose == "exit":
+        entertocontinue()
         rmcmenu()
-    else:
+
+    @staticmethod
+    def playerstats():
+        print("Enter the " + c.aqua + "player name" + c.reset + ":")
+        player = input("> ")
+
+        if player == "exit" or player == "0":
+            rmcmenu()
+
+        try:
+            playerusernamefixed = fixusernamecase(player)
+        except KeyError:
+            cls()
+            print(c.red + "Error: A player going by this username does not exist." + c.reset)
+            rmc.playerstats()
+
+        playeruuid = usernametouuid(playerusernamefixed)
+
+        request4, status4 = getapi("https://statistics.johnymuffin.com/api/v1/getUser?serverID=0&uuid=" + playeruuid)
+
+        if "msg" in request4:
+            cls()
+            print(c.red + "Error: This player has not played on RetroMC." + c.reset)
+            rmc.playerstats()
+
+        request, status = getapi("https://statistics.retromc.org/api/online?username=" + playerusernamefixed)
+
+        print("\nDisplaying " + c.aqua + "player statistics" + c.reset + ".\n")
+
+        print("Name: " + playerusernamefixed)
+        print("Player UUID: " + playeruuid)
+
+        if request4["groups"][0] == "wanderer":
+            rank = ccparser("&8[&7Wanderer&8]")
+        elif request4["groups"][0] == "citizen":
+            rank = ccparser("&f[&aCitizen&f]")
+        elif request4["groups"][0] == "trusted":
+            rank = ccparser("&6[&aCitizen&6]")
+        elif request4["groups"][0] == "diamondcitizen":
+            rank = ccparser("&b[&aCitizen&b]")
+        elif request4["groups"][0] == "hero":
+            rank = ccparser("&f[&2Hero&f]")
+        elif request4["groups"][0] == "legend":
+            rank = ccparser("&f[&9Legend&f]")
+        elif request4["groups"][0] == "mystic":
+            rank = ccparser("&f[&bMystic&f]")
+        elif request4["groups"][0] == "donator":
+            rank = ccparser("&8[&cDonator&8]")
+        elif request4["groups"][0] == "donator+":
+            rank = ccparser("&8[&cDonator&4+&8]")
+        elif request4["groups"][0] == "donatorplusplus":
+            rank = ccparser("&8[&cDonator&4++&8]")
+        elif request4["groups"][0] == "trooper":
+            rank = ccparser("&d[trooper]")
+        elif request4["groups"][0] == "helper":
+            rank = ccparser("&f[&3Helper&f]")
+        elif request4["groups"][0] == "trial":
+            rank = ccparser("&f[&aTrial Helper&f]")
+        elif request4["groups"][0] == "moderator":
+            rank = ccparser("&f[&6Moderator&f]")
+        elif request4["groups"][0] == "admin":
+            rank = ccparser("&f[&4Admin&f]")
+        elif request4["groups"][0] == "developer":
+            rank = ccparser("&f[&cDeveloper&f]")
+        else:
+            rank = request4["groups"][0]
+
+        print("Rank: " + rank)
+        print("Money: " + str(round(request4["money"], 2)) + "$\n")
+
+        print("Playtime: " + str(round(request4["playTime"] / 60 / 60, 2)) + " hours")
+        print("First join: " + unixtimetotime(request4["firstJoin"]))
+        print("Last join: " + unixtimetotime(request4["lastJoin"]))
+        print("Join count: " + str(request4["joinCount"]) + "\n")
+
+        print("Trust level: " + str(request4["trustLevel"]))
+        print("Trust score: " + str(round(request4["trustScore"], 2)))
+
+        print("Player deaths: " + str(request4["playerDeaths"]))
+        print("Players killed: " + str(request4["playersKilled"]))
+        print("Creatures killed: " + str(request4["creaturesKilled"]))
+
+        print("\nDistance traveled: " + str(request4["metersTraveled"]) + " blocks")
+        print("Blocks destroyed: " + str(request4["blocksDestroyed"]))
+        print("Blocks placed: " + str(request4["blocksPlaced"]))
+        print("Items dropped: " + str(request4["itemsDropped"]))
+        
+        print("\nOnline: " + str(request["online"]))
+
+        try:
+            if request["x"] == 0 and request["y"] == 0 and request["z"] == 0:
+                print("Coordinates: Unknown, player is in vanish")
+            else:
+                x = str(request["x"])
+                y = str(request["y"])
+                z = str(request["z"])
+
+                print("Coordinates: X: " + x + ", Y: " + y + ", Z: " + z)
+        except:
+            print("Coordinates: Player is offline")
+
+        request2, status2 = getapi("https://statistics.retromc.org/api/bans?uuid=" + str(playeruuid))
+
+        print("\nCurrently banned: " + str(request2["banned"]))
+        
+        if len(request2["bans"]) == 0:
+            print("Ban history: Player has never been banned")
+        else:
+            print("Ban history:")
+            for i in range(len(request2["bans"])):
+                banreason = request2["bans"][i]["reason"]
+
+                # remove trailing space on some ban reasons
+                if banreason[len(banreason) - 1] == " ":
+                    banreason = banreason[:-1]
+
+                print("\nBanned for \"" + banreason + "\" by " + request2["bans"][i]["admin"][0])
+
+                print("Pardoned: " + str(request2["bans"][i]["pardoned"]) + ", Ban issue date: " + unixtimetotime(request2["bans"][i]["date"]))
+
+        request3, status3 = getapi("https://statistics.retromc.org/api/user_villages?uuid=" + str(playeruuid))
+
+        novillages = False
+        if request3["status"] == False and request3["message"] == "no villages for this user":
+            novillages = True
+
+        print("\nOwner of villages: ", end="")
+        if novillages == True or len(request3["data"]["owner"]) == 0:
+            print("None :(")
+        else:
+            print("")
+            for i in range(len(request3["data"]["owner"])):
+                print(request3["data"]["owner"][i]["village"] + " (" + request3["data"]["owner"][i]["village_uuid"] + ")")
+
+        print("\nAssistant of villages: ", end="")
+        if novillages == True or len(request3["data"]["assistant"]) == 0:
+            print("None :(")
+        else:
+            print("")
+            for i in range(len(request3["data"]["assistant"])):
+                print(request3["data"]["assistant"][i]["village"] + " (" + request3["data"]["assistant"][i]["village_uuid"] + ")")
+
+        print("\nMember of villages: ", end="")
+        if novillages == True or len(request3["data"]["member"]) == 0:
+            print("None :(")
+        else:
+            print("")
+            for i in range(len(request3["data"]["member"])):
+                print(request3["data"]["member"][i]["village"] + " (" + request3["data"]["member"][i]["village_uuid"] + ")")
+        
+        print("\nView on J-Stats:\nhttps://statistics.retromc.org/player/" + playeruuid)
+
+        entertocontinue()
+        rmcmenu()
+
+    @staticmethod
+    def leaderboard():
+        print("Please select a " + c.aqua + "statistic type " + c.reset + "to view its leaderboard.\n")
+
+        print(c.aqua + "1) " + c.reset + "blocksPlaced")
+        print(c.aqua + "2) " + c.reset + "blocksDestroyed")
+        print(c.aqua + "3) " + c.reset + "metersTraveled")
+        print(c.aqua + "4) " + c.reset + "itemsDropped")
+        print(c.aqua + "5) " + c.reset + "playerDeaths")
+        print(c.aqua + "6) " + c.reset + "playersKilled")
+        print(c.aqua + "7) " + c.reset + "creaturesKilled")
+        print(c.aqua + "8) " + c.reset + "joinCount")
+        print(c.aqua + "9) " + c.reset + "playTime")
+        print(c.aqua + "10) " + c.reset + "trustLevel")
+        print(c.aqua + "11) " + c.reset + "trustScore")
+        print(c.aqua + "12) " + c.reset + "money")
+        print(c.aqua + "0) " + c.reset + "exit\n")
+
+        choose = input("> ").lower()
+
+        dataprefix = ""
+        datasuffix = ""
+
+        if choose == "1" or choose == "blocksplaced":
+            cls()
+            stattype = "blocksPlaced"
+            datasuffix = " blocks"
+        elif choose == "2" or choose == "blocksdestroyed":
+            cls()
+            stattype = "blocksDestroyed"
+            datasuffix = " blocks"
+        elif choose == "3" or choose == "meterstraveled":
+            cls()
+            stattype = "metersTraveled"
+            datasuffix = " meters"
+        elif choose == "4" or choose == "itemsdropped":
+            cls()
+            stattype = "itemsDropped"
+            datasuffix = " items"
+        elif choose == "5" or choose == "playerdeaths":
+            cls()
+            stattype = "playerDeaths"
+            datasuffix = " deaths"
+        elif choose == "6" or choose == "playerskilled":
+            cls()
+            stattype = "playersKilled"
+            datasuffix = " kills"
+        elif choose == "7" or choose == "creatureskilled":
+            cls()
+            stattype = "creaturesKilled"
+            datasuffix = " kills"
+        elif choose == "8" or choose == "joincount":
+            cls()
+            stattype = "joinCount"
+            datasuffix = " joins"
+        elif choose == "9" or choose == "playtime":
+            cls()
+            stattype = "playTime"
+        elif choose == "10" or choose == "trustlevel":
+            cls()
+            stattype = "trustLevel"
+            dataprefix = "Level "
+        elif choose == "11" or choose == "trustscore":
+            cls()
+            stattype = "trustScore"
+            dataprefix = "Score "
+        elif choose == "12" or choose == "money":
+            cls()
+            stattype = "money"
+            dataprefix = "$"
+        elif choose == "0" or choose == "exit":
+            rmcmenu()
+        else:
+            cls()
+            print(c.red + "Error: Invalid statistic type!" + c.reset)
+            rmc.leaderboard()
+
+        request, status = getapi("https://statistics.retromc.org/api/leaderboard?type=" + stattype)
+
+        print("Leaderboard for " + c.aqua + stattype + c.reset + ":")
+
+        if stattype == "playTime":
+            for i in range(len(request["data"])):
+                print(str(i + 1) + ". " + request["data"][i]["username"] + " = " + str(round(request["data"][i][stattype] / 60 / 60, 2)) + " hours (" + str(round(request["data"][i][stattype] / 60, 2)) + " minutes)")
+        else:
+            for i in range(len(request["data"])):
+                print(str(i + 1) + ". " + request["data"][i]["username"] + " = "  + dataprefix + str(request["data"][i][stattype]) + datasuffix)
+
+        entertocontinue("\nPress " + c.aqua + "ENTER" + c.reset + " to return to leaderboard menu.\n")
         cls()
-        print(c.red + "Error: Invalid statistic type!" + c.reset)
-        leaderboard()
+        rmc.leaderboard()
+    
+    @staticmethod
+    def capes():
+        print("Enter the " + c.aqua + "player name" + c.reset + ":")
+        player = input("> ")
 
-    request, status = getapi("https://statistics.retromc.org/api/leaderboard?type=" + stattype)
+        if player == "exit" or player == "0":
+            rmcmenu()
 
-    print("Leaderboard for " + c.aqua + stattype + c.reset + ":")
+        try:
+            playerusernamefixed = fixusernamecase(player)
+        except KeyError:
+            cls()
+            print(c.red + "Error: A player going by this username does not exist." + c.reset)
+            rmc.capes()
 
-    if stattype == "playTime":
-        for i in range(len(request["data"])):
-            print(str(i + 1) + ". " + request["data"][i]["username"] + " = " + str(round(request["data"][i][stattype] / 60 / 60, 2)) + " hours (" + str(round(request["data"][i][stattype] / 60, 2)) + " minutes)")
-    else:
-        for i in range(len(request["data"])):
-            print(str(i + 1) + ". " + request["data"][i]["username"] + " = "  + dataprefix + str(request["data"][i][stattype]) + datasuffix)
+        playeruuid = usernametouuid(playerusernamefixed)
 
-    entertocontinue("\nPress " + c.aqua + "ENTER" + c.reset + " to return to leaderboard menu.\n")
-    cls()
-    leaderboard()
+        request = requests.get("https://skins.legacyminecraft.com/api/cape/" + playerusernamefixed)
+
+        if request.status_code == 200:
+            print("Name: " + playerusernamefixed)
+            print("Player UUID: " + playeruuid)
+            print("\nBetaEvo cape: " + c.aqua + "Yes" + c.reset)
+
+            if platform.system() == "Windows":
+                capepath = confpath + "capes\\" + playerusernamefixed + "_cape.png"
+            else:
+                capepath = confpath + "capes/" + playerusernamefixed + "_cape.png"
+
+            image = open(capepath, "wb")
+            image.write(request.content)
+            image.close()
+
+            print("\nCape has been saved to " + c.aqua + capepath + c.reset)
+
+            entertocontinue()
+            rmcmenu()
+        else:
+            cls()
+            print(c.red + "Error: This user is not wearing a BetaEvo cape." + c.reset)
+            rmc.capes()
+
+rmc = RetroMC()
+
+class BetaMC:
+    @staticmethod
+    def playerlist():
+        request, status = getapi("https://api.betamc.org/api/v1/server/players")
+
+        print("There are " + c.aqua + str(request["online"]) + c.reset + " out of a maximum " + c.aqua + str(request["max"]) + c.reset + " players online.\n\nOutput format:")
+        print("Rank | Username | UUID\n")
+
+        for i in range(0, len(request["players"])):
+            listfmt = "{rank} | {name} | {uuid}"
+
+            print(listfmt.format(
+                rank = ccparser(request["players"][i]["prefix"]),
+                name = request["players"][i]["name"], 
+                uuid = request["players"][i]["uuid"],
+            ))
+
+        entertocontinue()
+        bmcmenu()
+
+    @staticmethod
+    def playerstats():
+        print("Enter the " + c.aqua + "player name or dashed UUID" + c.reset + ":")
+        player = input("> ")
+
+        if player == "exit" or player == "0":
+            bmcmenu()
+
+        request, status = getapi("https://api.betamc.org/api/v1/player/" + player)
+
+        if status == 404:
+            cls()
+            print(c.red + "Error: This player has not played on BetaMC." + c.reset)
+            bmc.playerstats()
+
+        print("\nDisplaying " + c.aqua + "player statistics" + c.reset + ".\n")
+
+        print("Name: " + request["name"])
+        print("Player UUID: " + request["uuid"])
+        print("Rank: " + ccparser(request["prefix"]))
+        print("Balance: $" + str(round(request["balance"], 2)))
+
+        print("\nOnline: " + str(request["online"]))
+
+        print("\nPlaytime: " + str(round(request["playtime"] / 1000 / 60 / 60, 2)) + " hours")
+        print("First join: " + unixtimetotime(request["first_join"] / 1000))
+        print("Last join: " + unixtimetotime(request["last_join"] / 1000))
+
+        print("\nOverall score: " + str(round(request["overall"], 2)))
+
+        print("\nBlocks traveled: " + str(int(request["blocks_traveled"])))
+        print("Blocks broken: " + str(request["blocks_broken"]))
+        print("Blocks placed: " + str(request["blocks_placed"]))
+        print("Deaths: " + str(request["deaths"]))
+        print("Players killed: " + str(request["players_killed"]))
+        print("Mobs killed: " + str(request["mobs_killed"]))
+        print("Damage dealt: " + str(request["damage_dealt"]))
+        print("Damage taken: " + str(request["damage_taken"]))
+
+        entertocontinue()
+        bmcmenu()
+
+bmc = BetaMC()
 
 def serverping():
     print(c.yellow + "WARNING: This feature has very questionable accuracy." + c.reset)
@@ -756,47 +870,6 @@ def serverping():
     
     entertocontinue()
     main()
-
-def capes():
-    print("Enter the " + c.aqua + "player name" + c.reset + ":")
-    player = input("> ")
-
-    if player == "exit" or player == "0":
-        rmcmenu()
-
-    try:
-        playerusernamefixed = fixusernamecase(player)
-    except KeyError:
-        cls()
-        print(c.red + "Error: A player going by this username does not exist." + c.reset)
-        capes()
-
-    playeruuid = usernametouuid(playerusernamefixed)
-
-    request = requests.get("https://skins.legacyminecraft.com/api/cape/" + playerusernamefixed)
-
-    if request.status_code == 200:
-        print("Name: " + playerusernamefixed)
-        print("Player UUID: " + playeruuid)
-        print("\nBetaEvo cape: " + c.aqua + "Yes" + c.reset)
-
-        if platform.system() == "Windows":
-            capepath = confpath + "capes\\" + playerusernamefixed + "_cape.png"
-        else:
-            capepath = confpath + "capes/" + playerusernamefixed + "_cape.png"
-
-        image = open(capepath, "wb")
-        image.write(request.content)
-        image.close()
-
-        print("\nCape has been saved to " + c.aqua + capepath + c.reset)
-
-        entertocontinue()
-        rmcmenu()
-    else:
-        cls()
-        print(c.red + "Error: This user is not wearing a BetaEvo cape." + c.reset)
-        capes()
 
 def loadingscreen(totalcount, current):
     print("\rLoading server information... (" + c.aqua + str(round(current / totalcount * 100, 1)) + "%" + c.reset + ")", end = "", flush = True)
@@ -880,64 +953,6 @@ def legacytracker():
     
     main()
 
-def bmcplayerlist():
-    request, status = getapi("https://api.betamc.org/api/v1/server/players")
-
-    print("There are " + c.aqua + str(request["online"]) + c.reset + " out of a maximum " + c.aqua + str(request["max"]) + c.reset + " players online.\n\nOutput format:")
-    print("Rank | Username | UUID\n")
-
-    for i in range(0, len(request["players"])):
-        listfmt = "{rank} | {name} | {uuid}"
-
-        print(listfmt.format(
-            rank = ccparser(request["players"][i]["prefix"]),
-            name = request["players"][i]["name"], 
-            uuid = request["players"][i]["uuid"],
-        ))
-
-    entertocontinue()
-    bmcmenu()
-
-def bmcplayerstats():
-    print("Enter the " + c.aqua + "player name or dashed UUID" + c.reset + ":")
-    player = input("> ")
-
-    if player == "exit" or player == "0":
-        bmcmenu()
-
-    request, status = getapi("https://api.betamc.org/api/v1/player/" + player)
-
-    if status == 404:
-        cls()
-        print(c.red + "Error: This player has not played on BetaMC." + c.reset)
-        bmcplayerstats()
-
-    print("\nDisplaying " + c.aqua + "player statistics" + c.reset + ".\n")
-
-    print("Name: " + request["name"])
-    print("Player UUID: " + request["uuid"])
-    print("Rank: " + ccparser(request["prefix"]))
-    print("Balance: $" + str(round(request["balance"], 2)))
-
-    print("\nOnline: " + str(request["online"]))
-
-    print("\nPlaytime: " + str(round(request["playtime"] / 1000 / 60 / 60, 2)) + " hours")
-    print("First join: " + unixtimetotime(request["first_join"] / 1000))
-    print("Last join: " + unixtimetotime(request["last_join"] / 1000))
-
-    print("\nOverall score: " + str(round(request["overall"], 2)))
-
-    print("\nBlocks traveled: " + str(int(request["blocks_traveled"])))
-    print("Blocks broken: " + str(request["blocks_broken"]))
-    print("Blocks placed: " + str(request["blocks_placed"]))
-    print("Deaths: " + str(request["deaths"]))
-    print("Players killed: " + str(request["players_killed"]))
-    print("Mobs killed: " + str(request["mobs_killed"]))
-    print("Damage dealt: " + str(request["damage_dealt"]))
-    print("Damage taken: " + str(request["damage_taken"]))
-
-    entertocontinue()
-    bmcmenu()
 
 def asciilogo():
     print("""
@@ -1108,25 +1123,25 @@ def rmcmenu():
 
         if choose == "1" or choose == "playerlist":
             cls()
-            playerlist()
+            rmc.playerlist()
         elif choose == "2" or choose == "chat":
             cls()
-            chat()
+            rmc.chat()
         elif choose == "3" or choose == "villagelist":
             cls()
-            villagelist()
+            rmc.villagelist()
         elif choose == "4" or choose == "villagedetails":
             cls()
-            villagedetails()
+            rmc.villagedetails()
         elif choose == "5" or choose == "playerstats":
             cls()
-            playerstats()
+            rmc.playerstats()
         elif choose == "6" or choose == "leaderboard":
             cls()
-            leaderboard()
+            rmc.leaderboard()
         elif choose == "7" or choose == "capes":
             cls()
-            capes()
+            rmc.capes()
         elif choose == "0" or choose == "exit":
             main()
         else:
@@ -1153,10 +1168,10 @@ def bmcmenu():
 
         if choose == "1" or choose == "playerlist":
             cls()
-            bmcplayerlist()
+            bmc.playerlist()
         if choose == "2" or choose == "playerstats":
             cls()
-            bmcplayerstats()
+            bmc.playerstats()
         elif choose == "0" or choose == "exit":
             main()
         else:
