@@ -532,26 +532,25 @@ class RetroMC:
             rank = request4["groups"][0]
 
         print("Rank: " + rank)
-        print("Money: " + str(round(request4["money"], 2)) + "$\n")
+        print("Balance: $" + str(round(request4["money"], 2)))
 
-        print("Playtime: " + str(round(request4["playTime"] / 60 / 60, 2)) + " hours")
+        print("\nOnline: " + str(request["online"]))
+
+        print("\nPlaytime: " + str(round(request4["playTime"] / 60 / 60, 2)) + " hours")
         print("First join: " + unixtimetotime(request4["firstJoin"]))
         print("Last join: " + unixtimetotime(request4["lastJoin"]))
-        print("Join count: " + str(request4["joinCount"]) + "\n")
+        print("Join count: " + str(request4["joinCount"]))
 
-        print("Trust level: " + str(request4["trustLevel"]))
+        print("\nTrust level: " + str(request4["trustLevel"]))
         print("Trust score: " + str(round(request4["trustScore"], 2)))
 
-        print("Player deaths: " + str(request4["playerDeaths"]))
-        print("Players killed: " + str(request4["playersKilled"]))
-        print("Creatures killed: " + str(request4["creaturesKilled"]))
-
-        print("\nDistance traveled: " + str(request4["metersTraveled"]) + " blocks")
-        print("Blocks destroyed: " + str(request4["blocksDestroyed"]))
+        print("\nBlocks traveled: " + str(request4["metersTraveled"]) + " blocks")
+        print("Blocks broken: " + str(request4["blocksDestroyed"]))
         print("Blocks placed: " + str(request4["blocksPlaced"]))
-        print("Items dropped: " + str(request4["itemsDropped"]))
-        
-        print("\nOnline: " + str(request["online"]))
+        print("Deaths: " + str(request4["playerDeaths"]))
+        print("Players killed: " + str(request4["playersKilled"]))
+        print("Mobs killed: " + str(request4["creaturesKilled"]))
+        print("Items dropped: " + str(request4["itemsDropped"]) + "\n")
 
         try:
             if request["x"] == 0 and request["y"] == 0 and request["z"] == 0:
