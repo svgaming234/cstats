@@ -875,6 +875,20 @@ class BetaMC:
         bmc.menu()
     
     @staticmethod
+    def printleaderboardpage(stattype, page, dataprefix, datasuffix):
+        request, status = getapi("https://api.betamc.org/api/v1/leaderboard?category=" + stattype + "&page=" + str(page - 1))
+        print("Leaderboard for " + c.aqua + stattype + c.reset + ", page " + c.aqua + str(page) + c.reset + " / " + c.aqua + str(request["pages"]) + c.reset + ":")
+
+        if stattype == "playtime":
+            for i in range(len(request["players"])):
+                print(str((i + 1) + ((page - 1) * 10)) + ". " + request["players"][i]["name"] + " = " + str(round(request["players"][i][stattype] / 1000 / 60 / 60, 2)) + " hours (" + str(round(request["players"][i][stattype] / 1000 / 60, 2)) + " minutes)")
+        else:
+           for i in range(len(request["players"])):
+                print(str((i + 1) + ((page - 1) * 10)) + ". " + request["players"][i]["name"] + " = "  + dataprefix + str(round(request["players"][i][stattype], 2)) + datasuffix)
+
+        return int(request["pages"])
+
+    @staticmethod
     def leaderboard():
         print("Please select a " + c.aqua + "statistic type " + c.reset + "to view its leaderboard.\n")
 
@@ -897,46 +911,35 @@ class BetaMC:
         datasuffix = ""
 
         if choose == "1" or choose == "overallScore":
-            cls()
             stattype = "overall"
             datasuffix = " points"
         elif choose == "2" or choose == "playtime":
-            cls()
             stattype = "playtime"
         elif choose == "3" or choose == "balance":
-            cls()
             stattype = "balance"
             dataprefix = "$"
         elif choose == "4" or choose == "blocksplaced":
-            cls()
             stattype = "blocks_placed"
             datasuffix = " blocks"
         elif choose == "5" or choose == "blocksbroken":
-            cls()
             stattype = "blocks_broken"
             datasuffix = " blocks"
         elif choose == "6" or choose == "blockstraveled":
-            cls()
             stattype = "blocks_traveled"
             datasuffix = " blocks"
         elif choose == "7" or choose == "playerskilled":
-            cls()
             stattype = "players_killed"
             datasuffix = " kills"
         elif choose == "8" or choose == "mobskilled":
-            cls()
             stattype = "mobs_killed"
             datasuffix = " kills"
         elif choose == "9" or choose == "deaths":
-            cls()
             stattype = "deaths"
             datasuffix = " deaths"
         elif choose == "10" or choose == "damagedealt":
-            cls()
             stattype = "damage_dealt"
             datasuffix = " damage"
         elif choose == "11" or choose == "damagetaken":
-            cls()
             stattype = "damage_taken"
             datasuffix = " damage"
         elif choose == "0" or choose == "exit":
@@ -946,18 +949,51 @@ class BetaMC:
             print(c.red + "Error: Invalid statistic type!" + c.reset)
             bmc.leaderboard()
 
-        request, status = getapi("https://api.betamc.org/api/v1/leaderboard?category=" + stattype)
+        invalidinputdecerrstr = c.red + "Error: Invalid input (cannot decrement to page below 1)!" + c.reset
+        page = 1
 
-        print("Leaderboard for " + c.aqua + stattype + c.reset + ":")
+        cls()
+        while True: 
+            maxpages = bmc.printleaderboardpage(stattype, page, dataprefix, datasuffix)
 
-        if stattype == "playtime":
-            for i in range(len(request["players"])):
-                print(str(i + 1) + ". " + request["players"][i]["name"] + " = " + str(round(request["players"][i][stattype] / 1000 / 60 / 60, 2)) + " hours (" + str(round(request["players"][i][stattype] / 1000 / 60, 2)) + " minutes)")
-        else:
-           for i in range(len(request["players"])):
-                print(str(i + 1) + ". " + request["players"][i]["name"] + " = "  + dataprefix + str(round(request["players"][i][stattype], 2)) + datasuffix)
+            print("\nTo select a leaderboard " + c.aqua + "page" + c.reset + ", type the " + c.aqua + "page number" + c.reset + " or alternatively " + c.aqua + "+ " + c.reset + "or" + c.aqua + " -" + c.reset + " to increment/decrement the page.")
+            print("Press " + c.aqua + "ENTER" + c.reset + " to return to the main leaderboard menu.\n")
 
-        entertocontinue("\nPress " + c.aqua + "ENTER" + c.reset + " to return to leaderboard menu.\n")
+            choosepage = input("> ").lower()
+            oldpage = page
+
+            if choosepage == "" or choosepage == "exit" or choosepage == "0":
+                cls()
+                bmc.leaderboard()
+                break
+            elif choosepage.isdigit() == True:
+                # isdigit rules out negative numbers, added this check in case i overlooked something
+                if int(choosepage) > 0: 
+                    page = int(choosepage)
+                    cls()
+                else: 
+                    cls()
+                    print(invalidinputdecerrstr)
+            elif choosepage == "+":
+                page += 1
+                cls()
+            elif choosepage == "-":
+                if (page - 1) > 0:
+                    page -= 1
+                    cls()
+                else:
+                    cls()
+                    print(invalidinputdecerrstr)
+
+            else:
+                cls()
+                print(c.red + "Error: Invalid input!" + c.reset)
+
+            if page > maxpages:
+                cls()
+                print(c.red + "Error: Invalid input (page number too high)!\nNote that the max page number amount can desynchronize if the program is left idle for a long time. In this case rerunning the same query should now work." + c.reset)
+                page = oldpage
+
         cls()
         bmc.leaderboard()
 
