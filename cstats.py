@@ -12,7 +12,7 @@ import time
 import configparser
 import threading
 from datetime import datetime
-from simplejson import JSONDecodeError
+from json import JSONDecodeError
 import urllib3.exceptions
 import warnings
 
