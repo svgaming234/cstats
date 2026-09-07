@@ -16,7 +16,7 @@ from simplejson import JSONDecodeError
 import urllib3.exceptions
 import warnings
 
-version = "v0.9.1"
+version = "v0.10.0"
 
 def mkdir_p(newdir):
     try: 
