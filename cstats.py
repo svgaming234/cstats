@@ -466,6 +466,29 @@ class RetroMC:
         rmc.menu()
 
     @staticmethod
+    def nationlist():
+        listfmt = "{name} | {owner} | {villages} | {nationuuid}"
+        request, status = getapi("https://api.retromc.org/api/v1/nation/getNationList")
+
+        print("Displaying list of " + c.aqua + "all" + c.reset + " RetroMC nations.\n\nOutput format:")
+        print("Nation name | Nation owner | Total villages | Nation UUID\n")
+
+        totalcount = len(request["nations"])
+
+        for i in range(0, totalcount): 
+            print(listfmt.format(
+                name = request["nations"][i]["name"], 
+                owner = uuidtousername(request["nations"][i]["owner"]),
+                villages = request["nations"][i]["villages"], 
+                nationuuid = request["nations"][i]["uuid"]
+            ))
+
+        print("\nTotal nation count: " + str(totalcount))
+
+        entertocontinue()
+        rmc.menu()
+
+    @staticmethod
     def playerstats():
         print("Enter the " + c.aqua + "player name" + c.reset + ":")
         player = input("> ")
@@ -770,6 +793,7 @@ class RetroMC:
             print(c.aqua + "5) " + c.reset + "playerstats")
             print(c.aqua + "6) " + c.reset + "leaderboard")
             print(c.aqua + "7) " + c.reset + "capes")
+            print(c.aqua + "8) " + c.reset + "nationlist")
             print(c.aqua + "0) " + c.reset + "exit")
 
             print("\nThis program is still a work in progress, report issues to SvGaming")
@@ -797,6 +821,9 @@ class RetroMC:
             elif choose == "7" or choose == "capes":
                 cls()
                 rmc.capes()
+            elif choose == "8" or choose == "nationlist":
+                cls()
+                rmc.nationlist()
             elif choose == "0" or choose == "exit":
                 main()
             else:
