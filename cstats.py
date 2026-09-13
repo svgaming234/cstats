@@ -1300,15 +1300,15 @@ def init():
         try:
             request = requests.head("https://github.com/svgaming234/cstats/releases/latest", allow_redirects=True, timeout = 3)
             latestversion = request.url.split("/")[-1]
+
+            if version != latestversion:
+                latestversionstr = c.yellow + "A new version is available! Please update to " + latestversion + c.reset
         except requests.exceptions.Timeout:
             latestversionstr = c.red + "Failed to check for updates (timed out)! Please check your internet connection." + c.reset
         except requests.exceptions.ConnectionError:
             latestversionstr = c.red + "Failed to check for updates (connection error)! Please check your internet connection." + c.reset
         except:
             latestversionstr = c.red + "Failed to check for updates (unspecified error)! Please check your internet connection." + c.reset
-            
-        if version != latestversion:
-            latestversionstr = c.yellow + "A new version is available! Please update to " + latestversion + c.reset
 
     main()
 
