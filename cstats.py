@@ -443,20 +443,20 @@ class RetroMC:
             print(flag + ": " + str(request2["flags"][flag]))
 
         print("\nAssistants:")
-        if len(request2["assistants"]) != 0:    
+        if len(request2["assistants"]) > 0:    
             for i in range(0, len(request2["assistants"])):
                 commaloop(i)
                 print(uuidtousername(request2["assistants"][i]), end="")
         else:
-            print("No assistants", end="")
+            print("No assistants :(", end="")
 
         print("\n\nMembers:")
-        if len(request2["members"]) != 0:
+        if len(request2["members"]) > 0:
             for i in range(0, len(request2["members"])):
                 commaloop(i)
                 print(uuidtousername(request2["members"][i]), end="")
         else:
-            print("No members", end="")
+            print("No members :(", end="")
 
         displayworldmap(request2["spawn"]["x"], request2["spawn"]["y"], request2["spawn"]["z"])
 
