@@ -489,6 +489,49 @@ class RetroMC:
         rmc.menu()
 
     @staticmethod
+    def nationdetails():
+        print("Enter the " + c.aqua + "nation name" + c.reset + ":")
+        nation = input("> ").lower()
+
+        if nation == "exit" or nation == "0":
+            rmc.menu()
+
+        request, status = getapi("https://api.retromc.org/api/v1/nation/getNationList")
+
+        print("\nDisplaying " + c.aqua + "nation details" + c.reset + ".\n")
+
+        for i in range(0, len(request["nations"])): 
+            if request["nations"][i]["name"].lower() == nation:
+                nationuuid = request["nations"][i]["uuid"]
+                break
+        else:
+            cls()
+            print(c.red + "Error: Nation not found." + c.reset)
+            rmc.nationdetails()
+
+        request2, status2 = getapi("https://api.retromc.org/api/v1/nation/getNation?uuid=" + nationuuid)
+        
+        print("Name: " + str(request2["name"]))
+        print("Nation UUID: " + str(request2["uuid"]))
+        print("Owner: " + uuidtousername(request2["owner"]))
+        print("Creation time: " + unixtimetotime(request2["creationTime"]))   
+        print("Balance: " + str(round(request2["balance"], 2)))
+        print("Total member villages: " + str(len(request2["villages"])))
+
+        print("\nVillages:")
+        if len(request2["villages"]) > 0:
+            for i in range(0, len(request2["villages"])):
+                commaloop(i)
+                print(request2["villages"][i]["name"], end="")
+        else:
+            print("No villages found :(", end="")
+
+        print("\n\nView on J-Stats:\nhttps://statistics.retromc.org/nation/" + str(request2["uuid"]))
+
+        entertocontinue()
+        rmc.menu()
+
+    @staticmethod
     def playerstats():
         print("Enter the " + c.aqua + "player name" + c.reset + ":")
         player = input("> ")
@@ -794,6 +837,7 @@ class RetroMC:
             print(c.aqua + "6) " + c.reset + "leaderboard")
             print(c.aqua + "7) " + c.reset + "capes")
             print(c.aqua + "8) " + c.reset + "nationlist")
+            print(c.aqua + "9) " + c.reset + "nationdetails")
             print(c.aqua + "0) " + c.reset + "exit")
 
             print("\nThis program is still a work in progress, report issues to SvGaming")
@@ -824,6 +868,9 @@ class RetroMC:
             elif choose == "8" or choose == "nationlist":
                 cls()
                 rmc.nationlist()
+            elif choose == "9" or choose == "nationdetails":
+                cls()
+                rmc.nationdetails()
             elif choose == "0" or choose == "exit":
                 main()
             else:
