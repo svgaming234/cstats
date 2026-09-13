@@ -335,7 +335,7 @@ class RetroMC:
             displayname = removeweirda(request["players"][i]["display_name"])
 
             if request["players"][i]["x"] == 0 and request["players"][i]["y"] == 0 and request["players"][i]["z"] == 0:
-                listfmt = "{display} | {user} | {uuid} | Coordinates: Unknown, player is in vanish"
+                listfmt = "{display} | {user} | {uuid} | Coordinates: Unknown, player's coordinates are hidden"
 
                 print(listfmt.format(
                     display = ccparser(displayname),
@@ -554,7 +554,7 @@ class RetroMC:
 
         try:
             if request["x"] == 0 and request["y"] == 0 and request["z"] == 0:
-                print("Coordinates: Unknown, player is in vanish")
+                print("Coordinates: Unknown, player's coordinates are hidden")
             else:
                 x = str(request["x"])
                 y = str(request["y"])
