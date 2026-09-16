@@ -518,15 +518,24 @@ class RetroMC:
         print("Balance: " + str(round(request2["balance"], 2)))
         print("Total member villages: " + str(len(request2["villages"])))
 
-        print("\nVillages:")
+        print("\nVillages:\n\nOutput format: ")
+        print("Village name | Activity this week (sorted by it) | Village UUID\n")
+
         if len(request2["villages"]) > 0:
-            for i in range(0, len(request2["villages"])):
-                commaloop(i)
-                print(request2["villages"][i]["name"], end="")
+            # sort villages in nation by top activity, bit jank but works
+            sortedvillages = sorted(request2["villages"], key=lambda sortedvillages: sortedvillages["activityCurrentWeek"], reverse=True)
+
+            listfmt = "{villagename} | {activitythisweek} | {villageuuid}"
+            for i in range(0, len(sortedvillages)):
+                print(listfmt.format(
+                    villagename = sortedvillages[i]["name"],
+                    activitythisweek = str(round(sortedvillages[i]["activityCurrentWeek"], 2)),
+                    villageuuid = sortedvillages[i]["uuid"]
+                ))
         else:
             print("No villages found :(", end="")
 
-        print("\n\nView on J-Stats:\nhttps://statistics.retromc.org/nation/" + str(request2["uuid"]))
+        print("\nView on J-Stats:\nhttps://statistics.retromc.org/nation/" + str(request2["uuid"]))
 
         entertocontinue()
         rmc.menu()
