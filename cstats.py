@@ -518,8 +518,8 @@ class RetroMC:
         print("Balance: " + str(round(request2["balance"], 2)))
         print("Total member villages: " + str(len(request2["villages"])))
 
-        print("\nVillages:\n\nOutput format: ")
-        print("Village name | Activity this week (sorted by it) | Village UUID\n")
+        print("\nVillages:\n\nOutput format:")
+        print("Village name | Activity score this week (sorted by it) | Village UUID\n")
 
         if len(request2["villages"]) > 0:
             # sort villages in nation by top activity, bit jank but works
@@ -534,6 +534,38 @@ class RetroMC:
                 ))
         else:
             print("No villages found :(", end="")
+            
+        print("\nActivity:\n")
+
+        print("Current activity week: " + request2["activity"]["currentWeek"])
+        print("Total activity score this week: " + str(round(request2["activity"]["currentWeekScore"], 2)))
+
+        print("\nHistorical activity and payouts (currently only showing last 10 weeks):\n\nOutput format:")
+        print("Activity week | Activity score | Activity payout\n")
+
+        # >1 because current week counts, while having no payment data
+        if len(request2["activity"]["weeks"]) > 1:
+            sortedweeks = sorted(request2["activity"]["weeks"], reverse=True)
+
+            listfmt = "{week} | {score} | ${payout}"
+
+            weekstoshowlen = len(sortedweeks)
+            # limit shown size to 10 weeks for now (counting starts at 1 for the iteration)
+            if weekstoshowlen > 11:
+                weekstoshowlen = 11
+
+            for i in range(1, weekstoshowlen):
+                print(listfmt.format(
+                    # this is confusing as hell
+                    week = sortedweeks[i],
+                    score = str(round(request2["activity"]["weeks"][sortedweeks[i]], 2)),
+                    payout = str(round(request2["payments"]["weeks"][sortedweeks[i]], 2))
+                ))
+        else:
+            print("None yet...")
+
+        print("\nTotal lifetime nation score: " + str(round(request2["activity"]["lifetime"], 2)))
+        print("Total lifetime nation payout: $" + str(round(request2["payments"]["lifetime"], 2)))
 
         print("\nView on J-Stats:\nhttps://statistics.retromc.org/nation/" + str(request2["uuid"]))
 
