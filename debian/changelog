@@ -1,0 +1,7 @@
+cstats (0.10.0) stable; urgency=medium
+
+  * Adds new BMC API features (BMC playerstats, playerlist, leaderboard)
+  * Various code cleanups and fixes
+  * Slightly revamped view of RMC playerstats to be more consistent with BMC playerstats
+
+ -- Pilzhut5 <pilzhut5@gmail.com>  Sat, 19 Sep 2026 10:35:00 +0200
