@@ -27,7 +27,7 @@ then
     dpkg-buildpackage --no-sign --build=binary || true
     chmod -x debian/rules
     mv Destroyfile Makefile
-    rm -rv temp/ debian/cstats/ debian/files debian/cstats.substvars debian/debhelper-build-stamp
+    rm -rv temp/ debian/cstats/ debian/files debian/cstats.substvars debian/debhelper-build-stamp debian/.debhelper/
     echo
     echo "DONE! take a look at the package in ../"
 else
