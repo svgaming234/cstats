@@ -4,7 +4,7 @@
 set -eu
 
 echo "checking dependencies"
-for dep in gzip dh dpkg-buildpackage
+for dep in dh dpkg-buildpackage
 do
     if command -v "$dep" >/dev/null 2>&1
     then
