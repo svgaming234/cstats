@@ -1,0 +1,18 @@
+Source: cstats
+Maintainer: svgaming234 <your@email.tld>
+Section: utils
+Priority: optional
+Build-Depends: debhelper-compat (=13)
+Standards-Version: 4.7.2.0
+Homepage: https://github.com/svgaming234/cstats
+
+Package: cstats
+Section: utils
+Priority: optional
+Architecture: all
+Description: Unofficial command line based statistics program for RetroMC and BetaMC
+Depends: python3 (>= 3.8), python3-requests
+Provides: cstats
+Replaces: cstats
+Conflicts: cstats
+Homepage: https://github.com/svgaming234/cstats

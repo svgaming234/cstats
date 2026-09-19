@@ -1,0 +1,7 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: cstats
+Source: https://github.com/svgaming234/cstats
+
+Files: *
+Copyright: 2024 svgaming234, Noggisoggi, JohnyMuffin
+License: MIT

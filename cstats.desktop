@@ -1,0 +1,10 @@
+[Desktop Entry]
+Categories=Utility;
+Comment=Unofficial command line based statistics program for RetroMC and BetaMC
+Exec=cstats
+Icon=cstats
+Name=cstats
+Path=
+StartupNotify=true
+Terminal=true
+Type=Application
