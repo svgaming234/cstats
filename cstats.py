@@ -589,13 +589,14 @@ class RetroMC:
 
         playeruuid = usernametouuid(playerusernamefixed)
 
-        request4, status4 = getapi("https://statistics.johnymuffin.com/api/v1/getUser?serverID=0&uuid=" + playeruuid)
+        request4, status4 = getapi("https://api.retromc.org/api/v1/statistics/player?uuid=" + playeruuid)
 
-        if "msg" in request4:
+        if "error" in request4 and request4["error"] == True and "message" in request4 and request4["message"] == "No statistics found for that player":
             cls()
             print(c.red + "Error: This player has not played on RetroMC." + c.reset)
             rmc.playerstats()
 
+        request5 = request4["stats"]
         request, status = getapi("https://statistics.retromc.org/api/online?username=" + playerusernamefixed)
 
         print("\nDisplaying " + c.aqua + "player statistics" + c.reset + ".\n")
@@ -603,62 +604,69 @@ class RetroMC:
         print("Name: " + playerusernamefixed)
         print("Player UUID: " + playeruuid)
 
-        if request4["groups"][0] == "wanderer":
+        if request5["groups"][0] == "wanderer":
             rank = ccparser("&8[&7Wanderer&8]")
-        elif request4["groups"][0] == "citizen":
+        elif request5["groups"][0] == "citizen":
             rank = ccparser("&f[&aCitizen&f]")
-        elif request4["groups"][0] == "trusted":
+        elif request5["groups"][0] == "trusted":
             rank = ccparser("&6[&aCitizen&6]")
-        elif request4["groups"][0] == "diamondcitizen":
+        elif request5["groups"][0] == "diamondcitizen":
             rank = ccparser("&b[&aCitizen&b]")
-        elif request4["groups"][0] == "hero":
+        elif request5["groups"][0] == "hero":
             rank = ccparser("&f[&2Hero&f]")
-        elif request4["groups"][0] == "legend":
+        elif request5["groups"][0] == "legend":
             rank = ccparser("&f[&9Legend&f]")
-        elif request4["groups"][0] == "mystic":
+        elif request5["groups"][0] == "mystic":
             rank = ccparser("&f[&bMystic&f]")
-        elif request4["groups"][0] == "donator":
+        elif request5["groups"][0] == "donator":
             rank = ccparser("&8[&cDonator&8]")
-        elif request4["groups"][0] == "donator+":
+        elif request5["groups"][0] == "donator+":
             rank = ccparser("&8[&cDonator&4+&8]")
-        elif request4["groups"][0] == "donatorplusplus":
+        elif request5["groups"][0] == "donatorplusplus":
             rank = ccparser("&8[&cDonator&4++&8]")
-        elif request4["groups"][0] == "trooper":
+        elif request5["groups"][0] == "trooper":
             rank = ccparser("&d[trooper]")
-        elif request4["groups"][0] == "helper":
+        elif request5["groups"][0] == "helper":
             rank = ccparser("&f[&3Helper&f]")
-        elif request4["groups"][0] == "trial":
+        elif request5["groups"][0] == "trial":
             rank = ccparser("&f[&aTrial Helper&f]")
-        elif request4["groups"][0] == "moderator":
+        elif request5["groups"][0] == "moderator":
             rank = ccparser("&f[&6Moderator&f]")
-        elif request4["groups"][0] == "admin":
+        elif request5["groups"][0] == "admin":
             rank = ccparser("&f[&4Admin&f]")
-        elif request4["groups"][0] == "developer":
+        elif request5["groups"][0] == "developer":
             rank = ccparser("&f[&cDeveloper&f]")
         else:
-            rank = request4["groups"][0]
+            rank = request5["groups"][0]
 
         print("Rank: " + rank)
-        print("Balance: $" + str(round(request4["money"], 2)))
+        print("Balance: $" + str(round(request5["money"], 2)))
 
         print("\nOnline: " + str(request["online"]))
 
-        print("\nPlaytime: " + str(round(request4["playTime"] / 60 / 60, 2)) + " hours")
-        print("First join: " + unixtimetotime(request4["firstJoin"]))
-        print("Last join: " + unixtimetotime(request4["lastJoin"]))
-        print("Join count: " + str(request4["joinCount"]))
+        print("\nPlaytime: " + str(round(request5["playTime"] / 60 / 60, 2)) + " hours")
+        print("First join: " + unixtimetotime(request5["firstJoin"]))
+        print("Last join: " + unixtimetotime(request5["lastJoin"]))
+        print("Join count: " + str(request5["joinCount"]))
 
-        print("\nTrust level: " + str(request4["trustLevel"]))
-        print("Trust score: " + str(round(request4["trustScore"], 2)))
+        print("\nTrust level: " + str(request5["trustLevel"]))
+        print("Trust score: " + str(round(request5["trustScore"], 2)))
 
-        print("\nBlocks traveled: " + str(request4["metersTraveled"]) + " blocks")
-        print("Blocks broken: " + str(request4["blocksDestroyed"]))
-        print("Blocks placed: " + str(request4["blocksPlaced"]))
-        print("Deaths: " + str(request4["playerDeaths"]))
-        print("Players killed: " + str(request4["playersKilled"]))
-        print("Mobs killed: " + str(request4["creaturesKilled"]))
-        print("Items dropped: " + str(request4["itemsDropped"]) + "\n")
+        print("\nBlocks traveled: " + str(request5["metersTraveled"]) + " blocks")
+        print("Blocks broken: " + str(request5["blocksDestroyed"]))
+        print("Blocks placed: " + str(request5["blocksPlaced"]))
+        print("Deaths: " + str(request5["playerDeaths"]))
+        print("Players killed: " + str(request5["playersKilled"]))
+        print("Mobs killed: " + str(request5["creaturesKilled"]))
+        print("Items dropped: " + str(request5["itemsDropped"]))
 
+        print("\nSpleef statistics:")
+        print("Matches played: " + str(request5["gamemaster_spleef_games_played"]))
+        print("Victories: " + str(request5["gamemaster_spleef_games_won"]))
+        print("Matches spectated: " + str(request5["gamemaster_spleef_matches_spectated"]))
+        print("Snow blocks broken: " + str(request5["gamemaster_spleef_blocks_broken"]))
+        print("Snowballs thrown: " + str(request5["gamemaster_spleef_snowballs_thrown"]) + "\n")
+        
         try:
             if request["x"] == 0 and request["y"] == 0 and request["z"] == 0:
                 print("Coordinates: Unknown, player's coordinates are hidden")
@@ -689,6 +697,7 @@ class RetroMC:
                 print("\nBanned for \"" + banreason + "\" by " + request2["bans"][i]["admin"][0])
 
                 print("Pardoned: " + str(request2["bans"][i]["pardoned"]) + ", Ban issue date: " + unixtimetotime(request2["bans"][i]["date"]))
+
 
         request3, status3 = getapi("https://statistics.retromc.org/api/user_villages?uuid=" + str(playeruuid))
 
