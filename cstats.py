@@ -698,7 +698,6 @@ class RetroMC:
 
                 print("Pardoned: " + str(request2["bans"][i]["pardoned"]) + ", Ban issue date: " + unixtimetotime(request2["bans"][i]["date"]))
 
-
         request3, status3 = getapi("https://statistics.retromc.org/api/user_villages?uuid=" + str(playeruuid))
 
         novillages = False
