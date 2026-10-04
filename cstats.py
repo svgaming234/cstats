@@ -810,16 +810,16 @@ class RetroMC:
             print(c.red + "Error: Invalid statistic type!" + c.reset)
             rmc.leaderboard()
 
-        request, status = getapi("https://statistics.retromc.org/api/leaderboard?type=" + stattype)
+        request, status = getapi("https://api.retromc.org/api/v1/statistics/leaderboard?key=" + stattype + "&limit=25")
 
         print("Leaderboard for " + c.aqua + stattype + c.reset + ":")
 
         if stattype == "playTime":
-            for i in range(len(request["data"])):
-                print(str(i + 1) + ". " + request["data"][i]["username"] + " = " + str(round(request["data"][i][stattype] / 60 / 60, 2)) + " hours (" + str(round(request["data"][i][stattype] / 60, 2)) + " minutes)")
+            for i in range(len(request["entries"])):
+                print(str(i + 1) + ". " + request["entries"][i]["username"] + " = " + str(round(request["entries"][i]["value"] / 60 / 60, 2)) + " hours (" + str(round(request["entries"][i]["value"] / 60, 2)) + " minutes)")
         else:
-            for i in range(len(request["data"])):
-                print(str(i + 1) + ". " + request["data"][i]["username"] + " = "  + dataprefix + str(request["data"][i][stattype]) + datasuffix)
+            for i in range(len(request["entries"])):
+                print(str(i + 1) + ". " + request["entries"][i]["username"] + " = "  + dataprefix + str(request["entries"][i]["value"]) + datasuffix)
 
         entertocontinue("\nPress " + c.aqua + "ENTER" + c.reset + " to return to leaderboard menu.\n")
         cls()
