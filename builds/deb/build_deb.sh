@@ -20,8 +20,6 @@ read -p "did you make sure that debian/changelog is up-to-date? (y/n) " Changelo
 
 if [ "$ChangelogConfirmation" = "y" ]
 then
-    #mv Makefile Destroyfile
-
     mkdir temp
     cp ../../cstats.py temp/cstats
     cp ../../cstats128.png temp/cstats.png
@@ -30,7 +28,7 @@ then
     chmod +x debian/rules temp/cstats
     dpkg-buildpackage --no-sign --build=binary || true
     chmod -x debian/rules
-    #mv Destroyfile Makefile
+
     rm -rv temp/ debian/cstats/ debian/files debian/cstats.substvars debian/debhelper-build-stamp debian/.debhelper/
     echo
     echo "DONE! take a look at the package in ../"
