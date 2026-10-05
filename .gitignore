@@ -16,10 +16,11 @@ builds/*.dsc
 builds/*.tar.xz
 
 # pyinstaller, pipfile
-build/
-dist/
+builds/pyinstaller/build/
+builds/pyinstaller/dist/
+builds/pyinstaller/cstats.spec
+
 Pipfile.lock
-cstats.spec
 
 # cstats uuid username cache, not stored in current directory by default anymore but still can happen
 uuidusernamecache
