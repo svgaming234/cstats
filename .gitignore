@@ -1,5 +1,25 @@
+# deb builds
+
+# these files should be deleted by the build_deb script, added these in case the script errors out
+builds/deb/temp/
+builds/deb/debian/cstats/
+builds/deb/debian/files
+builds/deb/debian/cstats.substvars
+builds/deb/debian/debhelper-build-stamp
+builds/deb/debian/.debhelper/
+
+# deb build result files
+builds/*.deb
+builds/*.buildinfo
+builds/*.changes
+builds/*.dsc
+builds/*.tar.xz
+
+# pyinstaller, pipfile
 build/
 dist/
 Pipfile.lock
 cstats.spec
+
+# cstats uuid username cache, not stored in current directory by default anymore but still can happen
 uuidusernamecache

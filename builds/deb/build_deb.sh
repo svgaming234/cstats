@@ -1,5 +1,6 @@
 #!/bin/dash
 # Pilzhut5's debian build script for cstats
+# modified by svgaming234
 
 set -eu
 
@@ -15,18 +16,21 @@ do
     fi
 done
 
-read -p "did you make sure that debian/changelog is up-to-date? (y/n)" ChangelogConfirmation
+read -p "did you make sure that debian/changelog is up-to-date? (y/n) " ChangelogConfirmation
 
 if [ "$ChangelogConfirmation" = "y" ]
 then
-    mv Makefile Destroyfile
+    #mv Makefile Destroyfile
+
     mkdir temp
-    cp cstats.py temp/cstats
-    cp cstats128.png temp/cstats.png
+    cp ../../cstats.py temp/cstats
+    cp ../../cstats128.png temp/cstats.png
+    cp ../../cstats.desktop temp/cstats.desktop
+
     chmod +x debian/rules temp/cstats
     dpkg-buildpackage --no-sign --build=binary || true
     chmod -x debian/rules
-    mv Destroyfile Makefile
+    #mv Destroyfile Makefile
     rm -rv temp/ debian/cstats/ debian/files debian/cstats.substvars debian/debhelper-build-stamp debian/.debhelper/
     echo
     echo "DONE! take a look at the package in ../"
