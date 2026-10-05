@@ -359,19 +359,27 @@ class RetroMC:
 
     @staticmethod
     def chat():
-        listfmt = "{display}: {message}"
         request, status = getapi("https://api.retromc.org/api/v1/server/chat")
 
         print("Displaying recently sent messages. (does " + c.aqua + "NOT" + c.reset + " display Discord messages)\n")
 
         for i in range(0, len(request["messages"])): 
+            listfmt = "{display}: {message}"
             # remove Â from display names because the api puts them there for no reason
             displayname = removeweirda(request["messages"][i]["display_name"])
 
-            print(listfmt.format(
-                display = ccparser(displayname), 
-                message = ccparser(request["messages"][i]["message"])
-            ))
+            if request["messages"][i]["channel"] == "global":
+                print(listfmt.format(
+                    display = ccparser(displayname), 
+                    message = ccparser(request["messages"][i]["message"])
+                ))
+            # system seems to be used for join/leave messages
+            elif request["messages"][i]["channel"] == "system":
+                print(ccparser(request["messages"][i]["message"]))
+            # didnt see any other types while testing, this should make it clear if there is anything else
+            else:
+                print(c.red + "[UNKNOWN MESSAGE TYPE] " + c.reset + ccparser(request["messages"][i]["message"]))
+
 
         entertocontinue()
         rmc.menu()
