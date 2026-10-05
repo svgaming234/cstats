@@ -640,6 +640,7 @@ class RetroMC:
             rank = request5["groups"][0]
 
         print("Rank: " + rank)
+        print("Note: \"Real\" rank shown here, not user prefix set with /prefix")
         print("Balance: $" + str(round(request5["money"], 2)))
 
         print("\nOnline: " + str(request["online"]))
