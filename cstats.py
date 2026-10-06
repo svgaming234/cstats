@@ -81,7 +81,7 @@ class colors:
     mce = "\033[93m"
     mcf = "\033[97m"
 
-    # &0 color code highlighted to be more visible on black background terminals
+    # &0 color code highlighted to be more visible on black background terminals (enableable on ccparser with config option)
     # not using background color to highlight because it needs to be reset somehow
     mc0highlight = "\033[90m"
 
