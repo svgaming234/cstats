@@ -81,6 +81,10 @@ class colors:
     mce = "\033[93m"
     mcf = "\033[97m"
 
+    # &0 color code highlighted to be more visible on black background terminals
+    # not using background color to highlight because it needs to be reset somehow
+    mc0highlight = "\033[90m"
+
 c = colors()
 
 def generatefilestructure():
@@ -109,6 +113,8 @@ def generateconfig(confoption):
         conf["general"]["changeWindowTitle"] = "True"
     elif confoption == "enableLegacyTrackerAutoRefresh":
         conf["general"]["enableLegacyTrackerAutoRefresh"] = "True"
+    elif confoption == "highlightBlackColorCodes":
+        conf["general"]["highlightBlackColorCodes"] = "False"
     elif confoption == "defaultSubMenu":
         conf["general"]["defaultSubMenu"] = "None"
 
@@ -120,6 +126,7 @@ def generateallconfigs():
     generateconfig("checkForUpdates")
     generateconfig("changeWindowTitle")
     generateconfig("enableLegacyTrackerAutoRefresh")
+    generateconfig("highlightBlackColorCodes")
     generateconfig("defaultSubMenu")
 
 def readconfig(confcategory, confoption):
@@ -159,6 +166,7 @@ def readallconfigs():
     readconfig("general", "checkForUpdates")
     readconfig("general", "changeWindowTitle")
     readconfig("general", "enableLegacyTrackerAutoRefresh")
+    readconfig("general", "highlightBlackColorCodes")
     readconfig("general", "defaultSubMenu")
 
 def getapi(url, verify = True):
@@ -173,7 +181,11 @@ def ccparser(s):
     # this is very jank feeling but it works i guess
     s = s.replace("&", "§")
     
-    s = s.replace("§0", c.mc0)
+    if confvalues["highlightBlackColorCodes"] == True:
+        s = s.replace("§0", c.mc0highlight)
+    else:
+        s = s.replace("§0", c.mc0)
+
     s = s.replace("§1", c.mc1)
     s = s.replace("§2", c.mc2)
     s = s.replace("§3", c.mc3)
