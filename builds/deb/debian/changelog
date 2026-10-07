@@ -8,4 +8,4 @@ cstats (0.11.0) stable; urgency=medium
   * Add config option to show black (&0) color code as dark gray to make it visible on black background terminals (disabled by default)
   * Rewritten README.md 
 
- -- SvGaming <svgaming234@gmail.com>  Sat, 7 Oct 2026 18:17:00 +0200
+ -- svgaming234 <svgaming234@gmail.com>  Sat, 7 Oct 2026 18:17:00 +0200
