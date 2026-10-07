@@ -1,5 +1,5 @@
 Source: cstats
-Maintainer: svgaming234 <your@email.tld>
+Maintainer: svgaming234 <svgaming234@gmail.com>
 Section: utils
 Priority: optional
 Build-Depends: debhelper-compat (=13)

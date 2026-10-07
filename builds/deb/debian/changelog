@@ -1,7 +1,11 @@
-cstats (0.10.0) stable; urgency=medium
+cstats (0.11.0) stable; urgency=medium
 
-  * Adds new BMC API features (BMC playerstats, playerlist, leaderboard)
-  * Various code cleanups and fixes
-  * Slightly revamped view of RMC playerstats to be more consistent with BMC playerstats
+ * Add RMC Nation support (nationlist, nationdetails)
+ * Add .deb builds, script by Pilzhut5
+ * Update RMC playerstats and leaderboard to use new API and show Spleef stats
+ * Updated credits on splash texts provided by Noggisoggi
+ * Make join/leave messages appear correctly in RMC chat with new API changes
+ * Add config option to show black (&0) color code as dark gray to make it visible on black background terminals (disabled by default)
+ * Rewritten README.md 
 
- -- Pilzhut5 <pilzhut5@gmail.com>  Sat, 19 Sep 2026 10:35:00 +0200
+ -- SvGaming <svgaming234@gmail.com>  Sat, 7 Oct 2026 18:17:00 +0200
