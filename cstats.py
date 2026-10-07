@@ -16,7 +16,7 @@ from requests import JSONDecodeError
 import urllib3.exceptions
 import warnings
 
-version = "v0.10.0"
+version = "v0.11.0"
 
 def mkdir_p(newdir):
     try: 
