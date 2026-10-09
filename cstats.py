@@ -329,7 +329,8 @@ def randomquote():
         "\"svgaming234.github.io/cactus\" - SvGaming234",
         "\"ok\" - ScaryAdmin",
         "\"admin\" - bb771",
-        "\"anyone wanna place a hit on someone\" - bb771"
+        "\"anyone wanna place a hit on someone\" - bb771",
+        "\"isle\" - tronitas46"
     ]
 
     print(c.yellow + splashes[random.randint(0, len(splashes) - 1)] + c.reset)
