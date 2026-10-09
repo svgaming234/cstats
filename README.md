@@ -81,12 +81,12 @@ Pull requests to cstats are welcome as long as no AI written or assisted content
 
 SvGaming - Project lead
 
-Noggisoggi - Creator of player list script which cstats is based on  
+Noggisoggi - Creator of player list script which cstats is based on
 
-JohnyMuffin - Creator of RetroMC and Legacy Tracker related APIs utilized by cstats  
+JohnyMuffin - Creator of RetroMC and Legacy Tracker related APIs utilized by cstats
 
 zavdav - Tester, told me about the getUser API, gave ideas for improving the ping feature, creator of BetaMC APIs used by cstats
 
-Pilzhut5 - contribution of .deb build scripts and .desktop file
+Pilzhut5 - contribution of .deb build scripts and .desktop file, improvements to RetroMC village list formatting
 
 Jaoheah - Switched the options around on the menu
