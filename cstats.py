@@ -632,11 +632,11 @@ class RetroMC:
         if request5["groups"][0] == "wanderer":
             rank = ccparser("&8[&7Wanderer&8]")
         elif request5["groups"][0] == "citizen":
-            rank = ccparser("&f[&aCitizen&f]")
+            rank = ccparser("&f[&aCitizen&f] &f(Regular)")
         elif request5["groups"][0] == "trusted":
-            rank = ccparser("&6[&aCitizen&6]")
+            rank = ccparser("&6[&aCitizen&6] &f(Gold)")
         elif request5["groups"][0] == "diamondcitizen":
-            rank = ccparser("&b[&aCitizen&b]")
+            rank = ccparser("&b[&aCitizen&b] &f(Diamond)")
         elif request5["groups"][0] == "hero":
             rank = ccparser("&f[&2Hero&f]")
         elif request5["groups"][0] == "legend":
