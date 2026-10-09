@@ -398,20 +398,25 @@ class RetroMC:
 
     @staticmethod
     def villagelist():
-        listfmt = "{name} | {owner} | {villageuuid}"
         request, status = getapi("https://api.retromc.org/api/v1/village/getVillageList")
-
-        print("Displaying list of " + c.aqua + "all" + c.reset + " RetroMC villages.\n\nOutput format:")
-        print("Village name | Village owner | Village UUID\n")
-
         totalcount = len(request["villages"])
-        print("Total village count: " + str(totalcount) + "\n")
+        nameColonWidth = 0
+        for i in range(0, totalcount):
+            nameLength = len(request["villages"][i]["name"])
+            if nameLength > nameColonWidth:
+                nameColonWidth = nameLength
+        listfmt = "{name:{nameColWidth}} | {owner:36} | {villageuuid}"
+
+        print("Displaying list of " + c.aqua + "all" + c.reset + " RetroMC villages.\n")
+        #print("Total village count: " + str(totalcount) + "\n")
+        print(f"{'VILLAGE NAME':^{nameColonWidth}} | {'VILLAGE OWNER':^36} | {'VILLAGE UUID':^36}")
 
         for i in range(0, totalcount): 
             print(listfmt.format(
                 name = request["villages"][i]["name"], 
                 owner = uuidtousername(request["villages"][i]["owner"]),
-                villageuuid = request["villages"][i]["uuid"]
+                villageuuid = request["villages"][i]["uuid"],
+                nameColWidth = nameColonWidth
             ))
 
         print("\nTotal village count: " + str(totalcount))
@@ -1345,6 +1350,7 @@ def about():
     print(c.aqua + "Noggisoggi" + c.reset + " - Creator of player list script which cstats is based on")
     print(c.aqua + "JohnyMuffin" + c.reset + " - Creator of RetroMC and Legacy Tracker related APIs utilized by cstats")
     print(c.aqua + "zavdav" + c.reset + " - Tester, told me about the getUser API, gave ideas for improving the ping feature, creator of BetaMC APIs used by cstats")
+    print(c.aqua + "Pilzhut5" + c.reset + " - contribution of .deb build scripts and .desktop file, improvements to RetroMC village list formatting")
     print(c.aqua + "Jaoheah" + c.reset + " - Switched the options around on the menu")
 
     print("\nGitHub repository: " + c.aqua + "https://github.com/svgaming234/cstats" + c.reset)
