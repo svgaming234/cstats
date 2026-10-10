@@ -571,21 +571,24 @@ class RetroMC:
 
         # >1 because current week counts, while having no payment data
         if len(request2["activity"]["weeks"]) > 1:
-            sortedweeks = sorted(request2["activity"]["weeks"], reverse=True)
+            sortedactivityweeks = sorted(request2["activity"]["weeks"], reverse=True)
+            sortedpaymentweeks = sorted(request2["payments"]["weeks"], reverse=True)
+
+            weekstoshowlen = len(sortedactivityweeks)
 
             listfmt = "{week} | {score} | ${payout}"
 
-            weekstoshowlen = len(sortedweeks)
-            # limit shown size to 10 weeks for now (counting starts at 1 for the iteration)
-            if weekstoshowlen > 11:
-                weekstoshowlen = 11
+            # limit shown size to 10 weeks for now
+            if weekstoshowlen > 10:
+                weekstoshowlen = 10
 
-            for i in range(1, weekstoshowlen):
+            for i in range(0, weekstoshowlen):
                 print(listfmt.format(
                     # this is confusing as hell
-                    week = sortedweeks[i],
-                    score = str(round(request2["activity"]["weeks"][sortedweeks[i]], 2)),
-                    payout = str(round(request2["payments"]["weeks"][sortedweeks[i]], 2))
+                    # congrats it's even more confusing now ~Pilzhut5
+                    week = sortedactivityweeks[i],
+                    score = str(round(request2["activity"]["weeks"][sortedactivityweeks[i]], 2)),
+                    payout = str(round(request2["payments"]["weeks"][sortedpaymentweeks[i-1]], 2)) if sortedactivityweeks[i] in sortedpaymentweeks else " --"
                 ))
         else:
             print("None yet...")
@@ -1351,7 +1354,7 @@ def about():
     print(c.aqua + "Noggisoggi" + c.reset + " - Creator of player list script which cstats is based on")
     print(c.aqua + "JohnyMuffin" + c.reset + " - Creator of RetroMC and Legacy Tracker related APIs utilized by cstats")
     print(c.aqua + "zavdav" + c.reset + " - Tester, told me about the getUser API, gave ideas for improving the ping feature, creator of BetaMC APIs used by cstats")
-    print(c.aqua + "Pilzhut5" + c.reset + " - contribution of .deb build scripts and .desktop file, improvements to RetroMC village list formatting")
+    print(c.aqua + "Pilzhut5" + c.reset + " - contribution of .deb build scripts and .desktop file, general improvements")
     print(c.aqua + "Jaoheah" + c.reset + " - Switched the options around on the menu")
 
     print("\nGitHub repository: " + c.aqua + "https://github.com/svgaming234/cstats" + c.reset)
