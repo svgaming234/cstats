@@ -571,25 +571,21 @@ class RetroMC:
 
         # >1 because current week counts, while having no payment data
         if len(request2["activity"]["weeks"]) > 1:
-            sortedactivityweeks = sorted(request2["activity"]["weeks"], reverse=True)
-            sortedpaymentweeks = sorted(request2["payments"]["weeks"], reverse=True)
-
-            weekstoshowlen = len(sortedactivityweeks)
+            sortedweeks = sorted(request2["activity"]["weeks"], reverse=True)
 
             listfmt = "{week} | {score} | ${payout}"
 
-            # limit shown size to 10 weeks for now
-            if weekstoshowlen > 10:
-                weekstoshowlen = 10
+            weekstoshowlen = len(sortedweeks)
+            # limit shown size to 10 weeks for now (counting starts at 1 for the iteration)
+            if weekstoshowlen > 11:
+                weekstoshowlen = 11
 
-            for i in range(0, weekstoshowlen):
+            for i, week in enumerate(sortedweeks):
                 print(listfmt.format(
-                    # this is confusing as hell
-                    # congrats it's even more confusing now ~Pilzhut5
-                    week = sortedactivityweeks[i],
-                    score = str(round(request2["activity"]["weeks"][sortedactivityweeks[i]], 2)),
-                    payout = str(round(request2["payments"]["weeks"][sortedpaymentweeks[i-1]], 2)) if sortedactivityweeks[i] in sortedpaymentweeks else " --"
-                ))
+                    week = sortedweeks[i],
+                    score = str(round(request2["activity"]["weeks"][sortedweeks[i]], 2)) if week in request2["activity"]["weeks"] else " -- ",
+                    payout = str(round(request2["payments"]["weeks"][sortedweeks[i]], 2)) if week in request2["payments"]["weeks"] else " --"
+                    ))
         else:
             print("None yet...")
 
