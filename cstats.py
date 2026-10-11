@@ -330,7 +330,8 @@ def randomquote():
         "\"ok\" - ScaryAdmin",
         "\"admin\" - bb771",
         "\"anyone wanna place a hit on someone\" - bb771",
-        "\"isle\" - tronitas46"
+        "\"isle\" - tronitas46",
+        "\"No encontrado ;)\" - The RetroMC API",
     ]
 
     print(c.yellow + splashes[random.randint(0, len(splashes) - 1)] + c.reset)
@@ -593,6 +594,21 @@ class RetroMC:
         print("Total lifetime nation payout: $" + str(round(request2["payments"]["lifetime"], 2)))
 
         print("\nView on J-Stats:\nhttps://statistics.retromc.org/nation/" + str(request2["uuid"]))
+
+        entertocontinue()
+        rmc.menu()
+
+    @staticmethod
+    def countries():
+        request, status = getapi("https://statistics.retromc.org/api/countries")
+        print("Displaying a list of all countries.\n\nOutput format:\n# | Country | Players | Active | Playtime | Distance | Economy | Active Economy | Placed | Broken | Mobs | Kills | Deaths\n")
+        countryCount = len(request["data"])
+        for i in range(countryCount):
+            print(i+1, end="")
+            for stat in ("country", "players", "activePlayers", "playTime", "metersTraveled", "economy", "activeEconomy", "blocksPlaced", "blocksDestroyed", "creaturesKilled", "playersKilled", "playerDeaths"):
+                print(" | " + str(request["data"][i][stat]), end="")
+            print()
+        print(f"\nTotal country count: {countryCount}\n")
 
         entertocontinue()
         rmc.menu()
@@ -913,6 +929,7 @@ class RetroMC:
             print(c.aqua + "7) " + c.reset + "capes")
             print(c.aqua + "8) " + c.reset + "nationlist")
             print(c.aqua + "9) " + c.reset + "nationdetails")
+            print(c.aqua + "10) " + c.reset + "contries")
             print(c.aqua + "0) " + c.reset + "exit")
 
             print("\nThis program is still a work in progress, report issues to SvGaming")
@@ -946,6 +963,9 @@ class RetroMC:
             elif choose == "9" or choose == "nationdetails":
                 cls()
                 rmc.nationdetails()
+            elif choose == "10" or choose == "contries":
+                cls()
+                rmc.countries()
             elif choose == "0" or choose == "exit":
                 main()
             else:
@@ -1350,7 +1370,7 @@ def about():
     print(c.aqua + "Noggisoggi" + c.reset + " - Creator of player list script which cstats is based on")
     print(c.aqua + "JohnyMuffin" + c.reset + " - Creator of RetroMC and Legacy Tracker related APIs utilized by cstats")
     print(c.aqua + "zavdav" + c.reset + " - Tester, told me about the getUser API, gave ideas for improving the ping feature, creator of BetaMC APIs used by cstats")
-    print(c.aqua + "Pilzhut5" + c.reset + " - contribution of .deb build scripts and .desktop file, general improvements")
+    print(c.aqua + "Pilzhut5" + c.reset + " - contribution of .deb build scripts and .desktop file, general additions & improvements")
     print(c.aqua + "Jaoheah" + c.reset + " - Switched the options around on the menu")
 
     print("\nGitHub repository: " + c.aqua + "https://github.com/svgaming234/cstats" + c.reset)
