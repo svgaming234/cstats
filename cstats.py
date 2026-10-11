@@ -580,13 +580,12 @@ class RetroMC:
             if weekstoshowlen > 11:
                 weekstoshowlen = 11
 
-            for i in range(1, weekstoshowlen):
+            for i, week in enumerate(sortedweeks):
                 print(listfmt.format(
-                    # this is confusing as hell
                     week = sortedweeks[i],
-                    score = str(round(request2["activity"]["weeks"][sortedweeks[i]], 2)),
-                    payout = str(round(request2["payments"]["weeks"][sortedweeks[i]], 2))
-                ))
+                    score = str(round(request2["activity"]["weeks"][sortedweeks[i]], 2)) if week in request2["activity"]["weeks"] else " -- ",
+                    payout = str(round(request2["payments"]["weeks"][sortedweeks[i]], 2)) if week in request2["payments"]["weeks"] else " --"
+                    ))
         else:
             print("None yet...")
 
@@ -1351,7 +1350,7 @@ def about():
     print(c.aqua + "Noggisoggi" + c.reset + " - Creator of player list script which cstats is based on")
     print(c.aqua + "JohnyMuffin" + c.reset + " - Creator of RetroMC and Legacy Tracker related APIs utilized by cstats")
     print(c.aqua + "zavdav" + c.reset + " - Tester, told me about the getUser API, gave ideas for improving the ping feature, creator of BetaMC APIs used by cstats")
-    print(c.aqua + "Pilzhut5" + c.reset + " - contribution of .deb build scripts and .desktop file, improvements to RetroMC village list formatting")
+    print(c.aqua + "Pilzhut5" + c.reset + " - contribution of .deb build scripts and .desktop file, general improvements")
     print(c.aqua + "Jaoheah" + c.reset + " - Switched the options around on the menu")
 
     print("\nGitHub repository: " + c.aqua + "https://github.com/svgaming234/cstats" + c.reset)

@@ -6,7 +6,7 @@ Unofficial command line based statistics program for RetroMC and BetaMC
 
 ### Windows
 
-Go to the "Releases" option, and grab the EXE file of the latest release. Keep in mind the file will likely be falsely detected as malware due to pyinstaller being frequently detected as a false positive. If you would like to avoid this, you can run the python file directly as described below.
+Go to the "Releases" option, and grab the EXE file of the latest release. Keep in mind the file will likely be falsely detected as malware due to PyInstaller being frequently detected as a false positive. If you would like to avoid this, you can run the python file directly as described below.
 
 ### Linux
 
@@ -51,7 +51,8 @@ First, install Python. Afterwards, install colorama and requests using pip (colo
 python3 -m pip install colorama requests
 ```
 
-**NOTE: Most Linux distributions have Python packages provided as part of their package manager, which should be used instead (the package for `requests` is usually called `python-requests` or `python3-requests`.**
+> [!NOTE]
+> Most Linux distributions have Python packages provided as part of their package manager, which should be used instead (the package for `requests` is usually called `python-requests` or `python3-requests`.
 
 The command may vary by platform. Afterwards, you can just run the Python file.
 
@@ -69,7 +70,8 @@ Using pip:
 python3 -m pip install pyinstaller
 ```
 
-**NOTE: Most Linux distributions have Python packages provided as part of their package manager, which should be used instead (the package for `pyinstaller` is usually called `pyinstaller` or `python3-pyinstaller`.**
+> [!NOTE]
+> Most Linux distributions have Python packages provided as part of their package manager, which should be used instead (the package for `pyinstaller` is usually called `pyinstaller` or `python3-pyinstaller`.
 
 Afterwards you can run `make_windows.bat` on Windows or the Makefile (`make build`) on Linux included in the cstats repository to compile it (located in `builds/pyinstaller/`). The executable will be located in the `dist` folder inside the directory.
 
@@ -87,6 +89,6 @@ JohnyMuffin - Creator of RetroMC and Legacy Tracker related APIs utilized by cst
 
 zavdav - Tester, told me about the getUser API, gave ideas for improving the ping feature, creator of BetaMC APIs used by cstats
 
-Pilzhut5 - contribution of .deb build scripts and .desktop file, improvements to RetroMC village list formatting
+Pilzhut5 - contribution of .deb build scripts and .desktop file, general improvements
 
 Jaoheah - Switched the options around on the menu
