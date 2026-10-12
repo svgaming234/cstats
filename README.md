@@ -89,6 +89,6 @@ JohnyMuffin - Creator of RetroMC and Legacy Tracker related APIs utilized by cst
 
 zavdav - Tester, told me about the getUser API, gave ideas for improving the ping feature, creator of BetaMC APIs used by cstats
 
-Pilzhut5 - contribution of .deb build scripts and .desktop file, general improvements
+Pilzhut5 - contribution of .deb build scripts and .desktop file, general additions & improvements
 
 Jaoheah - Switched the options around on the menu
