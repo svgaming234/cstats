@@ -330,7 +330,8 @@ def randomquote():
         "\"ok\" - ScaryAdmin",
         "\"admin\" - bb771",
         "\"anyone wanna place a hit on someone\" - bb771",
-        "\"isle\" - tronitas46"
+        "\"isle\" - tronitas46",
+        "\"No encontrado ;)\" - The RetroMC API"
     ]
 
     print(c.yellow + splashes[random.randint(0, len(splashes) - 1)] + c.reset)
@@ -593,6 +594,62 @@ class RetroMC:
         print("Total lifetime nation payout: $" + str(round(request2["payments"]["lifetime"], 2)))
 
         print("\nView on J-Stats:\nhttps://statistics.retromc.org/nation/" + str(request2["uuid"]))
+
+        entertocontinue()
+        rmc.menu()
+
+    @staticmethod
+    def countries():
+        request, status = getapi("https://statistics.retromc.org/api/countries")
+        countryCount = len(request["data"])
+        widths = [7, 6, 8, 7, 14, 6, 6, 4, 5, 6, 8, 7]
+        #print(request["data"])
+        for country in request["data"]:
+            #print(country)
+            for i, stat in enumerate(country):
+                if isinstance(country[stat], str):
+                    w = len(country[stat])
+                else:
+                    if country[stat] == round(country[stat]):
+                        w = len(str(country[stat]))
+                    else:
+                        w = len(f"{country[stat]:.2f}")
+                if widths[i] < w:
+                    widths[i] = w
+                    #print(w)
+        #print(widths)
+
+        translator = {0: 11,
+                      1: 0,
+                      2: 1,
+                      3: 2,
+                      4: 10,
+                      5: 3,
+                      6: 4,
+                      7: 5,
+                      8: 6,
+                      9: 7,
+                      10: 8,
+                      11: 9
+                      }
+            
+
+        print("Displaying a list of all countries.\n")
+        print(f'{"#":^{len(str(countryCount))}} | {"COUNTRY":^{widths[11]}} | {"PLAYERS":^{widths[0]}} | {"ACTIVE":^{widths[1]}} | {"PLAYTIME":^{widths[2]}} | {"DISTANCE":^{widths[10]}} | {"ECONOMY":^{widths[3]}} | {"ACTIVE ECONOMY":^{widths[4]}} | {"PLACED":^{widths[5]}} | {"BROKEN":^{widths[6]}} | {"MOBS":^{widths[7]}} | {"KILLS":^{widths[8]}} | {"DEATHS":^{widths[9]}}')
+        for i in range(countryCount):
+            print(f"{i+1:{len(str(countryCount))}}", end="")
+            for index, stat in enumerate(("country", "players", "activePlayers", "playTime", "metersTraveled", "economy", "activeEconomy", "blocksPlaced", "blocksDestroyed", "creaturesKilled", "playersKilled", "playerDeaths")):
+                rawdata = request["data"][i][stat]
+                if isinstance(rawdata, str):
+                    data = rawdata
+                else:
+                    if rawdata == round(rawdata):
+                        data = str(rawdata)
+                    else:
+                        data = f"{rawdata:.2f}"
+                print(f" | {data:{widths[translator.get(index)]}}", end="")
+            print()
+        print(f"\nTotal country count: {countryCount}\n")
 
         entertocontinue()
         rmc.menu()
@@ -913,6 +970,7 @@ class RetroMC:
             print(c.aqua + "7) " + c.reset + "capes")
             print(c.aqua + "8) " + c.reset + "nationlist")
             print(c.aqua + "9) " + c.reset + "nationdetails")
+            print(c.aqua + "10) " + c.reset + "countries")
             print(c.aqua + "0) " + c.reset + "exit")
 
             print("\nThis program is still a work in progress, report issues to SvGaming")
@@ -946,6 +1004,9 @@ class RetroMC:
             elif choose == "9" or choose == "nationdetails":
                 cls()
                 rmc.nationdetails()
+            elif choose == "10" or choose == "countries":
+                cls()
+                rmc.countries()
             elif choose == "0" or choose == "exit":
                 main()
             else:
@@ -1350,7 +1411,7 @@ def about():
     print(c.aqua + "Noggisoggi" + c.reset + " - Creator of player list script which cstats is based on")
     print(c.aqua + "JohnyMuffin" + c.reset + " - Creator of RetroMC and Legacy Tracker related APIs utilized by cstats")
     print(c.aqua + "zavdav" + c.reset + " - Tester, told me about the getUser API, gave ideas for improving the ping feature, creator of BetaMC APIs used by cstats")
-    print(c.aqua + "Pilzhut5" + c.reset + " - contribution of .deb build scripts and .desktop file, general improvements")
+    print(c.aqua + "Pilzhut5" + c.reset + " - contribution of .deb build scripts and .desktop file, general additions & improvements")
     print(c.aqua + "Jaoheah" + c.reset + " - Switched the options around on the menu")
 
     print("\nGitHub repository: " + c.aqua + "https://github.com/svgaming234/cstats" + c.reset)
