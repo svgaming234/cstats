@@ -331,7 +331,7 @@ def randomquote():
         "\"admin\" - bb771",
         "\"anyone wanna place a hit on someone\" - bb771",
         "\"isle\" - tronitas46",
-        "\"No encontrado ;)\" - The RetroMC API",
+        "\"No encontrado ;)\" - The RetroMC API"
     ]
 
     print(c.yellow + splashes[random.randint(0, len(splashes) - 1)] + c.reset)
@@ -601,12 +601,53 @@ class RetroMC:
     @staticmethod
     def countries():
         request, status = getapi("https://statistics.retromc.org/api/countries")
-        print("Displaying a list of all countries.\n\nOutput format:\n# | Country | Players | Active | Playtime | Distance | Economy | Active Economy | Placed | Broken | Mobs | Kills | Deaths\n")
         countryCount = len(request["data"])
+        widths = [7, 6, 8, 7, 14, 6, 6, 4, 5, 6, 8, 7]
+        #print(request["data"])
+        for country in request["data"]:
+            #print(country)
+            for i, stat in enumerate(country):
+                if isinstance(country[stat], str):
+                    w = len(country[stat])
+                else:
+                    if country[stat] == round(country[stat]):
+                        w = len(str(country[stat]))
+                    else:
+                        w = len(f"{country[stat]:.2f}")
+                if widths[i] < w:
+                    widths[i] = w
+                    #print(w)
+        #print(widths)
+
+        translator = {0: 11,
+                      1: 0,
+                      2: 1,
+                      3: 2,
+                      4: 10,
+                      5: 3,
+                      6: 4,
+                      7: 5,
+                      8: 6,
+                      9: 7,
+                      10: 8,
+                      11: 9
+                      }
+            
+
+        print("Displaying a list of all countries.\n")
+        print(f'{"#":^{len(str(countryCount))}} | {"COUNTRY":^{widths[11]}} | {"PLAYERS":^{widths[0]}} | {"ACTIVE":^{widths[1]}} | {"PLAYTIME":^{widths[2]}} | {"DISTANCE":^{widths[10]}} | {"ECONOMY":^{widths[3]}} | {"ACTIVE ECONOMY":^{widths[4]}} | {"PLACED":^{widths[5]}} | {"BROKEN":^{widths[6]}} | {"MOBS":^{widths[7]}} | {"KILLS":^{widths[8]}} | {"DEATHS":^{widths[9]}}')
         for i in range(countryCount):
-            print(i+1, end="")
-            for stat in ("country", "players", "activePlayers", "playTime", "metersTraveled", "economy", "activeEconomy", "blocksPlaced", "blocksDestroyed", "creaturesKilled", "playersKilled", "playerDeaths"):
-                print(" | " + str(request["data"][i][stat]), end="")
+            print(f"{i+1:{len(str(countryCount))}}", end="")
+            for index, stat in enumerate(("country", "players", "activePlayers", "playTime", "metersTraveled", "economy", "activeEconomy", "blocksPlaced", "blocksDestroyed", "creaturesKilled", "playersKilled", "playerDeaths")):
+                rawdata = request["data"][i][stat]
+                if isinstance(rawdata, str):
+                    data = rawdata
+                else:
+                    if rawdata == round(rawdata):
+                        data = str(rawdata)
+                    else:
+                        data = f"{rawdata:.2f}"
+                print(f" | {data:{widths[translator.get(index)]}}", end="")
             print()
         print(f"\nTotal country count: {countryCount}\n")
 
