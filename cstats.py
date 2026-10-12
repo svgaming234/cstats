@@ -970,7 +970,7 @@ class RetroMC:
             print(c.aqua + "7) " + c.reset + "capes")
             print(c.aqua + "8) " + c.reset + "nationlist")
             print(c.aqua + "9) " + c.reset + "nationdetails")
-            print(c.aqua + "10) " + c.reset + "contries")
+            print(c.aqua + "10) " + c.reset + "countries")
             print(c.aqua + "0) " + c.reset + "exit")
 
             print("\nThis program is still a work in progress, report issues to SvGaming")
@@ -1004,7 +1004,7 @@ class RetroMC:
             elif choose == "9" or choose == "nationdetails":
                 cls()
                 rmc.nationdetails()
-            elif choose == "10" or choose == "contries":
+            elif choose == "10" or choose == "countries":
                 cls()
                 rmc.countries()
             elif choose == "0" or choose == "exit":
