@@ -257,6 +257,52 @@ def fixusernamecase(username):
     usernamefixed = request["name"]
     return usernamefixed
 
+def updateCache():
+    UUIDs = set([])
+    with open(confpath + "uuidusernamecache", "r+") as cache:
+        for line in cache.readlines():
+            if len(line) == 37:
+                UUIDs.add(line[:-1])
+    with open(confpath + "uuidusernamecache", "w+") as cache:
+        cache.write("")
+    for i, uuid in enumerate(UUIDs):
+        columns = os.get_terminal_size().columns
+        lines = os.get_terminal_size().lines
+        updateScreen = f"""{'- UPDATING UUID USERNAME CACHE -':^52}
+{c.yellow}{"This might take a few minutes.":^52}{c.reset}
+
+{progressbar(int(((i+1)/len(UUIDs))*100))}
+
+{' Total UUIDs:':>30} {len(UUIDs)}
+{'Currently at:':>30} {i+1}
+
+{progressindicator(i+1):^52}"""
+        cls()
+        print(f"{updateScreen:^{columns}}")
+        uuidtousername(uuid)
+    entertocontinue()
+
+def progressbar(percentage):
+    base = "[" + f'{"="*(percentage//2):50}' + "]"
+    barList = list(base)
+    for l in range(len(str(percentage))+1):
+        barList.pop(len(barList)//2)
+    barList[(len(barList)//2)] = str(percentage) + "%"
+    result = ""
+    for char in barList:
+        result += char
+    return result
+
+def progressindicator(index):
+    animation = []
+    for i in range(10):
+        animation.append("."*(9-i) + "\\" + "."*(i*2) + "/" + "."*(9-i))
+    for i in range(10):
+        animation.append("."*i + "/" + "."*(18-i*2) + "\\" + "."*i)
+    while index > 20:
+        index -= 20
+    return animation[index-1]
+
 def entertocontinue(message = "\nPress " + c.aqua + "ENTER" + c.reset + " to return to previous menu.\n"):
     input(message)
 
@@ -1778,6 +1824,7 @@ def options():
     print(c.aqua + "1) " + c.reset + "resetCache")
     print(c.aqua + "2) " + c.reset + "resetConfig")
     print(c.aqua + "3) " + c.reset + "showConfigPath")
+    print(c.aqua + "4) " + c.reset + "updateCache")
     print(c.aqua + "0) " + c.reset + "exit\n")
 
     choose = input("> ").lower()
@@ -1795,6 +1842,11 @@ def options():
     if choose == "3" or choose == "showconfigpath":
         cls()
         showconfigpath()
+        cls()
+        options()
+    if choose == "4" or choose == "updateCache":
+        cls()
+        updateCache()
         cls()
         options()
     elif choose == "0" or choose == "exit":
