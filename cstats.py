@@ -117,6 +117,10 @@ def generateconfig(confoption):
         conf["general"]["highlightBlackColorCodes"] = "False"
     elif confoption == "defaultSubMenu":
         conf["general"]["defaultSubMenu"] = "None"
+    elif confoption == "showLocationMaps":
+        conf["general"]["showLocationMaps"] = "True"
+    elif confoption == "showCharts":
+        conf["general"]["showCharts"] = "True"
 
     confini = open(confpath + "config.ini", "w")
     conf.write(confini)
@@ -128,6 +132,8 @@ def generateallconfigs():
     generateconfig("enableLegacyTrackerAutoRefresh")
     generateconfig("highlightBlackColorCodes")
     generateconfig("defaultSubMenu")
+    generateconfig("showLocationMaps")
+    generateconfig("showCharts")
 
 def readconfig(confcategory, confoption):
     global confvalues
@@ -168,6 +174,8 @@ def readallconfigs():
     readconfig("general", "enableLegacyTrackerAutoRefresh")
     readconfig("general", "highlightBlackColorCodes")
     readconfig("general", "defaultSubMenu")
+    readconfig("general", "showCharts")
+    readconfig("general", "showLocationMaps")
 
 def getapi(url, verify = True):
     request = requests.get(url, verify = verify)
@@ -464,8 +472,9 @@ class RetroMC:
         print("Owner: " + uuidtousername(request2["owner"]))
         print("Location: X:" + str(request2["spawn"]["x"]) + ", Y:" + str(request2["spawn"]["y"]) + ", Z:" + str(request2["spawn"]["z"]) + " in world " + request2["spawn"]["world"])
 
-        rmc.locationMap(str(request2["name"]), request2["spawn"]["x"], request2["spawn"]["y"], request2["spawn"]["z"], request2["spawn"]["world"])
-        print()
+        if confvalues["showCharts"] == True:
+            rmc.locationMap(str(request2["name"]), request2["spawn"]["x"], request2["spawn"]["y"], request2["spawn"]["z"], request2["spawn"]["world"])
+            print()
         if request2["creationTime"] != 1640995200:
             print("Creation time: " + unixtimetotime(request2["creationTime"]))
         else:
@@ -599,8 +608,9 @@ class RetroMC:
                     score = str(round(request2["activity"]["weeks"][sortedweeks[i]], 2)) if week in request2["activity"]["weeks"] else " -- ",
                     payout = str(round(request2["payments"]["weeks"][sortedweeks[i]], 2)) if week in request2["payments"]["weeks"] else " --"
                     ))
-            print("\nPayout chart:")
-            rmc.showActivityPayoutChart(str(request2["name"]), request2["activity"]["weeks"], request2["payments"]["weeks"], sortedweeks)
+            if confvalues["showCharts"] == True:
+                print("\nPayout chart:")
+                rmc.showActivityPayoutChart(str(request2["name"]), request2["activity"]["weeks"], request2["payments"]["weeks"], sortedweeks)
         else:
             print("None yet...")
 
@@ -776,7 +786,8 @@ class RetroMC:
                 z = str(request["z"])
 
                 print("Coordinates: X: " + x + ", Y: " + y + ", Z: " + z)
-                rmc.locationMap(playerusernamefixed, int(x), int(y), int(z))
+                if confvalues["showLocationMaps"] == True:
+                    rmc.locationMap(playerusernamefixed, int(x), int(y), int(z))
         except:
             print("Coordinates: Player is offline")
 
@@ -923,29 +934,30 @@ class RetroMC:
                 print(str(i + 1) + ". " + request["entries"][i]["username"] + " = "  + dataprefix + str(request["entries"][i]["value"]) + datasuffix)
 
         # the chart
-        chartWidth = os.get_terminal_size().columns # classic CMD: 81x25; classic PowerShell: 120x50; Windows Terminal: 121x30
-        maxUsernameLength = 0
-        maxValue = request["entries"][0]["value"]
-        showTitle = True
-        for i in range(len(request["entries"])):
-            if i == 10:
-                break
-            if maxUsernameLength < len(request["entries"][i]["username"]):
-                maxUsernameLength = len(request["entries"][i]["username"])
-            
-        print("\nChart:")
-        print(c.aqua + "\u250c" + c.reset + "\u2500"*(chartWidth-2) + c.aqua + "\u2510" + c.reset)
-        if showTitle:
-            print("\u2502" + f'{"LEADERBOARD FOR " + camelCaseToNormal(stattype).upper():^{chartWidth-2}}' + "\u2502")
-            print("\u251c" + "\u2500"*(chartWidth-2) + "\u2524")
-        for i in range(len(request["entries"])):
-            if i == 10:
-                break
-            if i != 0:
-                print("\u2502" + " "*(chartWidth-2) + "\u2502")
-            length = round((request["entries"][i]["value"]/maxValue)*(chartWidth-5-maxUsernameLength))
-            print("\u2502" + f' {request["entries"][i]["username"]:{maxUsernameLength}} ' + "\u2588"*length + " "*(chartWidth-4-maxUsernameLength-length) + "\u2502")
-        print(c.aqua + "\u2514" + c.reset + "\u2500"*(chartWidth-2) + c.aqua + "\u2518" + c.reset)
+        if confvalues["showCharts"] == True:
+            chartWidth = os.get_terminal_size().columns # classic CMD: 81x25; classic PowerShell: 120x50; Windows Terminal: 121x30
+            maxUsernameLength = 0
+            maxValue = request["entries"][0]["value"]
+            showTitle = True
+            for i in range(len(request["entries"])):
+                if i == 10:
+                    break
+                if maxUsernameLength < len(request["entries"][i]["username"]):
+                    maxUsernameLength = len(request["entries"][i]["username"])
+                
+            print("\nChart:")
+            print(c.aqua + "\u250c" + c.reset + "\u2500"*(chartWidth-2) + c.aqua + "\u2510" + c.reset)
+            if showTitle:
+                print("\u2502" + f'{"LEADERBOARD FOR " + camelCaseToNormal(stattype).upper():^{chartWidth-2}}' + "\u2502")
+                print("\u251c" + "\u2500"*(chartWidth-2) + "\u2524")
+            for i in range(len(request["entries"])):
+                if i == 10:
+                    break
+                if i != 0:
+                    print("\u2502" + " "*(chartWidth-2) + "\u2502")
+                length = round((request["entries"][i]["value"]/maxValue)*(chartWidth-5-maxUsernameLength))
+                print("\u2502" + f' {request["entries"][i]["username"]:{maxUsernameLength}} ' + "\u2588"*length + " "*(chartWidth-4-maxUsernameLength-length) + "\u2502")
+            print(c.aqua + "\u2514" + c.reset + "\u2500"*(chartWidth-2) + c.aqua + "\u2518" + c.reset)
 
         entertocontinue("\nPress " + c.aqua + "ENTER" + c.reset + " to return to leaderboard menu.\n")
         cls()
