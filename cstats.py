@@ -1759,7 +1759,7 @@ def resetconfig():
 
 def showconfigpath():
     print("Your cstats configuration directory is located at: " + c.aqua + confpath + c.reset)
-    print("Additional configuration options can be adjusted within that file.")
+    print("Additional configuration options can be adjusted in " + c.aqua + "config.ini" + c.reset + " within that folder.")
 
     entertocontinue()
 
