@@ -265,10 +265,16 @@ def updateCache():
                 UUIDs.add(line[:-1])
     with open(confpath + "uuidusernamecache", "w+") as cache:
         cache.write("")
-    for i, uuid in enumerate(UUIDs):
-        columns = os.get_terminal_size().columns
-        lines = os.get_terminal_size().lines
-        updateScreen = f"""{'- UPDATING UUID USERNAME CACHE -':^52}
+    if len(UUIDs) == 0:
+        print(c.yellow + "Cache empty, nothing to update." + c.reset)
+        entertocontinue()
+    else:
+        for i, uuid in enumerate(UUIDs):
+            columns = os.get_terminal_size().columns
+            lines = os.get_terminal_size().lines
+            upperSpace = (lines - 10) // 2
+            leftSpace = (columns - 52) // 2
+            updateScreen = f"""{'- UPDATING UUID USERNAME CACHE -':^52}
 {c.yellow}{"This might take a few minutes.":^52}{c.reset}
 
 {progressbar(int(((i+1)/len(UUIDs))*100))}
@@ -277,10 +283,12 @@ def updateCache():
 {'Currently at:':>30} {i+1}
 
 {progressindicator(i+1):^52}"""
-        cls()
-        print(f"{updateScreen:^{columns}}")
-        uuidtousername(uuid)
-    entertocontinue()
+            cls()
+            print("\n"*(upperSpace-1))
+            for line in updateScreen.split("\n"):
+                print(" "*leftSpace + line)
+            uuidtousername(uuid)
+        entertocontinue()
 
 def progressbar(percentage):
     base = "[" + f'{"="*(percentage//2):50}' + "]"
