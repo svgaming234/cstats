@@ -1084,13 +1084,13 @@ class RetroMC:
             else:
                 shortWorldName = "???"
             sideMarkerSpacing = round(actualMapHeight/6)
-            sideMarkers = (0, midPoint[1]-(2*sideMarkerSpacing), midPoint[1]-sideMarkerSpacing, midPoint[1], midPoint[1]+sideMarkerSpacing, midPoint[1]+(2*sideMarkerSpacing), actualMapHeight-1)
+            sideMarkers = (1, midPoint[1]-(2*sideMarkerSpacing), midPoint[1]-sideMarkerSpacing, midPoint[1], midPoint[1]+sideMarkerSpacing, midPoint[1]+(2*sideMarkerSpacing), actualMapHeight)
             #print(sideMarkers)
             bottomMarkerSpacing = round(actualMapWidth/6)
-            bottomMarkers = (0, midPoint[0]-(2*bottomMarkerSpacing), midPoint[0]-bottomMarkerSpacing, midPoint[0], midPoint[0]+bottomMarkerSpacing, midPoint[0]+(2*bottomMarkerSpacing), actualMapWidth-1)
+            bottomMarkers = (1, midPoint[0]-(2*bottomMarkerSpacing), midPoint[0]-bottomMarkerSpacing, midPoint[0], midPoint[0]+bottomMarkerSpacing, midPoint[0]+(2*bottomMarkerSpacing), actualMapWidth)
             sideMarkerCounter = -3
             for i in range(actualMapHeight):
-                if i in sideMarkers:
+                if i+1 in sideMarkers:
                     firstPart = "\u2502" + f'{sideMarkerCounter*10:>4}' + "K" + "\u2524"
                     sideMarkerCounter += 1
                 else:
@@ -1113,10 +1113,10 @@ class RetroMC:
                     secondPartList[actualMapWidth-4] = "\u2502"
                 if i == 4:
                     secondPartList[actualMapWidth-4] = "S"
-                if i == midPoint[1]:
-                    secondPartList[midPoint[0]] = "+"
-                if i == Xline:
-                    secondPartList[Xcol] = c.red + "X" + c.reset
+                if i+1 == midPoint[1]:
+                    secondPartList[midPoint[0]-1] = "+"
+                if i+1 == Xline:
+                    secondPartList[Xcol-1] = c.red + "X" + c.reset
                 for part in secondPartList:
                     secondPart += part
                 print(firstPart + secondPart)
@@ -1124,7 +1124,7 @@ class RetroMC:
             for ThisIsTheXaxis in "\u251c" + "\u2500"*5 + "\u253c" + "\u2500"*actualMapWidth + "\u2524":
                 XaxisList.append(ThisIsTheXaxis)
             for counter in range(actualMapWidth):
-                if counter in bottomMarkers:
+                if counter+1 in bottomMarkers:
                     XaxisList[counter+7] = "\u252c"
             Xaxis = ""
             for part in XaxisList:
@@ -1136,7 +1136,7 @@ class RetroMC:
                 secondPartList.append(char)
             counter = -3
             for index in range(actualMapWidth):
-                if index in bottomMarkers:
+                if index+1 in bottomMarkers:
                     if counter > 0:
                         secondPartList[index-2] = str(counter*10)[0]
                         secondPartList[index-1] = str(counter*10)[1]
@@ -1159,10 +1159,10 @@ class RetroMC:
                 midPartList = []
                 for char in " "*actualMapWidth:
                     midPartList.append(char)
-                if i == midPoint[1]:
-                    midPartList[midPoint[0]] = "+"
-                if i == Xline:
-                    midPartList[Xcol] = c.red + "X" + c.reset
+                if i+1 == midPoint[1]:
+                    midPartList[midPoint[0]-1] = "+"
+                if i+1 == Xline:
+                    midPartList[Xcol-1] = c.red + "X" + c.reset
                 midPart = ""
                 for char in midPartList:
                     midPart += char
