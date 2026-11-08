@@ -998,7 +998,10 @@ class RetroMC:
 
         # the chart
         if confvalues["showCharts"] == True:
-            chartWidth = os.get_terminal_size().columns # classic CMD: 81x25; classic PowerShell: 120x50; Windows Terminal: 121x30
+            if platform.system() == "Windows":
+                chartWidth = os.get_terminal_size().columns - 1
+            else:
+                chartWidth = os.get_terminal_size().columns
             maxUsernameLength = 0
             maxValue = request["entries"][0]["value"]
             showTitle = True
@@ -1133,7 +1136,10 @@ class RetroMC:
 
     @staticmethod
     def locationMap(name, x, y, z, world="nothin", compassChar="\u253c"):
-        mapWidth = os.get_terminal_size().columns
+        if platform.system() == "Windows":
+            mapWidth = os.get_terminal_size().columns - 1
+        else:
+            mapWidth = os.get_terminal_size().columns
         title = f"LOCATION OF {name.upper()}"
         if (len(title) + len(str(x)) + len(str(y)) + len(str(z)) + 19) <= mapWidth:
             bigMap = True
@@ -1307,7 +1313,10 @@ class RetroMC:
             activityScaleParts.append(maxActivityForChart-((i+1)*activityScaleDifference))
         activityScaleParts.append(0)
         # Chart
-        chartWidth = os.get_terminal_size().columns
+        if platform.system() == "Windows":
+            chartWidth = os.get_terminal_size().columns - 1
+        else:
+            chartWidth = os.get_terminal_size().columns
         OverallSpace = chartWidth-(len(str(maxMoneyForChart))+len(str(maxActivityForChart))+7)
         printableWeekAmount = OverallSpace // 9
         weeksToPrint = sortedWeeks[1:]
