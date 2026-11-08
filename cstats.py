@@ -515,11 +515,18 @@ class RetroMC:
 
     @staticmethod
     def nationlist():
-        listfmt = "{name} | {owner} | {villages} | {nationuuid}"
         request, status = getapi("https://api.retromc.org/api/v1/nation/getNationList")
+        nameColonWidth = 11
+        villageCountWidth = 15
+        for nation in request["nations"]:
+            if len(nation["name"]) > nameColonWidth:
+                nameColonWidth = len(nation["name"])
+            if len(str(nation["villages"])) > villageCountWidth:
+                villageCountWidth = len(str(nation["villages"]))
+        listfmt = "{name:{nameColonWidth}} | {owner:36} | {villages:{villageCountWidth}} | {nationuuid}"
 
-        print("Displaying list of " + c.aqua + "all" + c.reset + " RetroMC nations.\n\nOutput format:")
-        print("Nation name | Nation owner | Total villages | Nation UUID\n")
+        print("Displaying list of " + c.aqua + "all" + c.reset + " RetroMC nations.\n")
+        print(f'{"NATION NAME":^{nameColonWidth}} | {"NATION OWNER":^36} | {"TOTAL VILLAGES":^{villageCountWidth}} | {"NATION UUID":^36}')
 
         totalcount = len(request["nations"])
 
@@ -528,7 +535,9 @@ class RetroMC:
                 name = request["nations"][i]["name"], 
                 owner = uuidtousername(request["nations"][i]["owner"]),
                 villages = request["nations"][i]["villages"], 
-                nationuuid = request["nations"][i]["uuid"]
+                nationuuid = request["nations"][i]["uuid"],
+                nameColonWidth = nameColonWidth,
+                villageCountWidth = villageCountWidth
             ))
 
         print("\nTotal nation count: " + str(totalcount))
