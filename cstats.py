@@ -340,7 +340,8 @@ def randomquote():
         "\"admin\" - bb771",
         "\"anyone wanna place a hit on someone\" - bb771",
         "\"isle\" - tronitas46",
-        "\"No encontrado ;)\" - The RetroMC API"
+        "\"No encontrado ;)\" - The RetroMC API",
+        "\"boss makes a dollar, I make a dime. This is why I play rmc on company time\" - 0pyr"
     ]
 
     print(c.yellow + splashes[random.randint(0, len(splashes) - 1)] + c.reset)
@@ -598,6 +599,8 @@ class RetroMC:
                     score = str(round(request2["activity"]["weeks"][sortedweeks[i]], 2)) if week in request2["activity"]["weeks"] else " -- ",
                     payout = str(round(request2["payments"]["weeks"][sortedweeks[i]], 2)) if week in request2["payments"]["weeks"] else " --"
                     ))
+            print("\nPayout chart:")
+            rmc.showActivityPayoutChart(str(request2["name"]), request2["activity"]["weeks"], request2["payments"]["weeks"], sortedweeks)
         else:
             print("None yet...")
 
@@ -1166,6 +1169,133 @@ class RetroMC:
                 print("\u2502" + midPart + "\u2502")
             print(c.aqua + "\u2514" + c.reset + "\u2500"*actualMapWidth + c.aqua + "\u2518" + c.reset)
 
+    @staticmethod
+    def showActivityPayoutChart(name, activity, payments, sortedWeeks):
+        # Debugging
+        '''
+        print("-----")
+        print(name)
+        print("-----")
+        print(activity)
+        print("-----")
+        print(payments)
+        print("-----")
+        print(sortedWeeks)
+        print("-----")
+        '''
+        # Preparation
+        #   Money
+        maxMoney = 0
+        for week in payments:
+            pm = payments.get(week)
+            if pm > maxMoney:
+                maxMoney = int(pm)
+        maxMoneyForChart = round(maxMoney, int(f"-{len(str(maxMoney))-1}"))
+        if maxMoneyForChart < maxMoney:
+            moneyNumberList = list(str(maxMoneyForChart))
+            chartMoneyStringNumber = ""
+            for index, digit in enumerate(moneyNumberList):
+                if index == 0:
+                    chartMoneyStringNumber += str(int(digit)+1)
+                else:
+                    chartMoneyStringNumber += digit
+            maxMoneyForChart = int(chartMoneyStringNumber)
+        scaleDifference = maxMoneyForChart // 5
+        moneyScaleParts = []
+        moneyScaleParts.append(maxMoneyForChart)
+        for i in range(4):
+            moneyScaleParts.append(maxMoneyForChart-((i+1)*scaleDifference))
+        moneyScaleParts.append(0)
+        #   Activity
+        maxActivity = 0
+        for week in activity:
+            thisActivity = activity.get(week)
+            if thisActivity > maxActivity:
+                maxActivity = round(thisActivity)
+        maxActivityForChart = round(maxActivity, (len(str(maxActivity))-1)*-1)
+        if maxActivityForChart < maxActivity:
+            activityNumberList = list(str(maxActivityForChart))
+            chartActivityStringNumber = ""
+            for index, digit in enumerate(activityNumberList):
+                if index == 0:
+                    chartActivityStringNumber += str(int(digit)+1)
+                else:
+                    chartActivityStringNumber += digit
+            maxActivityForChart = int(chartActivityStringNumber)
+        activityScaleDifference = maxActivityForChart // 5
+        activityScaleParts = []
+        activityScaleParts.append(maxActivityForChart)
+        for i in range(4):
+            activityScaleParts.append(maxActivityForChart-((i+1)*activityScaleDifference))
+        activityScaleParts.append(0)
+        # Chart
+        chartWidth = os.get_terminal_size().columns
+        OverallSpace = chartWidth-(len(str(maxMoneyForChart))+len(str(maxActivityForChart))+7)
+        printableWeekAmount = OverallSpace // 9
+        weeksToPrint = sortedWeeks[1:]
+        while len(weeksToPrint) > printableWeekAmount:
+            weeksToPrint.pop()
+        weeksToPrint.reverse()
+        
+        print(c.aqua + "\u2554" + c.reset + "\u2550"*(chartWidth-2) + c.aqua + "\u2557" + c.reset)
+        print("\u2551" + f'{"WEEKLY PAYOUTS OF " + name.upper():^{chartWidth-2}}' + "\u2551")
+        print("\u2560" + "\u2550"*(chartWidth-2) + "\u2563")
+        for i in range(len(moneyScaleParts)):
+            moneyScaleParts[i] = "$"+str(moneyScaleParts[i])
+        scaleCounter = 0
+        for i in range(11):
+            if i % 2 == 0:
+                if i == 0:
+                    leftChar = "\u252c"
+                    rightChar = "\u2510"
+                elif i == 10:
+                    leftChar = "\u2534"
+                    rightChar = "\u2518"
+                else:
+                    leftChar = "\u253c"
+                    rightChar = "\u2524"
+                firstPart = "\u2551" + f'{moneyScaleParts[scaleCounter]:>{len(str(maxMoneyForChart))+1}}' + leftChar
+                midPart = "\u2500"*(chartWidth-len(str(maxMoneyForChart))-5)
+                lastPart = rightChar + "\u2551"
+                scaleCounter += 1
+            else:
+                firstPart = "\u2551" + " "*(len(str(maxMoneyForChart))+1) + "\u2502"
+                midPart = " "*(chartWidth-len(str(maxMoneyForChart))-5)
+                lastPart = "\u2502\u2551"
+            midPartList = list(midPart)
+            NumberList = []
+            for index in range(1, 21):
+                NumberList.append(index)
+            NumberList.reverse()
+            for index, week in enumerate(weeksToPrint):
+                try:
+                    amount = (payments.get(week) / maxMoneyForChart) * 20
+                except:
+                    continue
+                if i == 10:
+                    if round(amount) > 0:
+                        for point in range(5):
+                            midPartList[1+point+index*10] = "\u2580" # half block up
+                else:
+                    if round(amount) == NumberList[i*2]:
+                        for point in range(5):
+                            midPartList[1+point+index*10] = "\u2584" # half block down
+                    elif round(amount) > NumberList[i*2]:
+                        for point in range(5):
+                            midPartList[1+point+index*10] = "\u2588" # full block
+            midPart = ""
+            for char in midPartList:
+                    midPart += char
+            print(firstPart + midPart + lastPart)
+        firstPart = "\u2551 " + " "*(len(str(maxMoneyForChart))+2)
+        midPartKinda = ""
+        lastPart = "\u2551"
+        for week in weeksToPrint:
+            midPartKinda += week[2:].replace("-", "")
+            midPartKinda += " "*5
+        print(firstPart + f'{midPartKinda:{chartWidth-len(str(maxMoneyForChart))-5}}' + lastPart)
+        print(c.aqua + "\u255a" + c.reset + "\u2550"*(chartWidth-2) + c.aqua + "\u255d" + c.reset)
+
 rmc = RetroMC()
 
 class BetaMC:
@@ -1564,7 +1694,7 @@ def about():
     print(c.aqua + "Noggisoggi" + c.reset + " - Creator of player list script which cstats is based on")
     print(c.aqua + "JohnyMuffin" + c.reset + " - Creator of RetroMC and Legacy Tracker related APIs utilized by cstats")
     print(c.aqua + "zavdav" + c.reset + " - Tester, told me about the getUser API, gave ideas for improving the ping feature, creator of BetaMC APIs used by cstats")
-    print(c.aqua + "Pilzhut5" + c.reset + " - contribution of .deb build scripts and .desktop file, general additions & improvements")
+    print(c.aqua + "Pilzhut5" + c.reset + " - Contribution of .deb build scripts, .desktop file, charts, location map, RetroMC countries and other stuff")
     print(c.aqua + "Jaoheah" + c.reset + " - Switched the options around on the menu")
 
     print("\nGitHub repository: " + c.aqua + "https://github.com/svgaming234/cstats" + c.reset)
