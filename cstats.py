@@ -117,6 +117,10 @@ def generateconfig(confoption):
         conf["general"]["highlightBlackColorCodes"] = "False"
     elif confoption == "defaultSubMenu":
         conf["general"]["defaultSubMenu"] = "None"
+    elif confoption == "showLocationMaps":
+        conf["general"]["showLocationMaps"] = "True"
+    elif confoption == "showCharts":
+        conf["general"]["showCharts"] = "True"
 
     confini = open(confpath + "config.ini", "w")
     conf.write(confini)
@@ -128,6 +132,8 @@ def generateallconfigs():
     generateconfig("enableLegacyTrackerAutoRefresh")
     generateconfig("highlightBlackColorCodes")
     generateconfig("defaultSubMenu")
+    generateconfig("showLocationMaps")
+    generateconfig("showCharts")
 
 def readconfig(confcategory, confoption):
     global confvalues
@@ -168,6 +174,8 @@ def readallconfigs():
     readconfig("general", "enableLegacyTrackerAutoRefresh")
     readconfig("general", "highlightBlackColorCodes")
     readconfig("general", "defaultSubMenu")
+    readconfig("general", "showCharts")
+    readconfig("general", "showLocationMaps")
 
 def getapi(url, verify = True):
     request = requests.get(url, verify = verify)
@@ -249,6 +257,60 @@ def fixusernamecase(username):
     usernamefixed = request["name"]
     return usernamefixed
 
+def updateCache():
+    UUIDs = set([])
+    with open(confpath + "uuidusernamecache", "r+") as cache:
+        for line in cache.readlines():
+            if len(line) == 37:
+                UUIDs.add(line[:-1])
+    with open(confpath + "uuidusernamecache", "w+") as cache:
+        cache.write("")
+    if len(UUIDs) == 0:
+        print(c.yellow + "Cache empty, nothing to update." + c.reset)
+        entertocontinue()
+    else:
+        for i, uuid in enumerate(UUIDs):
+            columns = os.get_terminal_size().columns
+            lines = os.get_terminal_size().lines
+            upperSpace = (lines - 10) // 2
+            leftSpace = (columns - 52) // 2
+            updateScreen = f"""{'- UPDATING UUID USERNAME CACHE -':^52}
+{c.yellow}{"This might take a few minutes.":^52}{c.reset}
+
+{progressbar(int(((i+1)/len(UUIDs))*100))}
+
+{' Total UUIDs:':>30} {len(UUIDs)}
+{'Currently at:':>30} {i+1}
+
+{progressindicator(i+1):^52}"""
+            cls()
+            print("\n"*(upperSpace-1))
+            for line in updateScreen.split("\n"):
+                print(" "*leftSpace + line)
+            uuidtousername(uuid)
+        entertocontinue()
+
+def progressbar(percentage):
+    base = "[" + f'{"="*(percentage//2):50}' + "]"
+    barList = list(base)
+    for l in range(len(str(percentage))+1):
+        barList.pop(len(barList)//2)
+    barList[(len(barList)//2)] = str(percentage) + "%"
+    result = ""
+    for char in barList:
+        result += char
+    return result
+
+def progressindicator(index):
+    animation = []
+    for i in range(10):
+        animation.append("."*(9-i) + "\\" + "."*(i*2) + "/" + "."*(9-i))
+    for i in range(10):
+        animation.append("."*i + "/" + "."*(18-i*2) + "\\" + "."*i)
+    while index > 20:
+        index -= 20
+    return animation[index-1]
+
 def entertocontinue(message = "\nPress " + c.aqua + "ENTER" + c.reset + " to return to previous menu.\n"):
     input(message)
 
@@ -265,6 +327,15 @@ def displayworldmap(x, y, z):
 def commaloop(value, separator = ", "):
     if value != 0:
         print(separator, end = "")
+
+def camelCaseToNormal(TheString):
+    output = ""
+    for char in TheString:
+        if char.isupper():
+            output += " " + char.lower()
+        else:
+            output += char
+    return output
 
 def randomquote():
     splashes = [
@@ -331,7 +402,8 @@ def randomquote():
         "\"admin\" - bb771",
         "\"anyone wanna place a hit on someone\" - bb771",
         "\"isle\" - tronitas46",
-        "\"No encontrado ;)\" - The RetroMC API"
+        "\"No encontrado ;)\" - The RetroMC API",
+        "\"boss makes a dollar, I make a dime. This is why I play rmc on company time\" - 0pyr"
     ]
 
     print(c.yellow + splashes[random.randint(0, len(splashes) - 1)] + c.reset)
@@ -454,6 +526,9 @@ class RetroMC:
         print("Owner: " + uuidtousername(request2["owner"]))
         print("Location: X:" + str(request2["spawn"]["x"]) + ", Y:" + str(request2["spawn"]["y"]) + ", Z:" + str(request2["spawn"]["z"]) + " in world " + request2["spawn"]["world"])
 
+        if confvalues["showCharts"] == True:
+            rmc.locationMap(str(request2["name"]), request2["spawn"]["x"], request2["spawn"]["y"], request2["spawn"]["z"], request2["spawn"]["world"])
+            print()
         if request2["creationTime"] != 1640995200:
             print("Creation time: " + unixtimetotime(request2["creationTime"]))
         else:
@@ -494,11 +569,18 @@ class RetroMC:
 
     @staticmethod
     def nationlist():
-        listfmt = "{name} | {owner} | {villages} | {nationuuid}"
         request, status = getapi("https://api.retromc.org/api/v1/nation/getNationList")
+        nameColonWidth = 11
+        villageCountWidth = 15
+        for nation in request["nations"]:
+            if len(nation["name"]) > nameColonWidth:
+                nameColonWidth = len(nation["name"])
+            if len(str(nation["villages"])) > villageCountWidth:
+                villageCountWidth = len(str(nation["villages"]))
+        listfmt = "{name:{nameColonWidth}} | {owner:36} | {villages:{villageCountWidth}} | {nationuuid}"
 
-        print("Displaying list of " + c.aqua + "all" + c.reset + " RetroMC nations.\n\nOutput format:")
-        print("Nation name | Nation owner | Total villages | Nation UUID\n")
+        print("Displaying list of " + c.aqua + "all" + c.reset + " RetroMC nations.\n")
+        print(f'{"NATION NAME":^{nameColonWidth}} | {"NATION OWNER":^36} | {"TOTAL VILLAGES":^{villageCountWidth}} | {"NATION UUID":^36}')
 
         totalcount = len(request["nations"])
 
@@ -507,7 +589,9 @@ class RetroMC:
                 name = request["nations"][i]["name"], 
                 owner = uuidtousername(request["nations"][i]["owner"]),
                 villages = request["nations"][i]["villages"], 
-                nationuuid = request["nations"][i]["uuid"]
+                nationuuid = request["nations"][i]["uuid"],
+                nameColonWidth = nameColonWidth,
+                villageCountWidth = villageCountWidth
             ))
 
         print("\nTotal nation count: " + str(totalcount))
@@ -587,6 +671,9 @@ class RetroMC:
                     score = str(round(request2["activity"]["weeks"][sortedweeks[i]], 2)) if week in request2["activity"]["weeks"] else " -- ",
                     payout = str(round(request2["payments"]["weeks"][sortedweeks[i]], 2)) if week in request2["payments"]["weeks"] else " --"
                     ))
+            if confvalues["showCharts"] == True:
+                print("\nPayout chart:")
+                rmc.showActivityPayoutChart(str(request2["name"]), request2["activity"]["weeks"], request2["payments"]["weeks"], sortedweeks)
         else:
             print("None yet...")
 
@@ -744,11 +831,14 @@ class RetroMC:
         print("Items dropped: " + str(request5["itemsDropped"]))
 
         print("\nSpleef statistics:")
-        print("Matches played: " + str(request5["gamemaster_spleef_games_played"]))
-        print("Victories: " + str(request5["gamemaster_spleef_games_won"]))
-        print("Matches spectated: " + str(request5["gamemaster_spleef_matches_spectated"]))
-        print("Snow blocks broken: " + str(request5["gamemaster_spleef_blocks_broken"]))
-        print("Snowballs thrown: " + str(request5["gamemaster_spleef_snowballs_thrown"]) + "\n")
+        try:
+            print("Matches played: " + str(request5["gamemaster_spleef_games_played"]))
+            print("Victories: " + str(request5["gamemaster_spleef_games_won"]))
+            print("Matches spectated: " + str(request5["gamemaster_spleef_matches_spectated"]))
+            print("Snow blocks broken: " + str(request5["gamemaster_spleef_blocks_broken"]))
+            print("Snowballs thrown: " + str(request5["gamemaster_spleef_snowballs_thrown"]) + "\n")
+        except KeyError:
+            print("Missing data :(\n")
         
         try:
             if request["x"] == 0 and request["y"] == 0 and request["z"] == 0:
@@ -759,6 +849,8 @@ class RetroMC:
                 z = str(request["z"])
 
                 print("Coordinates: X: " + x + ", Y: " + y + ", Z: " + z)
+                if confvalues["showLocationMaps"] == True:
+                    rmc.locationMap(playerusernamefixed, int(x), int(y), int(z))
         except:
             print("Coordinates: Player is offline")
 
@@ -831,7 +923,7 @@ class RetroMC:
         print(c.aqua + "9) " + c.reset + "playTime")
         print(c.aqua + "10) " + c.reset + "trustLevel")
         print(c.aqua + "11) " + c.reset + "trustScore")
-        print(c.aqua + "12) " + c.reset + "money")
+        #print(c.aqua + "12) " + c.reset + "money") #HIDDEN: API doesn't exist
         print(c.aqua + "0) " + c.reset + "exit\n")
 
         choose = input("> ").lower()
@@ -903,6 +995,35 @@ class RetroMC:
         else:
             for i in range(len(request["entries"])):
                 print(str(i + 1) + ". " + request["entries"][i]["username"] + " = "  + dataprefix + str(request["entries"][i]["value"]) + datasuffix)
+
+        # the chart
+        if confvalues["showCharts"] == True:
+            if platform.system() == "Windows":
+                chartWidth = os.get_terminal_size().columns - 1
+            else:
+                chartWidth = os.get_terminal_size().columns
+            maxUsernameLength = 0
+            maxValue = request["entries"][0]["value"]
+            showTitle = True
+            for i in range(len(request["entries"])):
+                if i == 10:
+                    break
+                if maxUsernameLength < len(request["entries"][i]["username"]):
+                    maxUsernameLength = len(request["entries"][i]["username"])
+                
+            print("\nChart:")
+            print(c.aqua + "\u250c" + c.reset + "\u2500"*(chartWidth-2) + c.aqua + "\u2510" + c.reset)
+            if showTitle:
+                print("\u2502" + f'{"LEADERBOARD FOR " + camelCaseToNormal(stattype).upper():^{chartWidth-2}}' + "\u2502")
+                print("\u251c" + "\u2500"*(chartWidth-2) + "\u2524")
+            for i in range(len(request["entries"])):
+                if i == 10:
+                    break
+                if i != 0:
+                    print("\u2502" + " "*(chartWidth-2) + "\u2502")
+                length = round((request["entries"][i]["value"]/maxValue)*(chartWidth-5-maxUsernameLength))
+                print("\u2502" + f' {request["entries"][i]["username"]:{maxUsernameLength}} ' + "\u2588"*length + " "*(chartWidth-4-maxUsernameLength-length) + "\u2502")
+            print(c.aqua + "\u2514" + c.reset + "\u2500"*(chartWidth-2) + c.aqua + "\u2518" + c.reset)
 
         entertocontinue("\nPress " + c.aqua + "ENTER" + c.reset + " to return to leaderboard menu.\n")
         cls()
@@ -1012,6 +1133,255 @@ class RetroMC:
             else:
                 cls()
                 print(c.red + "Error: Invalid option!" + c.reset)
+
+    @staticmethod
+    def locationMap(name, x, y, z, world="nothin", compassChar="\u253c"):
+        if platform.system() == "Windows":
+            mapWidth = os.get_terminal_size().columns - 1
+        else:
+            mapWidth = os.get_terminal_size().columns
+        title = f"LOCATION OF {name.upper()}"
+        if (len(title) + len(str(x)) + len(str(y)) + len(str(z)) + 19) <= mapWidth:
+            bigMap = True
+            actualMapWidth = mapWidth - 8
+            mapHeight = mapWidth // 4
+            actualMapHeight = mapHeight - 6
+            print(c.aqua + "\u250c" + c.reset + "\u2500"*(mapWidth-(17+len(str(x))+len(str(y))+len(str(z)))) + "\u252c" + "\u2500"*(len(str(x))+4) + "\u252c" + "\u2500"*(len(str(y))+4) + "\u252c" + "\u2500"*(len(str(z))+4) + c.aqua + "\u2510" + c.reset)
+            print("\u2502 " + f'{title:{mapWidth-(19+len(str(x))+len(str(y))+len(str(z)))}}' + " \u2502 X=" + str(x) + " \u2502 Y=" + str(y) + " \u2502 Z=" + str(z) + " \u2502")
+            print("\u251c" + "\u2500"*5 + "\u252c" + "\u2500"*(mapWidth-(23+len(str(x))+len(str(y))+len(str(z)))) + "\u2534" + "\u2500"*(len(str(x))+4) + "\u2534" + "\u2500"*(len(str(y))+4) + "\u2534" + "\u2500"*(len(str(z))+4) + "\u2524")
+        else:
+            bigMap = False
+            actualMapWidth = mapWidth - 2
+            mapHeight = mapWidth // 2
+            actualMapHeight = mapHeight - 4
+            print(c.aqua + "\u250c" + c.reset + "\u2500"*(mapWidth-2) + c.aqua + "\u2510" + c.reset)
+            print("\u2502 " + f'{title:{mapWidth-4}}' + " \u2502")
+            print("\u251c" + "\u2500"*(mapWidth-2) + "\u2524")
+        Xcol = round((x/30000)*(actualMapWidth/2))+(round(actualMapWidth/2))
+        Xline = round((z/30000)*(actualMapHeight/2))+(round(actualMapHeight/2))
+        midPoint = (round(actualMapWidth/2), round(actualMapHeight/2))
+        if bigMap == True:
+            if world == "retromc":
+                shortWorldName = "RMC"
+            elif world == "skylands":
+                shortWorldName = "SKY"
+            else:
+                shortWorldName = "???"
+            sideMarkerSpacing = round(actualMapHeight/6)
+            sideMarkers = (1, midPoint[1]-(2*sideMarkerSpacing), midPoint[1]-sideMarkerSpacing, midPoint[1], midPoint[1]+sideMarkerSpacing, midPoint[1]+(2*sideMarkerSpacing), actualMapHeight)
+            #print(sideMarkers)
+            bottomMarkerSpacing = round(actualMapWidth/6)
+            bottomMarkers = (1, midPoint[0]-(2*bottomMarkerSpacing), midPoint[0]-bottomMarkerSpacing, midPoint[0], midPoint[0]+bottomMarkerSpacing, midPoint[0]+(2*bottomMarkerSpacing), actualMapWidth)
+            sideMarkerCounter = -3
+            for i in range(actualMapHeight):
+                if i+1 in sideMarkers:
+                    firstPart = "\u2502" + f'{sideMarkerCounter*10:>4}' + "K" + "\u2524"
+                    sideMarkerCounter += 1
+                else:
+                    firstPart = "\u2502     \u2502"
+                secondPart = ""
+                secondPartList = []
+                for character in " "*actualMapWidth + "\u2502":
+                    secondPartList.append(character)
+                if i == 0:
+                    secondPartList[actualMapWidth-4] = c.aqua + "N" + c.reset
+                if i == 1:
+                    secondPartList[actualMapWidth-4] = c.aqua + "\u2502" + c.reset
+                if i == 2:
+                    secondPartList[actualMapWidth-6] = "W"
+                    secondPartList[actualMapWidth-5] = "\u2500"
+                    secondPartList[actualMapWidth-4] = compassChar
+                    secondPartList[actualMapWidth-3] = "\u2500"
+                    secondPartList[actualMapWidth-2] = "E"
+                if i == 3:
+                    secondPartList[actualMapWidth-4] = "\u2502"
+                if i == 4:
+                    secondPartList[actualMapWidth-4] = "S"
+                if i+1 == midPoint[1]:
+                    secondPartList[midPoint[0]-1] = "+"
+                if i+1 == Xline:
+                    secondPartList[Xcol-1] = c.red + "X" + c.reset
+                for part in secondPartList:
+                    secondPart += part
+                print(firstPart + secondPart)
+            XaxisList = []
+            for ThisIsTheXaxis in "\u251c" + "\u2500"*5 + "\u253c" + "\u2500"*actualMapWidth + "\u2524":
+                XaxisList.append(ThisIsTheXaxis)
+            for counter in range(actualMapWidth):
+                if counter+1 in bottomMarkers:
+                    XaxisList[counter+7] = "\u252c"
+            Xaxis = ""
+            for part in XaxisList:
+                Xaxis += part
+            print(Xaxis)
+            firstPart = f"\u2502 {shortWorldName} \u2502"
+            secondPartList = []
+            for char in " "*actualMapWidth + "\u2502":
+                secondPartList.append(char)
+            counter = -3
+            for index in range(actualMapWidth):
+                if index+1 in bottomMarkers:
+                    if counter > 0:
+                        secondPartList[index-2] = str(counter*10)[0]
+                        secondPartList[index-1] = str(counter*10)[1]
+                        secondPartList[index] = "K"
+                    elif counter < 0:
+                        secondPartList[index] = str(counter*10)[0]
+                        secondPartList[index+1] = str(counter*10)[1]
+                        secondPartList[index+2] = str(counter*10)[2]
+                        secondPartList[index+3] = "K"
+                    else:
+                        secondPartList[index] = "0"
+                    counter += 1
+            secondPart = ""
+            for part in secondPartList:
+                secondPart += part
+            print(firstPart + secondPart)
+            print(c.aqua + "\u2514" + c.reset + "\u2500"*5 + "\u2534" + "\u2500"*(mapWidth-8) + c.aqua + "\u2518" + c.reset)
+        else:
+            for i in range(actualMapHeight):
+                midPartList = []
+                for char in " "*actualMapWidth:
+                    midPartList.append(char)
+                if i+1 == midPoint[1]:
+                    midPartList[midPoint[0]-1] = "+"
+                if i+1 == Xline:
+                    midPartList[Xcol-1] = c.red + "X" + c.reset
+                midPart = ""
+                for char in midPartList:
+                    midPart += char
+                print("\u2502" + midPart + "\u2502")
+            print(c.aqua + "\u2514" + c.reset + "\u2500"*actualMapWidth + c.aqua + "\u2518" + c.reset)
+
+    @staticmethod
+    def showActivityPayoutChart(name, activity, payments, sortedWeeks):
+        # Debugging
+        '''
+        print("-----")
+        print(name)
+        print("-----")
+        print(activity)
+        print("-----")
+        print(payments)
+        print("-----")
+        print(sortedWeeks)
+        print("-----")
+        '''
+        # Preparation
+        #   Money
+        maxMoney = 0
+        for week in payments:
+            pm = payments.get(week)
+            if pm > maxMoney:
+                maxMoney = int(pm)
+        maxMoneyForChart = round(maxMoney, int(f"-{len(str(maxMoney))-1}"))
+        if maxMoneyForChart < maxMoney:
+            moneyNumberList = list(str(maxMoneyForChart))
+            chartMoneyStringNumber = ""
+            for index, digit in enumerate(moneyNumberList):
+                if index == 0:
+                    chartMoneyStringNumber += str(int(digit)+1)
+                else:
+                    chartMoneyStringNumber += digit
+            maxMoneyForChart = int(chartMoneyStringNumber)
+        scaleDifference = maxMoneyForChart // 5
+        moneyScaleParts = []
+        moneyScaleParts.append(maxMoneyForChart)
+        for i in range(4):
+            moneyScaleParts.append(maxMoneyForChart-((i+1)*scaleDifference))
+        moneyScaleParts.append(0)
+        #   Activity
+        maxActivity = 0
+        for week in activity:
+            thisActivity = activity.get(week)
+            if thisActivity > maxActivity:
+                maxActivity = round(thisActivity)
+        maxActivityForChart = round(maxActivity, (len(str(maxActivity))-1)*-1)
+        if maxActivityForChart < maxActivity:
+            activityNumberList = list(str(maxActivityForChart))
+            chartActivityStringNumber = ""
+            for index, digit in enumerate(activityNumberList):
+                if index == 0:
+                    chartActivityStringNumber += str(int(digit)+1)
+                else:
+                    chartActivityStringNumber += digit
+            maxActivityForChart = int(chartActivityStringNumber)
+        activityScaleDifference = maxActivityForChart // 5
+        activityScaleParts = []
+        activityScaleParts.append(maxActivityForChart)
+        for i in range(4):
+            activityScaleParts.append(maxActivityForChart-((i+1)*activityScaleDifference))
+        activityScaleParts.append(0)
+        # Chart
+        if platform.system() == "Windows":
+            chartWidth = os.get_terminal_size().columns - 1
+        else:
+            chartWidth = os.get_terminal_size().columns
+        OverallSpace = chartWidth-(len(str(maxMoneyForChart))+len(str(maxActivityForChart))+7)
+        printableWeekAmount = OverallSpace // 9
+        weeksToPrint = sortedWeeks[1:]
+        while len(weeksToPrint) > printableWeekAmount:
+            weeksToPrint.pop()
+        weeksToPrint.reverse()
+        
+        print(c.aqua + "\u2554" + c.reset + "\u2550"*(chartWidth-2) + c.aqua + "\u2557" + c.reset)
+        print("\u2551" + f'{"WEEKLY PAYOUTS OF " + name.upper():^{chartWidth-2}}' + "\u2551")
+        print("\u2560" + "\u2550"*(chartWidth-2) + "\u2563")
+        for i in range(len(moneyScaleParts)):
+            moneyScaleParts[i] = "$"+str(moneyScaleParts[i])
+        scaleCounter = 0
+        for i in range(11):
+            if i % 2 == 0:
+                if i == 0:
+                    leftChar = "\u252c"
+                    rightChar = "\u2510"
+                elif i == 10:
+                    leftChar = "\u2534"
+                    rightChar = "\u2518"
+                else:
+                    leftChar = "\u253c"
+                    rightChar = "\u2524"
+                firstPart = "\u2551" + f'{moneyScaleParts[scaleCounter]:>{len(str(maxMoneyForChart))+1}}' + leftChar
+                midPart = "\u2500"*(chartWidth-len(str(maxMoneyForChart))-5)
+                lastPart = rightChar + "\u2551"
+                scaleCounter += 1
+            else:
+                firstPart = "\u2551" + " "*(len(str(maxMoneyForChart))+1) + "\u2502"
+                midPart = " "*(chartWidth-len(str(maxMoneyForChart))-5)
+                lastPart = "\u2502\u2551"
+            midPartList = list(midPart)
+            NumberList = []
+            for index in range(1, 21):
+                NumberList.append(index)
+            NumberList.reverse()
+            for index, week in enumerate(weeksToPrint):
+                try:
+                    amount = (payments.get(week) / maxMoneyForChart) * 20
+                except:
+                    continue
+                if i == 10:
+                    if round(amount) > 0:
+                        for point in range(5):
+                            midPartList[1+point+index*10] = "\u2580" # half block up
+                else:
+                    if round(amount) == NumberList[i*2]:
+                        for point in range(5):
+                            midPartList[1+point+index*10] = "\u2584" # half block down
+                    elif round(amount) > NumberList[i*2]:
+                        for point in range(5):
+                            midPartList[1+point+index*10] = "\u2588" # full block
+            midPart = ""
+            for char in midPartList:
+                    midPart += char
+            print(firstPart + midPart + lastPart)
+        firstPart = "\u2551 " + " "*(len(str(maxMoneyForChart))+2)
+        midPartKinda = ""
+        lastPart = "\u2551"
+        for week in weeksToPrint:
+            midPartKinda += week[2:].replace("-", "")
+            midPartKinda += " "*5
+        print(firstPart + f'{midPartKinda:{chartWidth-len(str(maxMoneyForChart))-5}}' + lastPart)
+        print(c.aqua + "\u255a" + c.reset + "\u2550"*(chartWidth-2) + c.aqua + "\u255d" + c.reset)
 
 rmc = RetroMC()
 
@@ -1411,7 +1781,7 @@ def about():
     print(c.aqua + "Noggisoggi" + c.reset + " - Creator of player list script which cstats is based on")
     print(c.aqua + "JohnyMuffin" + c.reset + " - Creator of RetroMC and Legacy Tracker related APIs utilized by cstats")
     print(c.aqua + "zavdav" + c.reset + " - Tester, told me about the getUser API, gave ideas for improving the ping feature, creator of BetaMC APIs used by cstats")
-    print(c.aqua + "Pilzhut5" + c.reset + " - contribution of .deb build scripts and .desktop file, general additions & improvements")
+    print(c.aqua + "Pilzhut5" + c.reset + " - Contribution of .deb build scripts, .desktop file, charts, location map, RetroMC countries and other stuff")
     print(c.aqua + "Jaoheah" + c.reset + " - Switched the options around on the menu")
 
     print("\nGitHub repository: " + c.aqua + "https://github.com/svgaming234/cstats" + c.reset)
@@ -1461,7 +1831,7 @@ def resetconfig():
 
 def showconfigpath():
     print("Your cstats configuration directory is located at: " + c.aqua + confpath + c.reset)
-    print("Additional configuration options can be adjusted within that file.")
+    print("Additional configuration options can be adjusted in " + c.aqua + "config.ini" + c.reset + " within that folder.")
 
     entertocontinue()
 
@@ -1471,6 +1841,7 @@ def options():
     print(c.aqua + "1) " + c.reset + "resetCache")
     print(c.aqua + "2) " + c.reset + "resetConfig")
     print(c.aqua + "3) " + c.reset + "showConfigPath")
+    print(c.aqua + "4) " + c.reset + "updateCache")
     print(c.aqua + "0) " + c.reset + "exit\n")
 
     choose = input("> ").lower()
@@ -1488,6 +1859,11 @@ def options():
     if choose == "3" or choose == "showconfigpath":
         cls()
         showconfigpath()
+        cls()
+        options()
+    if choose == "4" or choose == "updateCache":
+        cls()
+        updateCache()
         cls()
         options()
     elif choose == "0" or choose == "exit":
