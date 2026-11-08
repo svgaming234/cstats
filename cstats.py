@@ -849,7 +849,7 @@ class RetroMC:
         print(c.aqua + "9) " + c.reset + "playTime")
         print(c.aqua + "10) " + c.reset + "trustLevel")
         print(c.aqua + "11) " + c.reset + "trustScore")
-        print(c.aqua + "12) " + c.reset + "money")
+        #print(c.aqua + "12) " + c.reset + "money") #HIDDEN: API doesn't exist
         print(c.aqua + "0) " + c.reset + "exit\n")
 
         choose = input("> ").lower()
