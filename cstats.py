@@ -758,11 +758,14 @@ class RetroMC:
         print("Items dropped: " + str(request5["itemsDropped"]))
 
         print("\nSpleef statistics:")
-        print("Matches played: " + str(request5["gamemaster_spleef_games_played"]))
-        print("Victories: " + str(request5["gamemaster_spleef_games_won"]))
-        print("Matches spectated: " + str(request5["gamemaster_spleef_matches_spectated"]))
-        print("Snow blocks broken: " + str(request5["gamemaster_spleef_blocks_broken"]))
-        print("Snowballs thrown: " + str(request5["gamemaster_spleef_snowballs_thrown"]) + "\n")
+        try:
+            print("Matches played: " + str(request5["gamemaster_spleef_games_played"]))
+            print("Victories: " + str(request5["gamemaster_spleef_games_won"]))
+            print("Matches spectated: " + str(request5["gamemaster_spleef_matches_spectated"]))
+            print("Snow blocks broken: " + str(request5["gamemaster_spleef_blocks_broken"]))
+            print("Snowballs thrown: " + str(request5["gamemaster_spleef_snowballs_thrown"]) + "\n")
+        except KeyError:
+            print("Missing data :(\n")
         
         try:
             if request["x"] == 0 and request["y"] == 0 and request["z"] == 0:
