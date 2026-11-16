@@ -337,6 +337,12 @@ def camelCaseToNormal(TheString):
             output += char
     return output
 
+def getTerminalWidth():
+    if platform.system() == "Windows":
+        return os.get_terminal_size().columns - 1
+    else:
+        return os.get_terminal_size().columns
+
 def randomquote():
     splashes = [
         "\"GUI soon(tm)\" - samcraft3",
@@ -998,10 +1004,7 @@ class RetroMC:
 
         # the chart
         if confvalues["showCharts"] == True:
-            if platform.system() == "Windows":
-                chartWidth = os.get_terminal_size().columns - 1
-            else:
-                chartWidth = os.get_terminal_size().columns
+            chartWidth = getTerminalWidth()
             maxUsernameLength = 0
             maxValue = request["entries"][0]["value"]
             showTitle = True
@@ -1136,10 +1139,7 @@ class RetroMC:
 
     @staticmethod
     def locationMap(name, x, y, z, world="nothin", compassChar="\u253c"):
-        if platform.system() == "Windows":
-            mapWidth = os.get_terminal_size().columns - 1
-        else:
-            mapWidth = os.get_terminal_size().columns
+        mapWidth = getTerminalWidth()
         title = f"LOCATION OF {name.upper()}"
         if (len(title) + len(str(x)) + len(str(y)) + len(str(z)) + 19) <= mapWidth:
             bigMap = True
@@ -1313,10 +1313,7 @@ class RetroMC:
             activityScaleParts.append(maxActivityForChart-((i+1)*activityScaleDifference))
         activityScaleParts.append(0)
         # Chart
-        if platform.system() == "Windows":
-            chartWidth = os.get_terminal_size().columns - 1
-        else:
-            chartWidth = os.get_terminal_size().columns
+        chartWidth = getTerminalWidth()
         OverallSpace = chartWidth-(len(str(maxMoneyForChart))+len(str(maxActivityForChart))+7)
         printableWeekAmount = OverallSpace // 9
         weeksToPrint = sortedWeeks[1:]
