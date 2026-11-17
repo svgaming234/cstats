@@ -488,6 +488,7 @@ class RetroMC:
         request, status = getapi("https://api.retromc.org/api/v1/village/getVillageList")
         print("Displaying list of " + c.aqua + "all" + c.reset + " RetroMC villages.\n")
         totalcount = len(request["villages"])
+        print("Total village count: " + str(totalcount) + "\n")
         nameColonWidth = 0
         for i in range(0, totalcount):
             nameLength = len(request["villages"][i]["name"])
