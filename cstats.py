@@ -14,6 +14,7 @@ import threading
 from datetime import datetime
 from requests import JSONDecodeError
 import urllib3.exceptions
+import shutil
 
 version = "v0.11.0"
 
@@ -1856,9 +1857,31 @@ def resetconfig():
 
 def showconfigpath():
     print("Your cstats configuration directory is located at: " + c.aqua + confpath + c.reset)
-    print("Additional configuration options can be adjusted in " + c.aqua + "config.ini" + c.reset + " within that folder.")
-
-    entertocontinue()
+    print("Additional configuration options can be adjusted in " + c.aqua + "config.ini" + c.reset + " within that folder.\n\n")
+    editor = "SomethingVeryVeryUniqueThatReallyCouldntBeANameOfARandomEditor"
+    if platform.system() == "Windows":
+        if shutil.which("edit"):
+            editor = "edit"
+        elif shutil.which("notepad"):
+            editor = "notepad"
+    elif platform.system() == "Darwin":
+        if shutil.which("open"):
+            editor = "open -e"
+    else:
+        if shutil.which("xdg-open"):
+            editor = "xdg-open"
+    if editor != "SomethingVeryVeryUniqueThatReallyCouldntBeANameOfARandomEditor":
+        print(c.aqua + "1) " + c.reset + "open config.ini")
+        print(c.aqua + "0) " + c.reset + "exit")
+        choice = input("> ").lower()
+        if choice == "1" or choice.startswith("open"):
+            print("cstats return to the previous menu after you closed the file")
+            os.system(editor + " " + confpath + "config.ini")
+            return
+        else:
+            return
+    else:
+        entertocontinue()
 
 def options():
     print("Please select an " + c.aqua + "option.\n" + c.reset)
