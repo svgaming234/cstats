@@ -841,6 +841,12 @@ class RetroMC:
         print("Balance: $" + str(round(request5["money"], 2)))
 
         print("\nOnline: " + str(request["online"]))
+        
+        print("GeoIP country code (can be inaccurate): ", end="")
+        try:
+            print(str(request5["country"]))
+        except KeyError:
+            print("Missing data :(")
 
         print("\nPlaytime: " + str(round(request5["playTime"] / 60 / 60, 2)) + " hours")
         print("First join: " + unixtimetotime(request5["firstJoin"]))
@@ -867,7 +873,7 @@ class RetroMC:
             print("Snowballs thrown: " + str(request5["gamemaster_spleef_snowballs_thrown"]) + "\n")
         except KeyError:
             print("Missing data :(\n")
-        
+
         try:
             if request["x"] == 0 and request["y"] == 0 and request["z"] == 0:
                 print("Coordinates: Unknown, player's coordinates are hidden")
