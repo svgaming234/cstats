@@ -869,7 +869,11 @@ class RetroMC:
         print("Blocks broken: " + str(request5["blocksDestroyed"]))
         print("Blocks placed: " + str(request5["blocksPlaced"]))
         print("Deaths: " + str(request5["playerDeaths"]))
-        print("Players killed: " + str(request5["playersKilled"]))
+        print("Players killed: ", end="")
+        try:
+            print(str(request5["playersKilled"]))
+        except:
+            print("0")
         print("Mobs killed: " + str(request5["creaturesKilled"]))
         print("Items dropped: " + str(request5["itemsDropped"]))
 
