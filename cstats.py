@@ -14,7 +14,6 @@ import threading
 from datetime import datetime
 from requests import JSONDecodeError
 import urllib3.exceptions
-import warnings
 
 version = "v0.11.0"
 
