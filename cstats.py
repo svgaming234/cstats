@@ -123,6 +123,8 @@ def generateconfig(confoption):
         conf["general"]["showCharts"] = "True"
     elif confoption == "compactLists":
         conf["general"]["compactLists"] = "False"
+    elif confoption == "dynamicListFormatFallback":
+        conf["general"]["dynamicListFormatFallback"] = "True"
 
     confini = open(confpath + "config.ini", "w")
     conf.write(confini)
@@ -137,6 +139,7 @@ def generateallconfigs():
     generateconfig("showLocationMaps")
     generateconfig("showCharts")
     generateconfig("compactLists")
+    generateconfig("dynamicListFormatFallback")
 
 def readconfig(confcategory, confoption):
     global confvalues
@@ -180,6 +183,7 @@ def readallconfigs():
     readconfig("general", "showCharts")
     readconfig("general", "showLocationMaps")
     readconfig("general", "compactLists")
+    readconfig("general", "dynamicListFormatFallback")
 
 def getapi(url, verify = True):
     request = requests.get(url, verify = verify)
@@ -485,16 +489,17 @@ class RetroMC:
         request, status = getapi("https://api.retromc.org/api/v1/village/getVillageList")
         print("Displaying list of " + c.aqua + "all" + c.reset + " RetroMC villages.\n")
         totalcount = len(request["villages"])
-        if confvalues["compactLists"] == True:
+        nameColonWidth = 0
+        for i in range(0, totalcount):
+            nameLength = len(request["villages"][i]["name"])
+            if nameLength > nameColonWidth:
+                nameColonWidth = nameLength
+        overallWidth = nameColonWidth + 78
+        if confvalues["compactLists"] or confvalues["dynamicListFormatFallback"] and overallWidth > getTerminalWidth():
             print("\nOutput format:\nVillage name | Village owner | Village UUID\n")
             for i in range(totalcount):
                 print(f'{request["villages"][i]["name"]} | {uuidtousername(request["villages"][i]["owner"])} | {request["villages"][i]["uuid"]}')
         else:
-            nameColonWidth = 0
-            for i in range(0, totalcount):
-                nameLength = len(request["villages"][i]["name"])
-                if nameLength > nameColonWidth:
-                    nameColonWidth = nameLength
             listfmt = "{name:{nameColWidth}} | {owner:36} | {villageuuid}"
 
             print(f"{'VILLAGE NAME':^{nameColonWidth}} | {'VILLAGE OWNER':^36} | {'VILLAGE UUID':^36}")
@@ -586,18 +591,19 @@ class RetroMC:
         request, status = getapi("https://api.retromc.org/api/v1/nation/getNationList")
         print("Displaying list of " + c.aqua + "all" + c.reset + " RetroMC nations.\n")
         totalcount = len(request["nations"])
-        if confvalues["compactLists"] == True:
+        nameColonWidth = 11
+        villageCountWidth = 14
+        for nation in request["nations"]:
+            if len(nation["name"]) > nameColonWidth:
+                nameColonWidth = len(nation["name"])
+            if len(str(nation["villages"])) > villageCountWidth:
+                villageCountWidth = len(str(nation["villages"]))
+        overallWidth = nameColonWidth + villageCountWidth + 81
+        if confvalues["compactLists"] or confvalues["dynamicListFormatFallback"] and overallWidth > getTerminalWidth():
             print("\nOutput format: Nation name | Nation owner | Total villages | Nation UUID\n")
             for i in range(totalcount):
                 print(f'{request["nations"][i]["name"]} | {uuidtousername(request["nations"][i]["owner"])} | {request["nations"][i]["villages"]} | {request["nations"][i]["uuid"]}')
         else:
-            nameColonWidth = 11
-            villageCountWidth = 14
-            for nation in request["nations"]:
-                if len(nation["name"]) > nameColonWidth:
-                    nameColonWidth = len(nation["name"])
-                if len(str(nation["villages"])) > villageCountWidth:
-                    villageCountWidth = len(str(nation["villages"]))
             listfmt = "{name:{nameColonWidth}} | {owner:36} | {villages:{villageCountWidth}} | {nationuuid}"
 
             print(f'{"NATION NAME":^{nameColonWidth}} | {"NATION OWNER":^36} | {"TOTAL VILLAGES":^{villageCountWidth}} | {"NATION UUID":^36}')
@@ -708,7 +714,20 @@ class RetroMC:
         request, status = getapi("https://statistics.retromc.org/api/countries")
         countryCount = len(request["data"])
         print("Displaying a list of " + c.aqua + "all" + c.reset + " countries.\n")
-        if confvalues["compactLists"] == True:
+        widths = [7, 6, 8, 7, 14, 6, 6, 4, 5, 6, 8, 7]
+        for country in request["data"]:
+            for i, stat in enumerate(country):
+                if isinstance(country[stat], str):
+                    w = len(country[stat])
+                else:
+                    if country[stat] == round(country[stat]):
+                        w = len(str(country[stat]))
+                    else:
+                        w = len(f"{country[stat]:.2f}")
+                if widths[i] < w:
+                    widths[i] = w
+        overallWidth = sum(widths) + len(str(countryCount)) + len(widths)*3
+        if confvalues["compactLists"] or confvalues["dynamicListFormatFallback"] and overallWidth > getTerminalWidth():
             print("\nOutput format:\n# | Country | Players | Active | Playtime | Distance | Economy | Active Economy | Placed | Broken | Mobs | Kills | Deaths\n")
             for i in range(countryCount):
                 print(i+1, end="")
@@ -716,22 +735,6 @@ class RetroMC:
                     print(" | " + str(request["data"][i][stat]), end="")
                 print()
         else:
-            widths = [7, 6, 8, 7, 14, 6, 6, 4, 5, 6, 8, 7]
-            #print(request["data"])
-            for country in request["data"]:
-                #print(country)
-                for i, stat in enumerate(country):
-                    if isinstance(country[stat], str):
-                        w = len(country[stat])
-                    else:
-                        if country[stat] == round(country[stat]):
-                            w = len(str(country[stat]))
-                        else:
-                            w = len(f"{country[stat]:.2f}")
-                    if widths[i] < w:
-                        widths[i] = w
-                        #print(w)
-            #print(widths)
 
             translator = {0: 11,
                           1: 0,
