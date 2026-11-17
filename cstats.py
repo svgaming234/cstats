@@ -124,6 +124,8 @@ def generateconfig(confoption):
         conf["general"]["compactLists"] = "False"
     elif confoption == "dynamicListFormatFallback":
         conf["general"]["dynamicListFormatFallback"] = "True"
+    elif confoption == "displayColors":
+        conf["general"]["displayColors"] = "True"
 
     confini = open(confpath + "config.ini", "w")
     conf.write(confini)
@@ -139,6 +141,7 @@ def generateallconfigs():
     generateconfig("showCharts")
     generateconfig("compactLists")
     generateconfig("dynamicListFormatFallback")
+    generateconfig("displayColors")
 
 def readconfig(confcategory, confoption):
     global confvalues
@@ -183,6 +186,7 @@ def readallconfigs():
     readconfig("general", "showLocationMaps")
     readconfig("general", "compactLists")
     readconfig("general", "dynamicListFormatFallback")
+    readconfig("general", "displayColors")
 
 def getapi(url, verify = True):
     request = requests.get(url, verify = verify)
@@ -1907,6 +1911,12 @@ def init():
     
     global latestversionstr
     latestversionstr = ""
+
+    if confvalues["displayColors"] == False:
+        # slightly janky way to blank out all color codes
+        c.red = c.aqua = c.yellow = c.white = ""
+        # mc colors
+        c.mc0highlight = c.mc0 = c.mc1 = c.mc2 = c.mc3 = c.mc4 = c.mc5 = c.mc6 = c.mc7 = c.mc8 = c.mc9 = c.mca = c.mcb = c.mcc = c.mcd = c.mce = c.mcf = ""
 
     if confvalues["checkForUpdates"] == True:
         try:
