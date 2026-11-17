@@ -1914,7 +1914,7 @@ def init():
 
     if confvalues["displayColors"] == False:
         # slightly janky way to blank out all color codes
-        c.red = c.aqua = c.yellow = c.white = ""
+        c.reset = c.red = c.aqua = c.yellow = c.white = ""
         # mc colors
         c.mc0highlight = c.mc0 = c.mc1 = c.mc2 = c.mc3 = c.mc4 = c.mc5 = c.mc6 = c.mc7 = c.mc8 = c.mc9 = c.mca = c.mcb = c.mcc = c.mcd = c.mce = c.mcf = ""
 
