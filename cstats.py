@@ -282,8 +282,8 @@ def updateCache():
         entertocontinue()
     else:
         for i, uuid in enumerate(UUIDs):
-            columns = os.get_terminal_size().columns
-            lines = os.get_terminal_size().lines
+            columns = shutil.get_terminal_size().columns
+            lines = shutil.get_terminal_size().lines
             upperSpace = (lines - 10) // 2
             leftSpace = (columns - 52) // 2
             updateScreen = f"""{'- UPDATING UUID USERNAME CACHE -':^52}
@@ -355,9 +355,9 @@ def camelCaseToNormal(TheString):
 
 def getTerminalWidth():
     if platform.system() == "Windows":
-        return os.get_terminal_size().columns - 1
+        return shutil.get_terminal_size().columns - 1
     else:
-        return os.get_terminal_size().columns
+        return shutil.get_terminal_size().columns
 
 def randomquote():
     splashes = [
