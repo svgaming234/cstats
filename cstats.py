@@ -1218,8 +1218,13 @@ class RetroMC:
                 shortWorldName = "RMC"
             elif world == "skylands":
                 shortWorldName = "SKY"
+            elif world == "retromc_nether":
+                shortWorldName = "NTH"
+            elif world == "farlands":
+                shortWorldName = "FAR"
             else:
                 shortWorldName = "???"
+                print(world)
             sideMarkerSpacing = round(actualMapHeight/6)
             sideMarkers = (1, midPoint[1]-(2*sideMarkerSpacing), midPoint[1]-sideMarkerSpacing, midPoint[1], midPoint[1]+sideMarkerSpacing, midPoint[1]+(2*sideMarkerSpacing), actualMapHeight)
             #print(sideMarkers)
