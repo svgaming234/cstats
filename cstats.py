@@ -15,16 +15,13 @@ from datetime import datetime
 from requests import JSONDecodeError
 import urllib3.exceptions
 import shutil
+import subprocess
+from pathlib import Path
 
 version = "v0.11.0"
 
 def mkdir_p(newdir):
-    try: 
-        os.makedirs(newdir)
-    except OSError as err:
-        # reraise the error unless it's about an already existing directory 
-        if err.errno != errno.EEXIST or not os.path.isdir(newdir): 
-            raise
+    Path(newdir).mkdir(parents=True, exist_ok=True)
 
 if platform.system() == "Windows":
     # make color codes show up on windows properly, this library is not required on other operating systems
@@ -1903,7 +1900,7 @@ def showconfigpath():
         choice = input("> ").lower()
         if choice == "1" or choice.startswith("open"):
             print("cstats return to the previous menu after you closed the file")
-            os.system(editor + " " + confpath + "config.ini")
+            subprocess.run([editor, Path(confpath) / "config.ini"])
             return
         else:
             return
