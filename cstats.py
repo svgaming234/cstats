@@ -14,16 +14,14 @@ import threading
 from datetime import datetime
 from requests import JSONDecodeError
 import urllib3.exceptions
+import shutil
+import subprocess
+from pathlib import Path
 
 version = "v0.11.0"
 
 def mkdir_p(newdir):
-    try: 
-        os.makedirs(newdir)
-    except OSError as err:
-        # reraise the error unless it's about an already existing directory 
-        if err.errno != errno.EEXIST or not os.path.isdir(newdir): 
-            raise
+    Path(newdir).mkdir(parents=True, exist_ok=True)
 
 if platform.system() == "Windows":
     # make color codes show up on windows properly, this library is not required on other operating systems
@@ -281,8 +279,8 @@ def updateCache():
         entertocontinue()
     else:
         for i, uuid in enumerate(UUIDs):
-            columns = os.get_terminal_size().columns
-            lines = os.get_terminal_size().lines
+            columns = shutil.get_terminal_size().columns
+            lines = shutil.get_terminal_size().lines
             upperSpace = (lines - 10) // 2
             leftSpace = (columns - 52) // 2
             updateScreen = f"""{'- UPDATING UUID USERNAME CACHE -':^52}
@@ -354,9 +352,9 @@ def camelCaseToNormal(TheString):
 
 def getTerminalWidth():
     if platform.system() == "Windows":
-        return os.get_terminal_size().columns - 1
+        return shutil.get_terminal_size().columns - 1
     else:
-        return os.get_terminal_size().columns
+        return shutil.get_terminal_size().columns
 
 def randomquote():
     splashes = [
@@ -661,19 +659,34 @@ class RetroMC:
         print("Balance: " + str(round(request2["balance"], 2)))
         print("Total member villages: " + str(len(request2["villages"])))
 
-        print("\nVillages:\n\nOutput format:")
-        print("Village name | Activity score this week (sorted by it) | Village UUID\n")
+        print("\nVillages:\n")
 
         if len(request2["villages"]) > 0:
             # sort villages in nation by top activity, bit jank but works
             sortedvillages = sorted(request2["villages"], key=lambda sortedvillages: sortedvillages["activityCurrentWeek"], reverse=True)
-
-            listfmt = "{villagename} | {activitythisweek} | {villageuuid}"
+            maxNameLength = 4
+            maxActivityLength = 8
+            if len(str(round(sortedvillages[0]["activityCurrentWeek"], 2))) > 8:
+                maxActivityLength = len(str(round(sortedvillages[0]["activityCurrentWeek"], 2)))
+            else:
+                maxActivityLength = 8
+            for village in range(len(sortedvillages)):
+                if len(sortedvillages[village]["name"]) > maxNameLength:
+                    maxNameLength = len(sortedvillages[village]["name"])
+            overallWidth = maxNameLength + maxActivityLength + 42
+            if confvalues["compactLists"] or confvalues["dynamicListFormatFallback"] and overallWidth > getTerminalWidth():
+                print("\nOutput format: \nVillage name | Activity score this week (sorted by it) | Village UUID\n")
+                listfmt = "{villagename} | {activitythisweek} | {villageuuid}"
+            else:
+                print(f'{"NAME":^{maxNameLength}} | {"ACTIVITY":^{maxActivityLength}} | {"VILLAGE UUID":^36}')
+                listfmt = "{villagename:{maxNameLength}} | {activitythisweek:{maxActivityLength}} | {villageuuid}"
             for i in range(0, len(sortedvillages)):
                 print(listfmt.format(
                     villagename = sortedvillages[i]["name"],
                     activitythisweek = str(round(sortedvillages[i]["activityCurrentWeek"], 2)),
-                    villageuuid = sortedvillages[i]["uuid"]
+                    villageuuid = sortedvillages[i]["uuid"],
+                    maxNameLength = maxNameLength,
+                    maxActivityLength = maxActivityLength
                 ))
         else:
             print("No villages found :(", end="")
@@ -868,7 +881,11 @@ class RetroMC:
         print("Blocks broken: " + str(request5["blocksDestroyed"]))
         print("Blocks placed: " + str(request5["blocksPlaced"]))
         print("Deaths: " + str(request5["playerDeaths"]))
-        print("Players killed: " + str(request5["playersKilled"]))
+        print("Players killed: ", end="")
+        try:
+            print(str(request5["playersKilled"]))
+        except:
+            print("0")
         print("Mobs killed: " + str(request5["creaturesKilled"]))
         print("Items dropped: " + str(request5["itemsDropped"]))
 
@@ -1201,8 +1218,13 @@ class RetroMC:
                 shortWorldName = "RMC"
             elif world == "skylands":
                 shortWorldName = "SKY"
+            elif world == "retromc_nether":
+                shortWorldName = "NTH"
+            elif world == "farlands":
+                shortWorldName = "FAR"
             else:
                 shortWorldName = "???"
+                print(world)
             sideMarkerSpacing = round(actualMapHeight/6)
             sideMarkers = (1, midPoint[1]-(2*sideMarkerSpacing), midPoint[1]-sideMarkerSpacing, midPoint[1], midPoint[1]+sideMarkerSpacing, midPoint[1]+(2*sideMarkerSpacing), actualMapHeight)
             #print(sideMarkers)
@@ -1864,9 +1886,31 @@ def resetconfig():
 
 def showconfigpath():
     print("Your cstats configuration directory is located at: " + c.aqua + confpath + c.reset)
-    print("Additional configuration options can be adjusted in " + c.aqua + "config.ini" + c.reset + " within that folder.")
-
-    entertocontinue()
+    print("Additional configuration options can be adjusted in " + c.aqua + "config.ini" + c.reset + " within that folder.\n\n")
+    editor = None
+    if platform.system() == "Windows":
+        if shutil.which("edit"):
+            editor = "edit"
+        elif shutil.which("notepad"):
+            editor = "notepad"
+    elif platform.system() == "Darwin":
+        if shutil.which("open"):
+            editor = "open -e"
+    else:
+        if shutil.which("xdg-open"):
+            editor = "xdg-open"
+    if editor != None:
+        print(c.aqua + "1) " + c.reset + "open config.ini")
+        print(c.aqua + "0) " + c.reset + "exit")
+        choice = input("> ").lower()
+        if choice == "1" or choice.startswith("open"):
+            print("cstats return to the previous menu after you closed the file")
+            subprocess.run([editor, Path(confpath) / "config.ini"])
+            return
+        else:
+            return
+    else:
+        entertocontinue()
 
 def options():
     print("Please select an " + c.aqua + "option.\n" + c.reset)
