@@ -1886,7 +1886,7 @@ def resetconfig():
 
 def showconfigpath():
     print("Your cstats configuration directory is located at: " + c.aqua + confpath + c.reset)
-    print("Additional configuration options can be adjusted in " + c.aqua + "config.ini" + c.reset + " within that folder.\n\n")
+    print("Additional configuration options can be adjusted in " + c.aqua + "config.ini" + c.reset + " within that folder.\n")
     editor = None
     if platform.system() == "Windows":
         if shutil.which("edit"):
@@ -1904,8 +1904,8 @@ def showconfigpath():
         print(c.aqua + "0) " + c.reset + "exit")
         choice = input("> ").lower()
         if choice == "1" or choice.startswith("open"):
-            print("cstats return to the previous menu after you closed the file")
-            subprocess.run([editor, Path(confpath) / "config.ini"])
+            print("You will be returned to the previous menu after you have closed the editor.")
+            subprocess.run([editor, Path(confpath) / "config.ini"], capture_output=True)
             return
         else:
             return
