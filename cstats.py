@@ -1885,7 +1885,7 @@ def resetconfig():
 def showconfigpath():
     print("Your cstats configuration directory is located at: " + c.aqua + confpath + c.reset)
     print("Additional configuration options can be adjusted in " + c.aqua + "config.ini" + c.reset + " within that folder.\n\n")
-    editor = "SomethingVeryVeryUniqueThatReallyCouldntBeANameOfARandomEditor"
+    editor = None
     if platform.system() == "Windows":
         if shutil.which("edit"):
             editor = "edit"
@@ -1897,7 +1897,7 @@ def showconfigpath():
     else:
         if shutil.which("xdg-open"):
             editor = "xdg-open"
-    if editor != "SomethingVeryVeryUniqueThatReallyCouldntBeANameOfARandomEditor":
+    if editor != None:
         print(c.aqua + "1) " + c.reset + "open config.ini")
         print(c.aqua + "0) " + c.reset + "exit")
         choice = input("> ").lower()
