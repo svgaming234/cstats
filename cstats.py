@@ -1887,7 +1887,9 @@ def resetconfig():
 def showconfigpath():
     print("Your cstats configuration directory is located at: " + c.aqua + confpath + c.reset)
     print("Additional configuration options can be adjusted in " + c.aqua + "config.ini" + c.reset + " within that folder.\n")
+
     print("You will be returned to the previous menu if you choose to open the file in a text editor automatically.\n")
+    
     editor = None
     if platform.system() == "Windows":
         if shutil.which("edit"):
