@@ -320,9 +320,9 @@ def progressindicator(index):
         index -= 20
     return animation[index-1]
 
-def entertocontinue(message = False):
+def entertocontinue(message = None):
     # checking inside the function as jank fix to displayColors not applying to c.aqua declared within the function
-    if message == False:
+    if message == None:
         message = "\nPress " + c.aqua + "ENTER" + c.reset + " to return to previous menu.\n"
 
     input(message)
