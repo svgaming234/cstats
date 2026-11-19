@@ -1898,7 +1898,7 @@ def showconfigpath():
             cmdline = ["notepad"]
     elif platform.system() == "Darwin":
         if shutil.which("open"):
-            cmdline = ["open", "-e"]
+            cmdline = ["open", "-t"]
     else:
         if shutil.which("xdg-open"):
             cmdline = ["xdg-open"]
@@ -1908,7 +1908,7 @@ def showconfigpath():
         print(c.aqua + "0) " + c.reset + "exit")
 
         choice = input("> ").lower()
-        
+
         if choice == "1" or choice.startswith("open"):
             cmdline.append(Path(confpath) / "config.ini")
             subprocess.Popen(cmdline, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
