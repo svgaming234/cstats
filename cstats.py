@@ -1893,21 +1893,25 @@ def showconfigpath():
     editor = None
     if platform.system() == "Windows":
         if shutil.which("edit"):
-            editor = "edit"
+            cmdline = ["edit"]
         elif shutil.which("notepad"):
-            editor = "notepad"
+            cmdline = ["notepad"]
     elif platform.system() == "Darwin":
         if shutil.which("open"):
-            editor = "open -e"
+            cmdline = ["open", "-e"]
     else:
         if shutil.which("xdg-open"):
-            editor = "xdg-open"
-    if editor != None:
+            cmdline = ["xdg-open"]
+
+    if cmdline != None:
         print(c.aqua + "1) " + c.reset + "open config.ini")
         print(c.aqua + "0) " + c.reset + "exit")
+
         choice = input("> ").lower()
+        
         if choice == "1" or choice.startswith("open"):
-            subprocess.Popen([editor, Path(confpath) / "config.ini"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            cmdline.append(Path(confpath) / "config.ini")
+            subprocess.Popen(cmdline, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
             return
         else:
             return
