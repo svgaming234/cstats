@@ -1892,9 +1892,7 @@ def showconfigpath():
     
     editor = None
     if platform.system() == "Windows":
-        if shutil.which("edit"):
-            cmdline = ["edit"]
-        elif shutil.which("notepad"):
+        if shutil.which("notepad"):
             cmdline = ["notepad"]
     elif platform.system() == "Darwin":
         if shutil.which("open"):
