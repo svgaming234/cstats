@@ -18,7 +18,7 @@ import shutil
 import subprocess
 from pathlib import Path
 
-version = "v0.11.0"
+version = "v0.12.0"
 
 def mkdir_p(newdir):
     Path(newdir).mkdir(parents=True, exist_ok=True)
