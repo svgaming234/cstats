@@ -551,7 +551,7 @@ class RetroMC:
         print("Owner: " + uuidtousername(request2["owner"]))
         print("Location: X:" + str(request2["spawn"]["x"]) + ", Y:" + str(request2["spawn"]["y"]) + ", Z:" + str(request2["spawn"]["z"]) + " in world " + request2["spawn"]["world"])
 
-        if confvalues["showCharts"] == True:
+        if confvalues["showLocationMaps"] == True:
             rmc.locationMap(str(request2["name"]), request2["spawn"]["x"], request2["spawn"]["y"], request2["spawn"]["z"], request2["spawn"]["world"])
             print()
         if request2["creationTime"] != 1640995200:
