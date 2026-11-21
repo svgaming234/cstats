@@ -1,4 +1,4 @@
-cstats (0.11.0) stable; urgency=medium
+cstats (0.12.0) stable; urgency=medium
 
   * Add RMC Nation support (nationlist, nationdetails)
   * Add .deb builds, script by Pilzhut5
@@ -8,4 +8,18 @@ cstats (0.11.0) stable; urgency=medium
   * Add config option to show black (&0) color code as dark gray to make it visible on black background terminals (disabled by default)
   * Rewritten README.md 
 
- -- svgaming234 <svgaming234@gmail.com>  Sat, 7 Oct 2026 18:17:00 +0200
+  * Implement RetroMC country stats API (by Pilzhut5)
+  * Add better table-like formatting to multiple lists (villagelist, nationlist, nationdetails, countries) (by Pilzhut5)
+  * This can be disabled by toggling the compactLists config option to True
+  * Add charts to nationdetails village activity payouts and leaderboards (by Pilzhut5)
+  * This can be disabled by toggling the showCharts config option to False
+  * Add visual world location maps for villages and online player locations (by Pilzhut5)
+  * This can be disabled by toggling the showLocationMaps config option to False
+  * Implement manually triggered UUID-username cache updater (by Pilzhut5)
+  * Fix RetroMC playerstats crashing for users with no spleef stats and/or no player kills (by Pilzhut5) 
+  * Allow opening config file automatically in options > showConfigPath (by Pilzhut5)
+  * Display estimated GeoIP country in RetroMC playerstats as this info is now provided by the RetroMC API
+  * Add displayColors toggle in config file
+  * Remove RetroMC money leaderboard option as the RetroMC API no longer seems to provide it (by Pilzhut5)
+
+ -- svgaming234 <svgaming234@gmail.com>  Sat, 21 Nov 2026 19:32:00 +0200
