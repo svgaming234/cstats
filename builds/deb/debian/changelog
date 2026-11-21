@@ -1,13 +1,5 @@
 cstats (0.12.0) stable; urgency=medium
 
-  * Add RMC Nation support (nationlist, nationdetails)
-  * Add .deb builds, script by Pilzhut5
-  * Update RMC playerstats and leaderboard to use new API and show Spleef stats
-  * Updated credits on splash texts provided by Noggisoggi
-  * Make join/leave messages appear correctly in RMC chat with new API changes
-  * Add config option to show black (&0) color code as dark gray to make it visible on black background terminals (disabled by default)
-  * Rewritten README.md 
-
   * Implement RetroMC country stats API (by Pilzhut5)
   * Add better table-like formatting to multiple lists (villagelist, nationlist, nationdetails, countries) (by Pilzhut5)
   * This can be disabled by toggling the compactLists config option to True
