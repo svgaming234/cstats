@@ -1132,8 +1132,6 @@ class RetroMC:
         cls()
 
         while True:
-            print(latestversionstr, end="")
-
             welcomescreen()
 
             print(c.aqua + "RetroMC" + c.reset + " menu\n")
@@ -1636,8 +1634,6 @@ class BetaMC:
         cls()
 
         while True:
-            print(latestversionstr, end="")
-
             welcomescreen()
 
             print(c.aqua + "BetaMC" + c.reset + " menu\n")
@@ -1960,9 +1956,6 @@ def init():
 
     if confvalues["changeWindowTitle"] == True:
         setwindowtitle("cstats " + version)
-    
-    global latestversionstr
-    latestversionstr = ""
 
     if confvalues["displayColors"] == False:
         # slightly janky way to blank out all color codes
@@ -1971,18 +1964,7 @@ def init():
         c.mc0highlight = c.mc0 = c.mc1 = c.mc2 = c.mc3 = c.mc4 = c.mc5 = c.mc6 = c.mc7 = c.mc8 = c.mc9 = c.mca = c.mcb = c.mcc = c.mcd = c.mce = c.mcf = ""
 
     if confvalues["checkForUpdates"] == True:
-        try:
-            request = requests.head("https://github.com/svgaming234/cstats/releases/latest", allow_redirects=True, timeout = 3)
-            latestversion = request.url.split("/")[-1]
-
-            if version != latestversion:
-                latestversionstr = c.yellow + "A new version is available! Please update to " + latestversion + c.reset
-        except requests.exceptions.Timeout:
-            latestversionstr = c.red + "Failed to check for updates (timed out)! Please check your internet connection." + c.reset
-        except requests.exceptions.ConnectionError:
-            latestversionstr = c.red + "Failed to check for updates (connection error)! Please check your internet connection." + c.reset
-        except:
-            latestversionstr = c.red + "Failed to check for updates (unspecified error)! Please check your internet connection." + c.reset
+        threading.Thread(target=checkForUpdates, daemon=True).start()
 
     main()
 
@@ -2007,8 +1989,6 @@ def main():
         elif argused == True:
             sys.exit(0)
         else:
-            print(latestversionstr, end="")
-
             welcomescreen()
 
             print(c.aqua + "Main" + c.reset + " menu, select a " + c.aqua + "server" + c.reset + " to view stats specific to it\n")
@@ -2050,6 +2030,24 @@ def main():
         else:
             cls()
             print(c.red + "Error: Invalid option!" + c.reset)
+
+def checkForUpdates():
+    latestversionstr = ""
+    try:
+        request = requests.head("https://github.com/svgaming234/cstats/releases/latest", allow_redirects=True, timeout = 3)
+        latestversion = request.url.split("/")[-1]
+
+        if version != latestversion:
+            latestversionstr = c.yellow + "A new version is available! Please update to " + latestversion + c.reset
+    except requests.exceptions.Timeout:
+        latestversionstr = c.red + "Failed to check for updates (timed out)! Please check your internet connection." + c.reset
+    except requests.exceptions.ConnectionError:
+        latestversionstr = c.red + "Failed to check for updates (connection error)! Please check your internet connection." + c.reset
+    except:
+        latestversionstr = c.red + "Failed to check for updates (unspecified error)! Please check your internet connection." + c.reset
+    if latestversionstr != "":
+        latestversionstr += "\n> "
+        print(latestversionstr, end="")
 
 if __name__ == "__main__":
     init()
